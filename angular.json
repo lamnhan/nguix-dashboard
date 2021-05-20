@@ -113,7 +113,7 @@
       "projectType": "library",
       "root": "projects/dashboard",
       "sourceRoot": "projects/dashboard/src",
-      "prefix": "lib",
+      "prefix": "nguix-dashboard",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",

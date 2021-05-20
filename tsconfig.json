@@ -4,9 +4,13 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "dashboard": [
+      "@lamnhan/nguix-dashboard": [
         "dist/dashboard/dashboard",
         "dist/dashboard"
+      ],
+      "@lamnhan/ngx-useful": [
+        "../ngx-useful/dist/useful/useful",
+        "../ngx-useful/dist/useful"
       ]
     },
     "outDir": "./dist/out-tsc",

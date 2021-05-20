@@ -1,14 +1,34 @@
 {
-  "name": "nguix-dashboard",
+  "name": "@lamnhan/nguix-dashboard",
   "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
-  },
+  "description": "An Angular UI kit for content management.",
+  "author": "Lam Nhan",
+  "homepage": "https://lamnhan.com",
+  "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "ng build dashboard && cpy README.md LICENSE dist/dashboard",
+    "deploy": "cd ./dist/dashboard && npm publish && cd ../../",
+    "docs": "ayedocs generate",
+    "test": "ng test dashboard",
+    "lint": "ng lint dashboard",
+    "e2e": "ng e2e",
+    "coverage": "cat ./coverage/*/lcov.info | coveralls",
+    "webdriver-update-ci": "webdriver-manager update --standalone false --gecko false --versions.chrome 2.37"
+  },
+  "keywords": [
+    "lamnhan",
+    "angular",
+    "ui",
+    "component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lamnhan/nguix-dashboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lamnhan/nguix-dashboard/issues"
+  },
   "dependencies": {
     "@angular/animations": "~12.0.0",
     "@angular/common": "~12.0.0",
@@ -18,6 +38,7 @@
     "@angular/platform-browser": "~12.0.0",
     "@angular/platform-browser-dynamic": "~12.0.0",
     "@angular/router": "~12.0.0",
+    "@lamnhan/schemata": "0.0.6",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
@@ -28,6 +49,8 @@
     "@angular/compiler-cli": "~12.0.0",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
+    "coveralls": "^3.1.0",
+    "cpy-cli": "^3.1.1",
     "jasmine-core": "~3.7.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
