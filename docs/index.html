@@ -1,9 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Blank</title>
-  <meta http-equiv="refresh" content="0; URL='reference/index.html'" />
-</head>
+<!DOCTYPE html><html lang="en"><head>
+
+  <!-- Github Pages hack to allow SPA refresh without receiving 404. -->
+  <script>
+    (function () {
+      var redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect != location.href) {
+        history.replaceState(null, null, redirect);
+      }
+    })();
+  </script>
+
+  <meta charset="utf-8">
+  <title>NGUIX Dashboard</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- Temporary meta tags (use prerender later) -->
+  <meta name="description" content="The Angular UI/UX Dashboard Kit">
+  <meta property="og:title" content="NGUIX Dashboard">
+  <meta property="og:description" content="The Angular UI/UX Dashboard Kit">
+  <meta property="og:image" content="https://nguix-dashboard.lamnhan.com/assets/images/featured.jpg">
+  <meta property="og:url" content="https://nguix-dashboard.lamnhan.com/">
+  <link rel="canonical" href="https://nguix-dashboard.lamnhan.com/">
+  <link rel="author" href="https://www.facebook.com/lamhiennhan">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@lam_hien_nhan">
+  <meta name="twitter:creator" content="@lam_hien_nhan">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NGUIX Dashboard">
+  <meta property="og:locale" content="en-US">
+  <meta property="fb:app_id" content="1234567890">
+  <meta itemprop="name" content="NGUIX Dashboard">
+  <meta itemprop="description" content="The Angular UI/UX Dashboard Kit">
+  <meta itemprop="image" content="https://nguix-dashboard.lamnhan.com/assets/images/featured.jpg">
+
+  <!-- In-app splash screen -->
+  <style>
+    #app-splash-screen {
+      z-index: 999999999;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      color: #000;
+      transition: opacity 0.5s ease;
+    }
+    #app-splash-screen.hidden {
+      opacity: 0;
+    }
+    #app-splash-screen img {
+      width: 120px;
+      height: 120px;
+      animation: heartbeat 1s infinite;
+    }
+    @keyframes heartbeat {
+      0% {
+        transform: scale(0.75);
+      }
+      20% {
+        transform: scale(1);
+      }
+      40% {
+        transform: scale(0.75);
+      }
+      60% {
+        transform: scale(1);
+      }
+      80% {
+        transform: scale(0.75);
+      }
+      100% {
+        transform: scale(0.75);
+      }
+    }
+  </style>
+
+<link rel="stylesheet" href="styles.31d6cfe0d16ae931b73c.css"></head>
 <body>
-</body>
-</html>
+
+  <app-root></app-root>
+
+  <div id="app-splash-screen">
+    <img src="https://img.icons8.com/color/96/000000/happy--v1.png">
+  </div>
+
+<script src="runtime.140d8788451faa9d8141.js" defer></script><script src="polyfills.ab357eb2f5aae822ed7c.js" defer></script><script src="main.3453b7e9ad33beffe0da.js" defer></script>
+
+</body></html>
