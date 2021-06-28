@@ -1,0 +1,114 @@
+.app-menu {
+
+  .head {
+    display: flex;
+    align-items: center;
+    border-bottom: var(--app-size-border) solid var(--app-color-background-shade);
+    padding: .5rem 1rem;
+
+    .title {
+      flex: 1;
+      font-weight: bold;
+
+      span {
+        cursor: pointer;
+      }
+    }
+
+    .toggler {
+      display: flex;
+      align-items: center;
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none !important;
+        background: none !important;
+        outline: none !important;
+        padding: 0 !important;
+        width: 32px;
+        height: 32px;
+        margin-left: 1rem;
+        transition: transform .1s ease;
+        opacity: .7;
+
+        &:hover, &:focus {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .body {
+    height: 0;
+    overflow: hidden;
+    transition: height .1s ease, padding .3s ease;
+    padding: 0 1rem;
+
+    &.expanded {
+      height: 100%;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: var(--app-size-border) solid var(--app-color-background-shade);
+    }
+
+    .menu-items {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li:first-child strong {
+        margin-top: 0;
+      } 
+
+      strong {
+        display: block;
+        font-weight: normal;
+        color: var(--app-color-medium);
+        text-transform: uppercase;
+        padding-bottom: 1rem;
+      }
+
+      a {
+        display: block;
+        text-decoration: none;
+        color: var(--app-color-foreground);
+        padding: .5rem 1rem;
+        opacity: .7;
+        
+        &:hover, &:focus, &:active, &.active {
+          opacity: 1;
+          background: var(--app-color-background-shade);
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) {
+
+  .app-menu {
+    border-bottom: none;
+    
+    .head {
+      flex-wrap: wrap;
+      border-bottom: none;
+
+      .title {
+        width: 100%;
+      }
+
+      .toggler {
+        display: none;
+      }
+    }
+
+    .body {
+      height: 100%;
+      border-bottom: none;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+  }
+}

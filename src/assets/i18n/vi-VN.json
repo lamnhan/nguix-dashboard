@@ -7,21 +7,13 @@
   },
   "PERSONA": {
     "TITLE": "Chức năng",
-    "DEFAULT": "Mặc định",
-    "INTRO": "Giới thiệu",
-    "BLOG": "Viết lách",
-    "SHOP": "Mua sắm"
+    "DEFAULT": "Mặc định"
   },
   "LOCALE": {
     "TITLE": "Ngôn ngữ"
   },
   "APP": {
     "HOME": "Trang nhà",
-    "ABOUT": "Giới thiệu",    
-    "SETTING": "Thiết lập",
-    "POSTS": "Bài viết",
-    "PRODUCTS": "Sản phẩm",
-    "TERMS": "Điều khoản",
     "PRIVACY": "Bảo mật"
   }
 }

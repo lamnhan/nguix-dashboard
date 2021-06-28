@@ -7,21 +7,12 @@
   },
   "PERSONA": {
     "TITLE": "Persona",
-    "DEFAULT": "Default",
-    "INTRO": "Intro",
-    "BLOG": "Blog",
-    "SHOP": "Shop"
+    "DEFAULT": "Default"
   },
   "LOCALE": {
     "TITLE": "Language"
   },
   "APP": {
-    "HOME": "Home",
-    "ABOUT": "About",
-    "SETTING": "Settings",
-    "POSTS": "Posts",
-    "PRODUCTS": "Products",
-    "TERMS": "Terms",
-    "PRIVACY": "Privacy"
+    "HOME": "Home"
   }
 }

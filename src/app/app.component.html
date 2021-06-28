@@ -1,28 +1,8 @@
-<nguix-header
-  *ngIf="personaService.name!=='default'; else docsHeaders"
-  [fixed]="true"
-  [i18n]="true"
-  [name]="('PERSONA.' + personaService.name) | uppercase | transloco"
-  [menuItems]="personaService.menu"
-></nguix-header>
-<ng-template #docsHeaders>
-  <app-header></app-header>
-  <app-header2nd></app-header2nd>
-</ng-template>
+<app-header></app-header>
+<app-header2nd></app-header2nd>
 
-<main class="page-container" [class.single-header]="personaService.name!=='default'">
+<main id="page-container" [class.single-header]="personaService.name==='admin'">
   <router-outlet></router-outlet>
 </main>
 
-<nguix-footer
-  *ngIf="personaService.name!=='default'; else docsFooter"
-  [i18n]="true"
-  [text]="('PERSONA.' + personaService.name) | uppercase | transloco"
-  [menuItems]="footerMenu"
-></nguix-footer>
-<ng-template #docsFooter>
-  <app-footer></app-footer>
-</ng-template>
-
-<nguix-nav-indicator></nguix-nav-indicator>
-<nguix-pwa-reminder></nguix-pwa-reminder>
+<app-footer></app-footer>

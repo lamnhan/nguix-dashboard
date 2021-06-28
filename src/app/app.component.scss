@@ -1,4 +1,4 @@
-.page-container {
+#page-container {
   width: 100%;
   max-width: 1200px;
   margin: auto;
@@ -12,21 +12,21 @@
 
 @media only screen and (min-width: 480px) {
 
-  .page-container {
+  #page-container {
     min-height: calc(100vh - 65px - 49px - 71px); // header - header2nd - footer
   }
 }
 
 @media only screen and (min-width: 768px) {
 
-  .page-container {
+  #page-container {
     min-height: calc(100vh - 65px - 49px - 57px); // header - header2nd - footer
   }
 }
 
 @media only screen and (min-width: 992px) {
 
-  .page-container {
+  #page-container {
     min-height: calc(100vh - 65px - 49px - 57px); // header - header2nd - footer
   }
 }
