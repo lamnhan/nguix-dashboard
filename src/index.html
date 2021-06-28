@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en">
 <head>
-
-  <!-- Github Pages hack to allow SPA refresh without receiving 404. -->
+  
+  <!-- Github Pages Only -->
   <script>
     (function () {
       var redirect = sessionStorage.redirect;
@@ -18,37 +18,45 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  
-  <!-- Temporary meta tags (use prerender later) -->
+
+  <!-- Meta tags -->
   <meta name="description" content="The Angular UI/UX Dashboard Kit">
-  <meta property="og:title" content="NGUIX Dashboard">
-  <meta property="og:description" content="The Angular UI/UX Dashboard Kit">
-  <meta property="og:image" content="https://nguix-dashboard.lamnhan.com/assets/images/featured.jpg">
-  <meta property="og:url" content="https://nguix-dashboard.lamnhan.com/">
   <link rel="canonical" href="https://nguix-dashboard.lamnhan.com/">
-  <link rel="author" href="https://www.facebook.com/lamhiennhan">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@lam_hien_nhan">
-  <meta name="twitter:creator" content="@lam_hien_nhan">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="NGUIX Dashboard">
-  <meta property="og:locale" content="en-US">
-  <meta property="fb:app_id" content="1234567890">
-  <meta itemprop="name" content="NGUIX Dashboard">
+  <link rel="author" href="https://lamnhan.com/lamnhan">
+  <meta itemprop="url" content="https://nguix-dashboard.lamnhan.com/">
+  <meta itemprop="name" content="NNGUIX Dashboard">
   <meta itemprop="description" content="The Angular UI/UX Dashboard Kit">
   <meta itemprop="image" content="https://nguix-dashboard.lamnhan.com/assets/images/featured.jpg">
+  <meta itemprop="inLanguage" content="en-US">
+  <meta itemprop="author" content="Lam Nhan">
+  <meta itemprop="dateCreated" content="2021-06-17T00:00:00.000Z">
+  <meta itemprop="datePublished" content="2021-06-17T00:00:00.000Z">
+  <meta itemprop="dateModified" content="2021-06-24T00:00:00.000Z">
+  <meta property="og:url" content="https://nguix-dashboard.lamnhan.com/">
+  <meta property="og:title" content="NNGUIX Dashboard">
+  <meta property="og:description" content="The Angular UI/UX Dashboard Kit">
+  <meta property="og:image" content="https://nguix-dashboard.lamnhan.com/assets/images/featured.jpg">
+  <meta property="og:locale" content="en-US">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NNGUIX Dashboard">
+  <meta property="fb:app_id" content="1234567890">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@lam_hien_nhan">
+  <meta name="twitter:site" content="@lam_hien_nhan">
 
-  <!-- In-app splash screen -->
-  <link rel="stylesheet" href="/assets/css/splash-screen.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&amp;family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+
+  <!-- In-app splashscreen -->
+  <link rel="stylesheet" href="https://unpkg.com/@lamnhan/nguix-starter@latest/splashscreens/heartbeat/index.css">
+  <script defer src="https://unpkg.com/@lamnhan/nguix-starter@latest/splashscreens/heartbeat/index.js"></script>
+  <noscript><style>#app-splash-screen{display: none !important;}</style></noscript>
+  <style>#app-splash-screen.en-US .only.en-US {display: inline-block !important;}</style>
 
 </head>
 <body>
-
   <app-root></app-root>
-
-  <div id="app-splash-screen">
-    <img src="https://img.icons8.com/color/96/000000/happy--v1.png">
-  </div>
-
+  <div id="app-splash-screen" class="en-US"><div class="body"><img src="/assets/images/logo.svg"></div><div class="foot"> <span class="only en-US">Still working, please wait! 👌</span></div></div>
 </body>
 </html>

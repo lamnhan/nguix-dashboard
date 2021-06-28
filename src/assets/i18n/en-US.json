@@ -1,0 +1,27 @@
+{
+  "THEME": {
+    "DARK_MODE": "Dark mode",
+    "TITLE": "Theming",
+    "LIGHT": "Light",
+    "DARK": "Dark"
+  },
+  "PERSONA": {
+    "TITLE": "Persona",
+    "DEFAULT": "Default",
+    "INTRO": "Intro",
+    "BLOG": "Blog",
+    "SHOP": "Shop"
+  },
+  "LOCALE": {
+    "TITLE": "Language"
+  },
+  "APP": {
+    "HOME": "Home",
+    "ABOUT": "About",
+    "SETTING": "Settings",
+    "POSTS": "Posts",
+    "PRODUCTS": "Products",
+    "TERMS": "Terms",
+    "PRIVACY": "Privacy"
+  }
+}

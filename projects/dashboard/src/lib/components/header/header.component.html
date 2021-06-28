@@ -1,3 +1,68 @@
-<header class="nguix-dashboard-header">
-  Dashboard header!
+<header class="host">
+
+  <div class="toggler">
+    <button class="icon" [class]="nav.getMenuIcon()" (click)="nav.menuAction()"></button>
+  </div>
+
+  <div class="brand">
+    <em><img src="/assets/images/logo.svg" [alt]="'NAME' | transloco"></em>
+    <strong class="font-head">{{ 'NAME' | transloco }}</strong>
+  </div>
+
+  <nav class="nav">
+
+    <div class="secondary" [class.visible]="nav.menuVisible">
+      <div class="container">
+        <div class="head">
+          <div class="toggler">
+            <button class="icon icon-menu" (click)="nav.toggleMenu()"></button>
+          </div>
+          <div class="brand" (click)="nav.navigate(['lamnhan'], {backwardable: false}) && nav.toggleMenu()">
+            <em><img src="/assets/images/logo.svg" [alt]="'NAME' | transloco"></em>
+            <strong class="font-head">{{ 'NAME' | transloco }}</strong>
+          </div>
+        </div>
+
+        <div class="body">
+
+          <ul class="list menu">
+            <li class="item" *ngFor="let menuItem of menuItems" [class]="menuItem.name">
+              <a
+                (click)="nav.toggleMenu()"
+                [usefulRouterLink]="menuItem.routerLink"
+                usefulRouterLinkActive="active"
+                [usefulRouterLinkActiveOptions]="{exact: true}"
+                [usefulRouterBackwardable]="false"
+              >
+                <i class="icon" [class]="menuItem.icon"></i>
+                <span>{{ (menuItem.text || '') | transloco }}</span>
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+        <div class="foot">
+          <div class="action">
+            <button class="button-primary" (click)="exitDashboard()">Exit dashboard</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="backdrop" (click)="nav.toggleMenu()"></div>
+    </div>
+
+  </nav>
+
+  <div class="user">
+    <a
+      class="avatar"
+      [usefulRouterLink]="!user.currentUser ? ['login'] : !user.username ? ['account'] : [user.username]"
+      [usefulRouterBackwardable]="!user.currentUser"
+    >
+      <img [src]="user.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
+    </a>
+  </div>
+  
 </header>

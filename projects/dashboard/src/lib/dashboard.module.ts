@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 
+import { DashboardRoutingModule } from './dashboard-routing.module';
+
 @NgModule({
   declarations: [],
-  imports: [],
+  imports: [
+    DashboardRoutingModule,
+  ],
   exports: []
 })
 export class NguixDashboardModule { }
