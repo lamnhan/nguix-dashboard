@@ -7,7 +7,8 @@
   },
   "PERSONA": {
     "TITLE": "Chức năng",
-    "DEFAULT": "Mặc định"
+    "DEFAULT": "Mặc định",
+    "ADMIN": "Quản trị"
   },
   "LOCALE": {
     "TITLE": "Ngôn ngữ"

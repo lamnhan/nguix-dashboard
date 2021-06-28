@@ -75,6 +75,8 @@ export class AppComponent {
       .setOptions({
         browserColor: true,
         onReady: () => this.appService.hideSplashScreen(),
+        personaValidator: (persona, userService) =>
+          persona !== 'admin' || !!userService?.allowedLevel(5)
       })
       .setIntegrations({
         localstorageService: this.localstorageService,        
@@ -88,9 +90,7 @@ export class AppComponent {
         ],
         personas: [
           { text: 'PERSONA.DEFAULT', value: 'default' },
-          { text: 'PERSONA.INTRO', value: 'intro' },
-          { text: 'PERSONA.BLOG', value: 'blog' },
-          { text: 'PERSONA.SHOP', value: 'shop' },
+          { text: 'PERSONA.ADMIN', value: 'admin' },
         ],
         locales: [
           { text: 'English', value: 'en-US' },
@@ -106,6 +106,9 @@ export class AppComponent {
       .setIntegrations({ settingService: this.settingService })
       .setMenuRegistry({
         home: { name: 'home', text: 'APP.HOME', routerLink: [''] },
+      })
+      .setActions({
+        admin: {redirect: ['admin']}
       })
       .init({
         default: {},

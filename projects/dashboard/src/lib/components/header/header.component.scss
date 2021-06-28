@@ -18,7 +18,14 @@
     margin-right: 1rem;
 
     button {
-      display: block;
+      display: inline-block;
+      border: none;
+      background-color: #0000;
+      padding: 0.25rem;
+
+      &, &:active, &:focus, &:hover {
+        outline: none !important;
+      }
 
       &:focus, &:active {
         border: var(--app-size-border) solid var(--app-color-foreground);

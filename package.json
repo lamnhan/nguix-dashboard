@@ -47,6 +47,7 @@
     "@lamnhan/schemata": "0.0.12",
     "@unistylus/bootstrap": "0.0.2",
     "@unistylus/core": "0.0.1",
+    "firebase": "8.6.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
@@ -55,6 +56,7 @@
     "@angular-devkit/build-angular": "~12.0.3",
     "@angular/cli": "~12.0.3",
     "@angular/compiler-cli": "~12.0.3",
+    "@molacms/cli": "0.0.4",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "coveralls": "^3.1.0",

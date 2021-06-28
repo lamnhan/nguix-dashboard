@@ -7,7 +7,8 @@
   },
   "PERSONA": {
     "TITLE": "Persona",
-    "DEFAULT": "Default"
+    "DEFAULT": "Default",
+    "ADMIN": "Admin"
   },
   "LOCALE": {
     "TITLE": "Language"
