@@ -1,1 +1,22 @@
-<p>home works!</p>
+<div class="host">
+
+  <section class="auth">
+
+    <div><h2>Demo</h2></div>
+
+    <div class="login" *ngIf="!authService.authenticated; else account">
+      <app-login [authService]="authService"></app-login>
+    </div>
+
+    <ng-template #account>
+      <div class="account" *ngIf="userService.currentUser">
+        <div>Account: <strong>{{ userService?.data?.email }}</strong></div>
+        <div><a [usefulRouterLink]="['admin']">Go to Dashboard</a></div>
+      </div>
+      <hr>
+      <button class="button-primary" (click)="signOut()">Logout</button>
+    </ng-template>
+
+  </section>
+
+</div>

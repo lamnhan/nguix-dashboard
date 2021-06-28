@@ -1,0 +1,34 @@
+<div class="app-login" *ngIf="auth">
+
+  <div class="message margin-bottom" *ngIf="message">
+    <div class="alert-danger" [innerHtml]="message"></div>
+  </div>
+
+  <div class="form" *ngIf="auth.methodAllowedForEmailPassword">
+
+    <form
+      [formGroup]="loginFormGroup"
+      (ngSubmit)="signIn()"
+      #loginForm="ngForm"
+    >
+  
+      <label class="group margin-bottom">
+        <span class="form-label">Email: <strong>admin@lamnhan.com</strong></span>
+        <input class="form-control" type="email" formControlName="email" placeholder="Demo email ...">
+      </label>
+  
+      <label class="group margin-bottom">
+        <span class="form-label">Password: <strong>1234567890</strong></span>
+        <input class="form-control" type="password" formControlName="password" placeholder="Demo password ...">
+      </label>
+  
+      <div class="action">
+        <button class="button-primary" type="submit"
+          [disabled]="!loginForm.form.valid || lockdown">Login</button>
+      </div>
+  
+    </form>
+
+  </div>
+
+</div>

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import {
   RouterLinkDirectiveModule,
   LocalstorageService,
@@ -31,9 +33,12 @@ import { FooterComponentModule } from './components/footer/footer.module';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+
     AppRoutingModule,
     AppTranslationModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
     RouterLinkDirectiveModule,
     HeaderComponentModule,
     Header2ndComponentModule,

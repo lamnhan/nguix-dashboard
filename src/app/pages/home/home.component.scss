@@ -1,0 +1,15 @@
+.host {
+  width: 100%;
+  max-width: 992px;
+  margin: auto;
+  padding: 1rem;
+  
+  section.auth {
+    max-width: 320px;
+    margin: auto;
+
+    .logout {
+      text-align: center;
+    }
+  }
+}
