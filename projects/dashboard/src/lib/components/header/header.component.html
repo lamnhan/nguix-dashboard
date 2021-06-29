@@ -2,7 +2,7 @@
 <header class="host">
 
   <div class="toggler">
-    <button class="icon" [class]="nav.getMenuIcon()" (click)="nav.menuAction()"></button>
+    <button class="icon" [class]="navService.getMenuIcon()" (click)="navService.menuAction()"></button>
   </div>
 
   <div class="brand">
@@ -12,15 +12,15 @@
 
   <nav class="nav">
 
-    <div class="secondary" [class.visible]="nav.menuVisible">
+    <div class="secondary" [class.visible]="navService.menuVisible">
       <div class="container">
         <div class="head">
           <div class="toggler">
-            <button class="icon icon-menu" (click)="nav.toggleMenu()"></button>
+            <button class="icon icon-menu" (click)="navService.toggleMenu()"></button>
           </div>
-          <div class="brand" (click)="nav.navigate(['admin'], {backwardable: false}) && nav.toggleMenu()">
-            <em><img src="/assets/images/logo.svg" alt="Dashboard"></em>
-            <strong class="font-head">Dashboard</strong>
+          <div class="brand" (click)="exitDashboard(); navService.toggleMenu()">
+            <em><img src="/assets/images/logo.svg" alt="App"></em>
+            <strong class="font-head">App</strong>
           </div>
         </div>
 
@@ -29,14 +29,14 @@
           <ul class="list menu">
             <li class="item" *ngFor="let menuItem of menuItems" [class]="menuItem.name">
               <a
-                (click)="nav.toggleMenu()"
+                (click)="navService.toggleMenu()"
                 [usefulRouterLink]="menuItem.routerLink"
                 usefulRouterLinkActive="active"
                 [usefulRouterLinkActiveOptions]="{exact: true}"
                 [usefulRouterBackwardable]="false"
               >
                 <i class="icon" [class]="menuItem.icon"></i>
-                <span>{{ t(menuItem.text || '') }}</span>
+                <span>{{ menuItem.text }}</span>
               </a>
             </li>
           </ul>
@@ -51,7 +51,7 @@
 
       </div>
 
-      <div class="backdrop" (click)="nav.toggleMenu()"></div>
+      <div class="backdrop" (click)="navService.toggleMenu()"></div>
     </div>
 
   </nav>
@@ -59,10 +59,10 @@
   <div class="user">
     <a
       class="avatar"
-      [usefulRouterLink]="!user.currentUser ? ['login'] : !user.username ? ['account'] : [user.username]"
-      [usefulRouterBackwardable]="!user.currentUser"
+      [usefulRouterLink]="!userService.currentUser ? ['login'] : !userService.username ? ['account'] : [userService.username]"
+      [usefulRouterBackwardable]="!userService.currentUser"
     >
-      <img [src]="user.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
+      <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
     </a>
   </div>
   

@@ -7,7 +7,9 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
   providers: [
     {
       provide: DASHBOARD_CONFIG,
-      useValue: dashboardConfig({})
+      useValue: dashboardConfig({
+        collections: ['categories']
+      })
     },
   ]
 })

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem, AppService, UserService, NavService, SettingService } from '@lamnhan/ngx-useful';
+import { MenuItem, AppService, NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
+
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 
 @Component({
   selector: 'nguix-dashboard-header',
@@ -7,17 +9,22 @@ import { MenuItem, AppService, UserService, NavService, SettingService } from '@
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  menuItems: MenuItem[] = [];
+
   constructor(
-    public readonly app: AppService,
-    public readonly user: UserService,
-    public readonly nav: NavService,
-    public readonly setting: SettingService,
+    public readonly appService: AppService,
+    public readonly navService: NavService,
+    public readonly settingService: SettingService,
+    public readonly userService: UserService,
+    public readonly dashboardService: DashboardService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.menuItems = this.dashboardService.getMenu();
+  }
 
   exitDashboard() {
-    this.setting.changePersona('default');
-    this.nav.navigate(['']);
+    this.settingService.changePersona('default');
+    this.navService.navigate(['']);
   }
 }
