@@ -21,10 +21,9 @@ import {
 } from '@lamnhan/ngx-useful';
 import { PageDataService, UserDataService } from '@lamnhan/ngx-schemata';
 
-import { NguixDashboardModule } from '@lamnhan/nguix-dashboard';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppTranslationModule } from './app-translation.module';
+import { AppDashboardModule } from './app-dashboard.module';
 import { AppComponent } from './app.component';
 
 import { HeaderComponentModule } from './components/header/header.module';
@@ -35,7 +34,7 @@ import { FooterComponentModule } from './components/footer/footer.module';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    NguixDashboardModule,
+    AppDashboardModule,
     AppRoutingModule,
     AppTranslationModule,
     AngularFireModule.initializeApp(environment.firebase),

@@ -103,7 +103,10 @@ export class AppComponent {
       .init();
     this.pwaService.setOptions({ reminder: false }).init();
     this.personaService
-      .setIntegrations({ settingService: this.settingService })
+      .setIntegrations({
+        settingService: this.settingService,
+        navService: this.navService
+      })
       .setMenuRegistry({
         home: { name: 'home', text: 'APP.HOME', routerLink: [''] },
       })

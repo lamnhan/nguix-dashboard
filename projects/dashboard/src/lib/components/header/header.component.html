@@ -1,3 +1,4 @@
+<ng-container *transloco="let t">
 <header class="host">
 
   <div class="toggler">
@@ -17,7 +18,7 @@
           <div class="toggler">
             <button class="icon icon-menu" (click)="nav.toggleMenu()"></button>
           </div>
-          <div class="brand" (click)="nav.navigate(['lamnhan'], {backwardable: false}) && nav.toggleMenu()">
+          <div class="brand" (click)="nav.navigate(['admin'], {backwardable: false}) && nav.toggleMenu()">
             <em><img src="/assets/images/logo.svg" alt="Dashboard"></em>
             <strong class="font-head">Dashboard</strong>
           </div>
@@ -35,7 +36,7 @@
                 [usefulRouterBackwardable]="false"
               >
                 <i class="icon" [class]="menuItem.icon"></i>
-                <span>{{ (menuItem.text || '') | transloco }}</span>
+                <span>{{ t(menuItem.text || '') }}</span>
               </a>
             </li>
           </ul>
@@ -66,3 +67,4 @@
   </div>
   
 </header>
+</ng-container>

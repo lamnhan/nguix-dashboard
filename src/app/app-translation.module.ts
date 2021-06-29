@@ -28,7 +28,7 @@ class CustomHandler implements TranslocoMissingHandler {
 }
 
 @NgModule({
-  exports: [ TranslocoModule ],
+  exports: [TranslocoModule],
   imports: [HttpClientModule],
   providers: [
     {

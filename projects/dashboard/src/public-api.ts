@@ -4,6 +4,8 @@
 
 export * from './lib/dashboard.module';
 
+export * from './lib/services/config/config.service';
+
 export * from './lib/components/header/header.component';
 export {HeaderComponentModule} from './lib/components/header/header.module';
 

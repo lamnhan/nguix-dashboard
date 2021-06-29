@@ -21,7 +21,7 @@
   "peerDependencies": {
     "@angular/common": "^12.0.3",
     "@angular/core": "^12.0.3",    
-    "@lamnhan/ngx-useful": "0.0.16",
+    "@lamnhan/ngx-useful": "0.0.17",
     "@lamnhan/schemata": "0.0.12",
     "@lamnhan/ngx-schemata": "0.0.4",
     "@unistylus/core": "0.0.1",

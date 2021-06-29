@@ -10,8 +10,9 @@ import { HeaderComponentModule } from './components/header/header.module';
     DashboardRoutingModule,
     HeaderComponentModule
   ],
+  providers: [],
   exports: [
     HeaderComponentModule
   ]
 })
-export class NguixDashboardModule { }
+export class NguixDashboardModule {}
