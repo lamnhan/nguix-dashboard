@@ -5,24 +5,18 @@
     <button class="icon" [class]="navService.getMenuIcon()" (click)="navService.menuAction()"></button>
   </div>
 
-  <div class="brand">
-    <em><img src="/assets/images/logo.svg" alt="Dashboard"></em>
-    <strong class="font-head">Dashboard</strong>
+  <div class="vendor">
+    <button class="icon icon-mola"></button>
+  </div>
+
+  <div class="app">
+    <button><i class="icon icon-home"></i><span>My App</span></button>
   </div>
 
   <nav class="nav">
 
     <div class="secondary" [class.visible]="navService.menuVisible">
       <div class="container">
-        <div class="head">
-          <div class="toggler">
-            <button class="icon icon-menu" (click)="navService.toggleMenu()"></button>
-          </div>
-          <div class="brand" (click)="exitDashboard(); navService.toggleMenu()">
-            <em><img src="/assets/images/logo.svg" alt="App"></em>
-            <strong class="font-head">App</strong>
-          </div>
-        </div>
 
         <div class="body">
 
@@ -36,17 +30,11 @@
                 [usefulRouterBackwardable]="false"
               >
                 <i class="icon" [class]="menuItem.icon"></i>
-                <span>{{ menuItem.text }}</span>
+                <span>{{ t(menuItem.text || '') || menuItem.text }}</span>
               </a>
             </li>
           </ul>
 
-        </div>
-
-        <div class="foot">
-          <div class="action">
-            <button class="button-primary" (click)="exitDashboard()">Exit dashboard</button>
-          </div>
         </div>
 
       </div>
@@ -59,9 +47,9 @@
   <div class="user">
     <a
       class="avatar"
-      [usefulRouterLink]="!userService.currentUser ? ['login'] : !userService.username ? ['account'] : [userService.username]"
-      [usefulRouterBackwardable]="!userService.currentUser"
+      *ngIf="userService.currentUser"
     >
+      <span>Howdy, {{ userService.data?.displayName || 'user' }}</span>
       <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
     </a>
   </div>

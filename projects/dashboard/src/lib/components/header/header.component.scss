@@ -1,7 +1,6 @@
 .host {
   width: 100%;
-  height: 64px;
-  padding: 1rem;
+  height: 46px;
   position: fixed;
   top: 0;
   left: 0;
@@ -9,8 +8,7 @@
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  background: var(--app-color-background);
-  border-bottom: var(--app-size-border) solid var(--app-color-background-shade);
+  background: var(--app-color-primary);
 
   .toggler {
     display: flex;
@@ -20,50 +18,29 @@
     button {
       display: inline-block;
       border: none;
-      background-color: #0000;
       padding: 0.25rem;
 
       &, &:active, &:focus, &:hover {
         outline: none !important;
       }
-
-      &:focus, &:active {
-        border: var(--app-size-border) solid var(--app-color-foreground);
-        border-radius: var(--app-size-radius);
-      }
     }
   }
 
-  .brand {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+  .vendor {
 
-    em {
-
-      img {
-        width: 2.5rem;
-        height: 2.5rem;
-      }
-    }
-
-    strong {
-      display: none;
-      margin-left: 1rem;
-      font-size: 1.25rem;
-    }
   }
+
+  .app {}
 
   .nav {
     flex: 1;
 
     .secondary {
       display: flex;
-      z-index: 9999999;
       width: 100vw;
       height: var(--app-view-height, 100vh);
       position: fixed;
-      top: 0;
+      top: 46px;
       transition: all .3s ease;
       left: -100vw;
       opacity: 0;
@@ -74,25 +51,10 @@
       }
 
       .container {
-        background: var(--app-color-background);
-        border-right: var(--app-size-border) solid var(--app-color-background-shade);
-        width: 250px;
+        background: var(--app-color-primary);
+        width: 150px;
         display: flex;
         flex-flow: column;
-
-        .head {
-          width: 100%;
-          height: 64px;
-          padding: 1rem;
-          border-bottom: var(--app-size-border) solid var(--app-color-background-shade);
-          display: flex;
-          align-items: center;
-          flex-wrap: nowrap;
-
-          .brand strong {
-            display: inline-block;
-          }
-        }
 
         .body {
           width: 100%;
@@ -111,27 +73,11 @@
 
             li a {
               border: none !important;
-              padding: .75rem 1.25rem;
+              padding: .5rem 1rem;
 
               span {
-                margin-left: 1.5rem;
+                margin-left: 1rem;
               }
-            }
-          }
-
-        }
-        
-        .foot {
-          padding: 1rem;
-          border-top: var(--app-size-border) solid var(--app-color-background-shade);
-          width: 100%;
-
-          .action {
-
-            a {
-              display: inline-block;
-              text-align: center;
-              width: 100%;
             }
           }
 
@@ -148,12 +94,11 @@
   .user {
     display: flex;
     align-items: center;
-    padding-top: 2px;
 
     a.avatar {
       display: inline-block;
-      width: 2.2rem;
-      height: 2.2rem;
+      width: 1rem;
+      height: 1rem;
       border-radius: 100%;
       overflow: hidden;
 
@@ -209,7 +154,7 @@
     .secondary {
       left: 0;
       opacity: 1;
-      width: 250px;
+      width: 150px;
     }
   }
 }

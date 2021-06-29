@@ -8,7 +8,12 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
     {
       provide: DASHBOARD_CONFIG,
       useValue: dashboardConfig({
-        collections: ['categories']
+        collections: [
+          'categories',
+          'tags',
+          'pages',
+          'posts',
+        ]
       })
     },
   ]

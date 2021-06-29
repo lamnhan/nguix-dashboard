@@ -1,8 +1,6 @@
-<div *ngIf="personaService.name==='admin'; else docsHeaders">
-  <nguix-dashboard-header></nguix-dashboard-header>
-</div>
-
-<ng-template #docsHeaders>
+<nguix-dashboard-header
+  *ngIf="personaService.name==='admin'; else appHeaders"></nguix-dashboard-header>
+<ng-template #appHeaders>
   <app-header></app-header>
   <app-header2nd></app-header2nd>
 </ng-template>

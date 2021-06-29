@@ -1,4 +1,5 @@
 import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { MenuItem } from '@lamnhan/ngx-useful';
 
 export const DASHBOARD_CONFIG = new InjectionToken<DashboardConfig>('DashboardConfig');
 
@@ -9,7 +10,11 @@ export function dashboardConfig(config: DashboardConfig) {
 }
 
 export interface DashboardConfig {
-  collections: string[];
+  collections: Array<string | CustomSchemata>;
+}
+
+export interface CustomSchemata {
+  menuItem: MenuItem;
 }
 
 @Injectable({
