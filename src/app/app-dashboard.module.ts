@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NguixDashboardModule, DASHBOARD_CONFIG } from '@lamnhan/nguix-dashboard';
+import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnhan/nguix-dashboard';
 
 @NgModule({
   exports: [NguixDashboardModule],
@@ -7,7 +7,7 @@ import { NguixDashboardModule, DASHBOARD_CONFIG } from '@lamnhan/nguix-dashboard
   providers: [
     {
       provide: DASHBOARD_CONFIG,
-      useValue: {}
+      useValue: dashboardConfig({})
     },
   ]
 })

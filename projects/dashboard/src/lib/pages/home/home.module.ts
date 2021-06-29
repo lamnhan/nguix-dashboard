@@ -4,10 +4,10 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
 import { HomeRoutingModule } from './home-routing.module';
-import { HomeComponent } from './home.component';
+import { HomePage } from './home.component';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomePage],
   imports: [
     CommonModule,
     TranslocoModule,
@@ -15,4 +15,4 @@ import { HomeComponent } from './home.component';
     HomeRoutingModule
   ]
 })
-export class HomePageModule {}
+export class NguixDashboardHomePageModule {}

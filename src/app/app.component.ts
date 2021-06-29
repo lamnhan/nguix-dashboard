@@ -26,12 +26,6 @@ import { UserDataService } from '@lamnhan/ngx-schemata';
 })
 export class AppComponent {
 
-  footerMenu: MenuItem[] = [
-    { text: 'APP.SETTING', routerLink: ['setting'] },
-    { text: 'APP.TERMS', routerLink: ['terms'] },
-    { text: 'APP.PRIVACY', routerLink: ['privacy'] },
-  ];
-
   constructor(
     private firebaseFirestore: AngularFirestore,
     private firebaseAuth: AngularFireAuth,

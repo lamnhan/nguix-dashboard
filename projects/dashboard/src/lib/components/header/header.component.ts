@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuItem, AppService, UserService, NavService, SettingService } from '@lamnhan/ngx-useful';
 
 @Component({
@@ -7,8 +7,6 @@ import { MenuItem, AppService, UserService, NavService, SettingService } from '@
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  @Input() menuItems: MenuItem[] = [];
-
   constructor(
     public readonly app: AppService,
     public readonly user: UserService,
