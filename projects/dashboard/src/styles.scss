@@ -1,10 +1,10 @@
 // register skin
-@import './skin';
+@import './scss/skin';
 
 // register soul
-@import './soul/core';
-@import './soul/content/typography';
-@import './soul/components/menu';
+@import './scss/soul/core';
+@import './scss/soul/content/typography';
+@import './scss/soul/components/dropmenu';
 
 // register lib
 @import './theming/dashboard.module';

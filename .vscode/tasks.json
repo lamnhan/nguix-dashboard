@@ -10,7 +10,7 @@
 			},
 			"problemMatcher": [],
 			"label": "npm: build:lib",
-			"detail": "ng build dashboard && cpy skin soul theming styles.scss ../../../dist/dashboard --cwd=projects/dashboard/src --parents && cpy README.md LICENSE dist/dashboard"
+			"detail": "ng build dashboard && npm run copies && cpy README.md LICENSE dist/dashboard"
 		},
 		{
 			"type": "npm",

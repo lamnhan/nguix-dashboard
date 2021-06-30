@@ -1,5 +1,5 @@
 @import '@unistylus/core/scss/mixins';
-@import '../skin'; // use $icons
+@import '../scss/skin'; // use $icons
 
 $icons: (
   // general
@@ -7,6 +7,9 @@ $icons: (
   x-menu-light: '#{$icons}/menu-light.svg',
   x-home-light: '#{$icons}/home-light.svg',
   // content
+  x-dashboard-light: '#{$icons}/dashboard-light.svg',
+  x-pages-light: '#{$icons}/pages-light.svg',
+  x-posts-light: '#{$icons}/posts-light.svg',
 );
 
 @include register_app_icons(

@@ -1,59 +1,66 @@
 <ng-container *transloco="let t">
-<header class="host">
+<header class="host x">
 
   <div class="toggler">
     <button class="icon icon-x-menu-light" (click)="navService.toggleMenu()"></button>
   </div>
 
-  <div class="menu-x vendor">
-    <ul>
-      <li>
-        <a href="#"><i class="icon icon-x-mola-light"></i></a>
-        <ul class="submenu" aria-label="submenu">
-          <li><a href="#">Sub-1</a></li>
-          <li><a href="#">Sub-2</a></li>
-          <li><a href="#">Sub-3</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+  <ul class="dropmenu-x vendor">
+    <li>
+      <a href="#" (click)="false"><i class="icon icon-x-mola-light"></i></a>
+      <ul class="submenu" aria-label="submenu">
+        <li><a href="#">About Mola</a></li>
+        <li><a href="#">Mola Home</a></li>
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Feedback</a></li>
+      </ul>
+    </li>
+  </ul>
 
-  <div class="menu-x app">
-    <ul>
-      <li>
-        <a href="#"><i class="icon icon-x-home-light"></i><span>My App</span></a>
-        <ul class="submenu" aria-label="submenu">
-          <li><a href="#">Sub-1</a></li>
-          <li><a href="#">Sub-2</a></li>
-          <li><a href="#">Sub-3</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+  <ul class="dropmenu-x app">
+    <li>
+      <a href="#" (click)="false"><i class="icon icon-x-home-light"></i><span>My App</span></a>
+      <ul class="submenu" aria-label="submenu">
+        <li><a href="#" (click)="exitDashboard(); false">Visit App</a></li>
+      </ul>
+    </li>
+  </ul>
 
   <nav class="nav">
 
     <div class="secondary" [class.visible]="navService.menuVisible">
       <div class="container">
 
-        <div class="body">
+        <ul class="body">
 
-          <ul class="list menu">
-            <li class="item" *ngFor="let menuItem of menuItems" [class]="menuItem.name">
-              <a
-                (click)="navService.toggleMenu()"
-                [usefulRouterLink]="menuItem.routerLink"
-                usefulRouterLinkActive="active"
-                [usefulRouterLinkActiveOptions]="{exact: true}"
-                [usefulRouterBackwardable]="false"
-              >
-                <i class="icon" [class]="menuItem.icon"></i>
-                <span>{{ t(menuItem.text || '') || menuItem.text }}</span>
-              </a>
-            </li>
-          </ul>
+          <li class="item dashboard">
+            <a
+              (click)="navService.toggleMenu()"
+              [usefulRouterLink]="['admin']"
+              usefulRouterLinkActive="active"
+              [usefulRouterLinkActiveOptions]="{exact: true}"
+              [usefulRouterBackwardable]="false"
+            >
+              <i class="icon icon-x-dashboard-light"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
 
-        </div>
+          <li class="item" *ngFor="let menuItem of menuItems" [class]="menuItem.name">
+            <a
+              (click)="navService.toggleMenu()"
+              [usefulRouterLink]="menuItem.routerLink"
+              usefulRouterLinkActive="active"
+              [usefulRouterLinkActiveOptions]="{exact: true}"
+              [usefulRouterBackwardable]="false"
+            >
+              <i class="icon" [class]="menuItem.icon"></i>
+              <span>{{ t(menuItem.text || '') || menuItem.text }}</span>
+            </a>
+          </li>
+
+        </ul>
 
       </div>
 
@@ -62,21 +69,19 @@
 
   </nav>
 
-  <div class="menu-x user" *ngIf="userService.currentUser">
-    <ul>
-      <li>
-        <a href="#">
-          <span>Howdy, {{ userService.data?.displayName || 'user' }}</span>
-          <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
-        </a>
-        <ul class="submenu" aria-label="submenu">
-          <li><a href="#">Sub-1</a></li>
-          <li><a href="#">Sub-2</a></li>
-          <li><a href="#">Sub-3</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+  <ul class="dropmenu-x user" *ngIf="userService.currentUser">
+    <li>
+      <a href="#" (click)="false">
+        <span>Howdy, {{ userService.data?.displayName || 'User' }}</span>
+        <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
+      </a>
+      <ul class="submenu" aria-label="submenu">
+        <li><a href="#">{{ userService.data?.displayName || 'User' }}</a></li>
+        <li><a href="#">Edit Profile</a></li>
+        <li><a href="#">Log Out</a></li>
+      </ul>
+    </li>
+  </ul>
   
 </header>
 </ng-container>

@@ -10,7 +10,6 @@ import {
   TranslocoModule
 } from '@ngneat/transloco';
 import { Injectable, NgModule } from '@angular/core';
-import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
@@ -38,11 +37,11 @@ class CustomHandler implements TranslocoMissingHandler {
         defaultLang: 'en-US',
         fallbackLang: 'en-US',
         reRenderOnLangChange: true,
-        prodMode: environment.production,
+        prodMode: true,
       })
     },
     { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader },
     { provide: TRANSLOCO_MISSING_HANDLER, useClass: CustomHandler },
   ]
 })
-export class AppTranslationModule {}
+export class DashboardTranslationModule {}

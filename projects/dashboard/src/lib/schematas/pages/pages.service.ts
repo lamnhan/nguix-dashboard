@@ -9,7 +9,7 @@ export class PagesService {
     name: 'pages',
     text: 'Pages',
     routerLink: ['admin', 'list', 'pages'],
-    icon: 'icon-dashboard-pages'
+    icon: 'icon-x-pages-light'
   };
 
   constructor() { }

@@ -4,9 +4,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 export const DASHBOARD_CONFIG = new InjectionToken<DashboardConfig>('DashboardConfig');
 
 export function dashboardConfig(config: DashboardConfig) {
-  return {
-    ...config,
-  } as DashboardConfig;
+  return config;
 }
 
 export interface DashboardConfig {

@@ -1,4 +1,4 @@
-@import '../../../skin';
+@import '../../../scss/skin';
 
 .host {
   width: 100%;
@@ -24,8 +24,7 @@
       height: 2.5rem;
       background-size: 100% !important;
       background-color: $dark_background;
-      margin-left: .5rem;
-      margin-right: .75rem;
+      margin: 0 .5rem;
 
       &:hover, &:focus, &:active, &.active {
         background: url('#{$icons}/menu-light-active.svg');
@@ -37,15 +36,18 @@
     display: flex;
     align-items: center;
 
-    ul>li>a {
+    a:first-child {
 
       i {
         background-size: 100% !important;
       }
 
-      &:hover, &:focus, &:active, &.active i {
-        background: url('#{$icons}/mola-light-active.svg');
-      }      
+      &:hover, &:focus, &:active, &.active {
+
+        i {
+          background: url('#{$icons}/mola-light-active.svg');
+        }      
+      }
     }
   }
   
@@ -53,8 +55,22 @@
     display: flex;
     align-items: center;
 
-    span {
-      display: none;
+    a:first-child {
+
+      span {
+        display: none;
+      }
+
+      i {
+        background-size: 100% !important;
+      }
+
+      &:hover, &:focus, &:active, &.active {
+
+        i {
+          background: url('#{$icons}/home-light-active.svg');
+        }      
+      }
     }
   }
 
@@ -82,11 +98,15 @@
         display: flex;
         flex-flow: column;
 
-        .body {
+        ul.body {
+          list-style: none;
+          margin: 0;
+          padding: 1rem 0;
           width: 100%;
           flex: 1;
           overflow-x: hidden;
           overflow-y: scroll;
+
           // hide scrollbar
           -ms-overflow-style: none;
           scrollbar-width: none;
@@ -94,19 +114,32 @@
             display: none;
           }
 
-          ul.menu {
-            padding: 1rem 0;
+          li a {
+            padding: .75rem 1rem;
+            color: $dark_text;
+            text-decoration: none;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            font-weight: 500;
+            border-left: 3px solid rgba(0,0,0,0);
 
-            li a {
-              border: none !important;
-              padding: .5rem 1rem;
-
-              span {
-                margin-left: .5rem;
-              }
+            i {
+              width: 1.5rem;
+              height: 1.5rem;
             }
-          }
 
+            span {
+              flex: 1;
+              margin-left: 1rem;
+            }
+
+            &:hover {
+              color: $dark_active;
+              border-color: $dark_active;
+            }
+
+          }
         }
       }
 
@@ -122,11 +155,6 @@
     align-items: center;
 
     a {
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      border-radius: 100%;
-      overflow: hidden;
 
       &:focus, &:active {
         outline: none;
@@ -137,8 +165,17 @@
       }
 
       img {
-        width: 100%;
+        width: 2rem;
         height: auto;
+      }
+    }
+
+    ul.submenu {
+      left: auto !important;
+      right: 0;
+
+      li:first-child a {
+        color: $dark_text;
       }
     }
   }
