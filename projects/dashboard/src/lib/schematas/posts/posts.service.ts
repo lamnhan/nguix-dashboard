@@ -9,7 +9,7 @@ export class PostsService {
     name: 'posts',
     text: 'Posts',
     routerLink: ['admin', 'list', 'posts'],
-    icon: 'icon-posts'
+    icon: 'icon-dashboard-posts'
   };
 
   constructor() { }

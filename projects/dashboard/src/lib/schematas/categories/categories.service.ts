@@ -9,7 +9,7 @@ export class CategoriesService {
     name: 'categories',
     text: 'Categories',
     routerLink: ['admin', 'list', 'categories'],
-    icon: 'icon-categories'
+    icon: 'icon-dashboard-categories'
   };
 
   constructor() { }

@@ -2,15 +2,33 @@
 <header class="host">
 
   <div class="toggler">
-    <button class="icon" [class]="navService.getMenuIcon()" (click)="navService.menuAction()"></button>
+    <button class="icon icon-dashboard-menu" (click)="navService.toggleMenu()"></button>
   </div>
 
-  <div class="vendor">
-    <button class="icon icon-mola"></button>
+  <div class="menu vendor">
+    <ul>
+      <li>
+        <a href="#"><i class="icon icon-dashboard-mola"></i></a>
+        <ul class="submenu" aria-label="submenu">
+          <li><a href="#">Sub-1</a></li>
+          <li><a href="#">Sub-2</a></li>
+          <li><a href="#">Sub-3</a></li>
+        </ul>
+      </li>
+    </ul>
   </div>
 
-  <div class="app">
-    <button><i class="icon icon-home"></i><span>My App</span></button>
+  <div class="menu app">
+    <ul>
+      <li>
+        <a href="#"><i class="icon icon-dashboard-home"></i><span>My App</span></a>
+        <ul class="submenu" aria-label="submenu">
+          <li><a href="#">Sub-1</a></li>
+          <li><a href="#">Sub-2</a></li>
+          <li><a href="#">Sub-3</a></li>
+        </ul>
+      </li>
+    </ul>
   </div>
 
   <nav class="nav">
@@ -44,14 +62,20 @@
 
   </nav>
 
-  <div class="user">
-    <a
-      class="avatar"
-      *ngIf="userService.currentUser"
-    >
-      <span>Howdy, {{ userService.data?.displayName || 'user' }}</span>
-      <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
-    </a>
+  <div class="menu user" *ngIf="userService.currentUser">
+    <ul>
+      <li>
+        <a href="#">
+          <span>Howdy, {{ userService.data?.displayName || 'user' }}</span>
+          <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
+        </a>
+        <ul class="submenu" aria-label="submenu">
+          <li><a href="#">Sub-1</a></li>
+          <li><a href="#">Sub-2</a></li>
+          <li><a href="#">Sub-3</a></li>
+        </ul>
+      </li>
+    </ul>
   </div>
   
 </header>
