@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:lib": "ng build dashboard && cpy theming styles.scss ../../../dist/dashboard --cwd=projects/dashboard/src --parents && cpy README.md LICENSE dist/dashboard",
+    "build:lib": "ng build dashboard && cpy skin soul theming styles.scss ../../../dist/dashboard --cwd=projects/dashboard/src --parents && cpy README.md LICENSE dist/dashboard",
     "build:app": "ng build",
     "build": "npm run build:app && npm run build:lib",
     "deploy:lib": "cd ./dist/dashboard && npm publish && cd ../../",

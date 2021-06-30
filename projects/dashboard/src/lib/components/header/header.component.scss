@@ -1,4 +1,4 @@
-@import '../../dashboard.component';
+@import '../../../skin';
 
 .host {
   width: 100%;
@@ -18,24 +18,40 @@
 
     button {
       display: inline-block;
-      border: none;
-      padding: 0.25rem;
       outline: none !important;
-      width: 2rem;
-      height: 2rem;
+      border: none;
+      width: 2.5rem;
+      height: 2.5rem;
+      background-size: 100% !important;
+      background-color: $dark_background;
+      margin-left: .5rem;
+      margin-right: .75rem;
 
-      &:active, &:focus, &:hover {
-        background-color: var(--app-color-dark-shade);
+      &:hover, &:focus, &:active, &.active {
+        background: url('#{$icons}/menu-light-active.svg');
       }
     }
   }
 
   .vendor {
-    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+
+    ul>li>a {
+
+      i {
+        background-size: 100% !important;
+      }
+
+      &:hover, &:focus, &:active, &.active i {
+        background: url('#{$icons}/mola-light-active.svg');
+      }      
+    }
   }
   
   .app {
-    margin-left: 1rem;
+    display: flex;
+    align-items: center;
 
     span {
       display: none;

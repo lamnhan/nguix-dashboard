@@ -5,8 +5,8 @@
   margin-top: 114px;
   min-height: calc(100vh - 65px - 49px - 121px); // header - header2nd - footer
 
-  .single-header {
-    margin-top: 65px;
+  &.single-header {
+    margin-top: 46px;
   }
 }
 

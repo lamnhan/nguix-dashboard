@@ -2,13 +2,13 @@
 <header class="host">
 
   <div class="toggler">
-    <button class="icon icon-dashboard-menu" (click)="navService.toggleMenu()"></button>
+    <button class="icon icon-x-menu-light" (click)="navService.toggleMenu()"></button>
   </div>
 
-  <div class="menu vendor">
+  <div class="menu-x vendor">
     <ul>
       <li>
-        <a href="#"><i class="icon icon-dashboard-mola"></i></a>
+        <a href="#"><i class="icon icon-x-mola-light"></i></a>
         <ul class="submenu" aria-label="submenu">
           <li><a href="#">Sub-1</a></li>
           <li><a href="#">Sub-2</a></li>
@@ -18,10 +18,10 @@
     </ul>
   </div>
 
-  <div class="menu app">
+  <div class="menu-x app">
     <ul>
       <li>
-        <a href="#"><i class="icon icon-dashboard-home"></i><span>My App</span></a>
+        <a href="#"><i class="icon icon-x-home-light"></i><span>My App</span></a>
         <ul class="submenu" aria-label="submenu">
           <li><a href="#">Sub-1</a></li>
           <li><a href="#">Sub-2</a></li>
@@ -62,7 +62,7 @@
 
   </nav>
 
-  <div class="menu user" *ngIf="userService.currentUser">
+  <div class="menu-x user" *ngIf="userService.currentUser">
     <ul>
       <li>
         <a href="#">

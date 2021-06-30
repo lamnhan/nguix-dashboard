@@ -1,34 +1,36 @@
-.dashboard-menu {
+.menu-x {
 
   a {
     text-decoration: none !important;
   }
   
   ul {
-    background: darkorange;
+    background: $dark_background;
     list-style: none;
     margin: 0;
     padding-left: 0;
   }
   
   li {
-    color: #fff;
-    background: darkorange;
+    color: $dark_text;
+    background: $dark_background;
     display: block;
     float: left;
-    padding: 1rem;
+    padding: .5rem .75rem;
     position: relative;
     text-decoration: none;
     transition-duration: 0.5s;
   }
     
   li a {
-    color: #fff;
+    color: $dark_text;
+    display: flex;
+    align-items: center;
   }
   
   li:hover,
   li:focus-within {
-    background: red;
+    background: $dark_emphasis;
     cursor: pointer;
   }
   
@@ -37,7 +39,7 @@
   }
   
   ul li ul {
-    background: orange;
+    background: $dark_emphasis;
     visibility: hidden;
     opacity: 0;
     min-width: 5rem;
@@ -52,9 +54,10 @@
   ul li:focus-within > ul,
   ul li ul:hover,
   ul li ul:focus {
-     visibility: visible;
-     opacity: 1;
-     display: block;
+    visibility: visible;
+    opacity: 1;
+    display: block;
+    color: $dark_active;
   }
   
   ul li ul li {

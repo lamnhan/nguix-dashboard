@@ -1,15 +1,12 @@
 @import '@unistylus/core/scss/mixins';
-
-$dashboard_icons: '';
+@import '../skin'; // use $icons
 
 $icons: (
-  dashboard-menu-light: '#{$bootstrap_icons}/dark/list.svg',
-  dashboard-mola-light: '#{$bootstrap_icons}/dark/suit-heart-fill.svg',
-  dashboard-home-light: '#{$bootstrap_icons}/dark/house-fill.svg',
-  dashboard-categories: '#{$bootstrap_icons}/dark/collection-fill.svg',
-  dashboard-tags: '#{$bootstrap_icons}/dark/tags-fill.svg',
-  dashboard-pages: '#{$bootstrap_icons}/dark/file-earmark-fill.svg',
-  dashboard-posts: '#{$bootstrap_icons}/dark/file-earmark-text-fill.svg',
+  // general
+  x-mola-light: '#{$icons}/mola-light.svg',
+  x-menu-light: '#{$icons}/menu-light.svg',
+  x-home-light: '#{$icons}/home-light.svg',
+  // content
 );
 
 @include register_app_icons(
