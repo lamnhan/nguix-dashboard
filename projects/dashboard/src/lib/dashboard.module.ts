@@ -8,10 +8,11 @@ import { NguixDashboardHeaderComponentModule } from './components/header/header.
 import { ConfigService, DASHBOARD_CONFIG, dashboardConfig } from './services/config/config.service';
 import { DashboardService } from './services/dashboard/dashboard.service';
 
-import { CategoriesService } from './schematas/categories/categories.service';
-import { TagsService } from './schematas/tags/tags.service';
-import { PagesService } from './schematas/pages/pages.service';
-import { PostsService } from './schematas/posts/posts.service';
+import { FrontPartService } from './parts/front/front.service';
+import { CategoryPartService } from './parts/category/category.service';
+import { TagPartService } from './parts/tag/tag.service';
+import { PagePartService } from './parts/page/page.service';
+import { PostPartService } from './parts/post/post.service';
 
 @NgModule({
   declarations: [],
@@ -21,21 +22,24 @@ import { PostsService } from './schematas/posts/posts.service';
     NguixDashboardHeaderComponentModule
   ],
   providers: [
+    // services
     {
       provide: DASHBOARD_CONFIG,
       useValue: dashboardConfig({
-        collections: [
-          'posts',
-          'pages',
+        parts: [
+          'post',
+          'page',
         ]
       })
     },
     ConfigService,
     DashboardService,
-    CategoriesService,
-    TagsService,
-    PagesService,
-    PostsService,
+    // parts
+    FrontPartService,
+    CategoryPartService,
+    TagPartService,
+    PagePartService,
+    PostPartService,
   ],
   exports: [
     NguixDashboardHeaderComponentModule

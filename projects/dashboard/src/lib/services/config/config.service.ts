@@ -8,10 +8,11 @@ export function dashboardConfig(config: DashboardConfig) {
 }
 
 export interface DashboardConfig {
-  collections: Array<string | CustomSchemata>;
+  parts: Array<string | CustomPart>;
 }
 
-export interface CustomSchemata {
+export interface CustomPart {
+  collection?: string;
   menuItem: MenuItem;
 }
 
@@ -20,7 +21,13 @@ export interface CustomSchemata {
 })
 export class ConfigService {
   constructor(@Inject(DASHBOARD_CONFIG) private config: DashboardConfig) {}
+
   getConfig() {
+    // include front by default
+    if (this.config.parts.indexOf('front') === -1) {
+      this.config.parts.unshift('front');
+    }
+    // final config
     return this.config;
   }
 }

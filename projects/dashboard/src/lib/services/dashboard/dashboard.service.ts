@@ -3,41 +3,46 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 
 import { ConfigService } from '../config/config.service';
 
-import { CategoriesService } from '../../schematas/categories/categories.service';
-import { TagsService } from '../../schematas/tags/tags.service';
-import { PagesService } from '../../schematas/pages/pages.service';
-import { PostsService } from '../../schematas/posts/posts.service';
+import { FrontPartService } from '../../parts/front/front.service';
+import { CategoryPartService } from '../../parts/category/category.service';
+import { TagPartService } from '../../parts/tag/tag.service';
+import { PagePartService } from '../../parts/page/page.service';
+import { PostPartService } from '../../parts/post/post.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  private readonly unknownMenuItem: MenuItem = {
-    name: 'unknown', text: 'Unknown', routerLink: ['admin'], icon: 'icon-unknown'
-  };
 
   constructor(
+    // services
     private configService: ConfigService,
-    public readonly categoriesService: CategoriesService,
-    public readonly tagsService: TagsService,
-    public readonly pagesService: PagesService,
-    public readonly postsService: PostsService,
+    // parts
+    public readonly frontPart: FrontPartService,
+    public readonly categoryPart: CategoryPartService,
+    public readonly tagPart: TagPartService,
+    public readonly pagePart: PagePartService,
+    public readonly postPart: PostPartService,
   ) {}
 
   getMenu() {
-    const {collections} = this.configService.getConfig();
-    return collections.map(input =>
-      typeof input !== 'string'
-      ? input.menuItem
-      : input === 'categories'
-      ? this.categoriesService.menuItem
-      : input === 'tags'
-      ? this.tagsService.menuItem
-      : input === 'pages'
-      ? this.pagesService.menuItem
-      : input === 'posts'
-      ? this.postsService.menuItem
-      : this.unknownMenuItem
-    );
+    const {parts} = this.configService.getConfig();
+    return parts
+      .map(part =>
+        typeof part !== 'string'
+        ? part.menuItem
+        : part === 'front'
+        ? this.frontPart.menuItem
+        : part === 'category'
+        ? this.categoryPart.menuItem
+        : part === 'tag'
+        ? this.tagPart.menuItem
+        : part === 'page'
+        ? this.pagePart.menuItem
+        : part === 'post'
+        ? this.postPart.menuItem
+        : null
+      )
+      .filter(item => !!item) as MenuItem[];
   }
 }

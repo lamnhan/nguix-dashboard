@@ -71,10 +71,7 @@
   }
 
   // sub-menu visible
-  & li:hover > ul,
-  & li:focus-within > ul,
-  & li ul:hover,
-  & li ul:focus {
+  & li:hover > ul {
     display: block;
     visibility: visible;
     opacity: 1;

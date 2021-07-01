@@ -4,5 +4,18 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
 @NgModule({
   exports: [NguixDashboardModule],
   imports: [],
+  providers: [
+    {
+      provide: DASHBOARD_CONFIG,
+      useValue: dashboardConfig({
+        parts: [
+          'post',
+          'page',
+          'category',
+          'tag'
+        ]
+      }),
+    }
+  ]
 })
 export class AppDashboardModule {}

@@ -8,11 +8,15 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then(m => m.NguixDashboardHomePageModule),
   },
   {
-    path: 'admin/list/:collection', canLoad: [AdminGuard], canActivate: [AdminGuard],
+    path: 'admin/list/:part', canLoad: [AdminGuard], canActivate: [AdminGuard],
     loadChildren: () => import('./pages/list/list.module').then(m => m.NguixDashboardListPageModule),
   },
   {
-    path: 'admin/edit/:collection/:doc', canLoad: [AdminGuard], canActivate: [AdminGuard],
+    path: 'admin/new/:part', canLoad: [AdminGuard], canActivate: [AdminGuard],
+    loadChildren: () => import('./pages/edit/edit.module').then(m => m.NguixDashboardEditPageModule),
+  },
+  {
+    path: 'admin/edit/:part/:id', canLoad: [AdminGuard], canActivate: [AdminGuard],
     loadChildren: () => import('./pages/edit/edit.module').then(m => m.NguixDashboardEditPageModule),
   }
 ];

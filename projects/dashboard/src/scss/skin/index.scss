@@ -62,6 +62,7 @@ $dark_active: #72aee6;
 
 @mixin icon_variant($path) {
   background-size: 100% !important;
+  background-repeat: no-repeat;
   background: url('#{$path}');
 }
 

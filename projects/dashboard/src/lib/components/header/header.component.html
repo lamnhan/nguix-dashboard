@@ -9,7 +9,7 @@
     <li>
       <a href="#" (click)="false"><i class="icon icon-dashboard-mola"></i></a>
       <ul class="submenu" aria-label="submenu">
-        <li><a [usefulRouterLink]="['admin', 'about']">About Mola</a></li>
+        <li><a [usefulRouterLink]="['admin', 'about']">About Dashboard</a></li>
         <li><a href="https://mola.lamnhan.com" target="_blank">Mola Home</a></li>
         <li><a href="https://mola.lamnhan.com/docs" target="_blank">Documentation</a></li>
         <li><a href="mailto:mola@lamnhan.com">Support</a></li>
@@ -34,44 +34,12 @@
 
         <ul class="body dashboard-menu">
 
-          <li class="home">
-            <a
-              (click)="navService.toggleMenu()"
-              [usefulRouterLink]="['admin']"
-              usefulRouterLinkActive="active"
-              [usefulRouterLinkActiveOptions]="{exact: true, also: ['admin/about']}"
-              [usefulRouterBackwardable]="false"
-            >
-              <i class="icon icon-dashboard-dashboard"></i>
-              <span>Dashboard</span>
-            </a>
-            <ul class="submenu">
-              <li>
-                <a
-                  (click)="navService.toggleMenu()"
-                  [usefulRouterLink]="['admin']"
-                  usefulRouterLinkActive="active"
-                  [usefulRouterLinkActiveOptions]="{exact: true}"
-                  [usefulRouterBackwardable]="false"
-                >Home</a>
-              </li>
-              <li>
-                <a
-                  (click)="navService.toggleMenu()"
-                  [usefulRouterLink]="['admin', 'about']"
-                  usefulRouterLinkActive="active"
-                  [usefulRouterBackwardable]="false"
-                >About</a>
-              </li>
-            </ul>
-          </li>
-
           <li [class]="menuItem.name" *ngFor="let menuItem of menuItems">
             <a
               (click)="navService.toggleMenu()"
               [usefulRouterLink]="menuItem.routerLink"
               usefulRouterLinkActive="active"
-              [usefulRouterLinkActiveOptions]="{also: menuItem.activeAlso || []}"
+              [usefulRouterLinkActiveOptions]="{exact: true, also: menuItem.activeAlso || []}"
               [usefulRouterBackwardable]="false"
             >
               <i class="icon" [class]="menuItem.icon"></i>
@@ -83,8 +51,9 @@
                   (click)="navService.toggleMenu()"
                   [usefulRouterLink]="subItem.routerLink"
                   usefulRouterLinkActive="active"
+                  [usefulRouterLinkActiveOptions]="{exact: true}"
                   [usefulRouterBackwardable]="false"
-                >{{ subItem.text }}</a>
+                >{{ t(subItem.text || '') || subItem.text }}</a>
               </li>
             </ul>
           </li>

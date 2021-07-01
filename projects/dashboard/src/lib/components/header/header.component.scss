@@ -111,17 +111,7 @@
               }
             }
 
-            &.home a:first-child {
-              @include icon_hover_filter('dark_active');
-              @include icon_active_filter('dark_text');
-            }
-
-            &.pages a:first-child {
-              @include icon_hover_filter('dark_active');
-              @include icon_active_filter('dark_text');
-            }
-
-            &.posts a:first-child {
+            a:first-child {
               @include icon_hover_filter('dark_active');
               @include icon_active_filter('dark_text');
             }

@@ -4,7 +4,7 @@ h3.dashboard,
 h4.dashboard,
 h5.dashboard,
 h6.dashboard {
-  font-family: var(--app-font-head);
+  font-family: $font_head;
   font-weight: 500;
 }
 
@@ -14,18 +14,13 @@ a.dashboard {
 
   &:hover, &:focus, &:active {
     color: $primary_emphasis;
-    text-decoration: underline;
     border: none;
     background: none;
     outline: 0;
   }
-
+  
   &.muted {
-    color: $dark_medium;
-
-    &:hover, &:focus, &:active {
-      color: $dark_text;
-      text-decoration: none;
-    }
+    color: $primary_medium;
+    text-decoration: underline;
   }
 }
