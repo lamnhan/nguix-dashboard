@@ -16,17 +16,19 @@
     display: flex;
     align-items: center;
 
+    & {
+      @include icon_hover_active_filter('dark_active');
+    }
+
     button {
       display: inline-block;
       outline: none !important;
       border: none;
       width: 2.5rem;
       height: 2.5rem;
-      background-color: $dark_background;
+      background-color: rgba(0,0,0,0);
       margin: 0 .5rem;
     }
-
-    @include icon_hover_active('menu/dark/active');
   }
 
   .vendor {
@@ -34,7 +36,7 @@
     align-items: center;
 
     a:first-child {
-      @include icon_hover_active('mola/dark/active');
+      @include icon_hover_active_filter('dark_active');
     }
   }
   
@@ -43,7 +45,10 @@
     align-items: center;
 
     a:first-child {
-      @include icon_hover_active('home/dark/active');
+
+      & {
+        @include icon_hover_active_filter('dark_active');
+      }
 
       span {
         display: none;
@@ -107,18 +112,18 @@
             }
 
             &.home a:first-child {
-              @include icon_hover('dashboard/dark/active');
-              @include icon_active('dashboard/dark/text');
+              @include icon_hover_filter('dark_active');
+              @include icon_active_filter('dark_text');
             }
 
             &.pages a:first-child {
-              @include icon_hover('pages/dark/active');
-              @include icon_active('pages/dark/text');
+              @include icon_hover_filter('dark_active');
+              @include icon_active_filter('dark_text');
             }
 
             &.posts a:first-child {
-              @include icon_hover('posts/dark/active');
-              @include icon_active('posts/dark/text');
+              @include icon_hover_filter('dark_active');
+              @include icon_active_filter('dark_text');
             }
           }
         }

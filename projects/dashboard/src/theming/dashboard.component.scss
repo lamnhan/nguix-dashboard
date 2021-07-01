@@ -3,13 +3,13 @@
 
 $icons: (
   // general
-  mola-dark-medium: '#{$icons}/mola/dark/medium.svg',
-  menu-dark-medium: '#{$icons}/menu/dark/medium.svg',
-  home-dark-medium: '#{$icons}/home/dark/medium.svg',
+  dashboard-mola: '#{$dashboard_icons}/mola.svg',
+  dashboard-menu: '#{$dashboard_icons}/menu.svg',
+  dashboard-home: '#{$dashboard_icons}/home.svg',
   // content
-  dashboard-dark-medium: '#{$icons}/dashboard/dark/medium.svg',
-  pages-dark-medium: '#{$icons}/pages/dark/medium.svg',
-  posts-dark-medium: '#{$icons}/posts/dark/medium.svg',
+  dashboard-dashboard: '#{$dashboard_icons}/dashboard.svg',
+  dashboard-pages: '#{$dashboard_icons}/pages.svg',
+  dashboard-posts: '#{$dashboard_icons}/posts.svg',
 );
 
 @include register_app_icons(

@@ -2,12 +2,12 @@
 <header class="host dashboard">
 
   <div class="toggler">
-    <button class="icon icon-menu-dark-medium" (click)="navService.toggleMenu()"></button>
+    <button class="icon icon-dashboard-menu" (click)="navService.toggleMenu()"></button>
   </div>
 
   <ul class="vendor dashboard-dropmenu">
     <li>
-      <a href="#" (click)="false"><i class="icon icon-mola-dark-medium"></i></a>
+      <a href="#" (click)="false"><i class="icon icon-dashboard-mola"></i></a>
       <ul class="submenu" aria-label="submenu">
         <li><a [usefulRouterLink]="['admin', 'about']">About Mola</a></li>
         <li><a href="https://mola.lamnhan.com" target="_blank">Mola Home</a></li>
@@ -20,7 +20,7 @@
 
   <ul class="app dashboard-dropmenu">
     <li>
-      <a href="#" (click)="false"><i class="icon icon-home-dark-medium"></i><span>My App</span></a>
+      <a href="#" (click)="false"><i class="icon icon-dashboard-home"></i><span>My App</span></a>
       <ul class="submenu" aria-label="submenu">
         <li><a href="#" (click)="exitDashboard(); false">Visit App</a></li>
       </ul>
@@ -42,7 +42,7 @@
               [usefulRouterLinkActiveOptions]="{exact: true, also: ['admin/about']}"
               [usefulRouterBackwardable]="false"
             >
-              <i class="icon icon-dashboard-dark-medium"></i>
+              <i class="icon icon-dashboard-dashboard"></i>
               <span>Dashboard</span>
             </a>
             <ul class="submenu">

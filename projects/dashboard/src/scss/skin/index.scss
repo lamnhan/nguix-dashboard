@@ -1,4 +1,4 @@
-$icons: '/assets/icons';
+$dashboard_icons: '/assets/icons';
 
 $font_head: 'Georgia', 'Times New Roman', serif;
 $font_body: 'Segoe UI', 'Ubuntu', sans-serif;
@@ -21,13 +21,51 @@ $dark_text: #ffffff;
 $dark_medium: #a7aaad;
 $dark_active: #72aee6;
 
-// move this to unistylus
-@mixin icon_variant($path) {
-  background-size: 100% !important;
-  background: url('#{$icons}/#{$path}.svg');
+@mixin icon_filter($name) {
+  // dark
+  @if $name == 'dark_background' {
+    filter: brightness(0) saturate(100%) invert(11%) sepia(6%) saturate(1549%) hue-rotate(161deg) brightness(98%) contrast(93%);
+  } @else if $name == 'dark_emphasis' {
+    filter: brightness(0) saturate(100%) invert(15%) sepia(18%) saturate(490%) hue-rotate(162deg) brightness(92%) contrast(86%);
+  } @else if $name == 'dark_text' {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(22deg) brightness(103%) contrast(103%);
+  } @else if $name == 'dark_medium' {
+    filter: brightness(0) saturate(100%) invert(76%) sepia(7%) saturate(136%) hue-rotate(169deg) brightness(91%) contrast(85%);
+  } @else if $name == 'dark_active' {
+    filter: brightness(0) saturate(100%) invert(62%) sepia(72%) saturate(433%) hue-rotate(181deg) brightness(95%) contrast(90%);
+  }
 }
 
-@mixin icon_hover($path) {
+@mixin icon_hover_filter($name) {
+  &:hover, &:focus {
+    .icon {
+      @include icon_filter($name);
+    }
+  }
+}
+
+@mixin icon_active_filter($name) {
+  &:active, &.active {
+    .icon {
+      @include icon_filter($name);
+    }
+  }
+}
+
+@mixin icon_hover_active_filter($name) {
+  &:hover, &:focus, &:active, &.active {
+    .icon {
+      @include icon_filter($name);
+    }
+  }
+}
+
+@mixin icon_variant($path) {
+  background-size: 100% !important;
+  background: url('#{$path}');
+}
+
+@mixin icon_hover_variant($path) {
   &:hover, &:focus {
     .icon {
       @include icon_variant($path);
@@ -35,7 +73,7 @@ $dark_active: #72aee6;
   }
 }
 
-@mixin icon_active($path) {
+@mixin icon_active_variant($path) {
   &:active, &.active {
     .icon {
       @include icon_variant($path);
@@ -43,7 +81,7 @@ $dark_active: #72aee6;
   }
 }
 
-@mixin icon_hover_active($path) {
+@mixin icon_hover_active_variant($path) {
   &:hover, &:focus, &:active, &.active {
     .icon {
       @include icon_variant($path);

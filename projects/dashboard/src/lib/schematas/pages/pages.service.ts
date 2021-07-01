@@ -9,7 +9,7 @@ export class PagesService {
     name: 'pages',
     text: 'Pages',
     routerLink: ['admin', 'list', 'pages'],
-    icon: 'icon-pages-dark-medium',
+    icon: 'icon-dashboard-pages',
     activeAlso: [
       'admin/edit/pages/new',
     ],

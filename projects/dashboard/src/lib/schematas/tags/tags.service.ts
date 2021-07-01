@@ -9,7 +9,7 @@ export class TagsService {
     name: 'tags',
     text: 'Tags',
     routerLink: ['admin', 'list', 'tags'],
-    icon: 'icon-tags-dark-medium'
+    icon: 'icon-dashboard-tags'
   };
 
   constructor() { }

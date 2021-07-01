@@ -9,7 +9,7 @@ export class PostsService {
     name: 'posts',
     text: 'Posts',
     routerLink: ['admin', 'list', 'posts'],
-    icon: 'icon-posts-dark-medium',
+    icon: 'icon-dashboard-posts',
     activeAlso: [
       'admin/edit/posts/new',
       'admin/list/categories',
