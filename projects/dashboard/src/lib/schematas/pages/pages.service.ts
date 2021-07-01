@@ -9,7 +9,20 @@ export class PagesService {
     name: 'pages',
     text: 'Pages',
     routerLink: ['admin', 'list', 'pages'],
-    icon: 'icon-x-pages-light'
+    icon: 'icon-pages-dark-medium',
+    activeAlso: [
+      'admin/edit/pages/new',
+    ],
+    subItems: [
+      {
+        text: 'All Pages',
+        routerLink: ['admin', 'list', 'pages'],
+      },
+      {
+        text: 'Add New',
+        routerLink: ['admin', 'edit', 'pages', 'new'],
+      }
+    ]
   };
 
   constructor() { }

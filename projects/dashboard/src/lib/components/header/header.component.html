@@ -1,26 +1,26 @@
 <ng-container *transloco="let t">
-<header class="host x">
+<header class="host dashboard">
 
   <div class="toggler">
-    <button class="icon icon-x-menu-light" (click)="navService.toggleMenu()"></button>
+    <button class="icon icon-menu-dark-medium" (click)="navService.toggleMenu()"></button>
   </div>
 
-  <ul class="dropmenu-x vendor">
+  <ul class="vendor dashboard-dropmenu">
     <li>
-      <a href="#" (click)="false"><i class="icon icon-x-mola-light"></i></a>
+      <a href="#" (click)="false"><i class="icon icon-mola-dark-medium"></i></a>
       <ul class="submenu" aria-label="submenu">
-        <li><a href="#">About Mola</a></li>
-        <li><a href="#">Mola Home</a></li>
-        <li><a href="#">Documentation</a></li>
-        <li><a href="#">Support</a></li>
-        <li><a href="#">Feedback</a></li>
+        <li><a [usefulRouterLink]="['admin', 'about']">About Mola</a></li>
+        <li><a href="https://mola.lamnhan.com" target="_blank">Mola Home</a></li>
+        <li><a href="https://mola.lamnhan.com/docs" target="_blank">Documentation</a></li>
+        <li><a href="mailto:mola@lamnhan.com">Support</a></li>
+        <li><a href="mailto:mola@lamnhan.com">Feedback</a></li>
       </ul>
     </li>
   </ul>
 
-  <ul class="dropmenu-x app">
+  <ul class="app dashboard-dropmenu">
     <li>
-      <a href="#" (click)="false"><i class="icon icon-x-home-light"></i><span>My App</span></a>
+      <a href="#" (click)="false"><i class="icon icon-home-dark-medium"></i><span>My App</span></a>
       <ul class="submenu" aria-label="submenu">
         <li><a href="#" (click)="exitDashboard(); false">Visit App</a></li>
       </ul>
@@ -32,32 +32,61 @@
     <div class="secondary" [class.visible]="navService.menuVisible">
       <div class="container">
 
-        <ul class="body">
+        <ul class="body dashboard-menu">
 
-          <li class="item dashboard">
+          <li class="home">
             <a
               (click)="navService.toggleMenu()"
               [usefulRouterLink]="['admin']"
               usefulRouterLinkActive="active"
-              [usefulRouterLinkActiveOptions]="{exact: true}"
+              [usefulRouterLinkActiveOptions]="{exact: true, also: ['admin/about']}"
               [usefulRouterBackwardable]="false"
             >
-              <i class="icon icon-x-dashboard-light"></i>
+              <i class="icon icon-dashboard-dark-medium"></i>
               <span>Dashboard</span>
             </a>
+            <ul class="submenu">
+              <li>
+                <a
+                  (click)="navService.toggleMenu()"
+                  [usefulRouterLink]="['admin']"
+                  usefulRouterLinkActive="active"
+                  [usefulRouterLinkActiveOptions]="{exact: true}"
+                  [usefulRouterBackwardable]="false"
+                >Home</a>
+              </li>
+              <li>
+                <a
+                  (click)="navService.toggleMenu()"
+                  [usefulRouterLink]="['admin', 'about']"
+                  usefulRouterLinkActive="active"
+                  [usefulRouterBackwardable]="false"
+                >About</a>
+              </li>
+            </ul>
           </li>
 
-          <li class="item" *ngFor="let menuItem of menuItems" [class]="menuItem.name">
+          <li [class]="menuItem.name" *ngFor="let menuItem of menuItems">
             <a
               (click)="navService.toggleMenu()"
               [usefulRouterLink]="menuItem.routerLink"
               usefulRouterLinkActive="active"
-              [usefulRouterLinkActiveOptions]="{exact: true}"
+              [usefulRouterLinkActiveOptions]="{also: menuItem.activeAlso || []}"
               [usefulRouterBackwardable]="false"
             >
               <i class="icon" [class]="menuItem.icon"></i>
               <span>{{ t(menuItem.text || '') || menuItem.text }}</span>
             </a>
+            <ul class="submenu">
+              <li *ngFor="let subItem of menuItem.subItems">
+                <a
+                  (click)="navService.toggleMenu()"
+                  [usefulRouterLink]="subItem.routerLink"
+                  usefulRouterLinkActive="active"
+                  [usefulRouterBackwardable]="false"
+                >{{ subItem.text }}</a>
+              </li>
+            </ul>
           </li>
 
         </ul>
@@ -69,16 +98,16 @@
 
   </nav>
 
-  <ul class="dropmenu-x user" *ngIf="userService.currentUser">
+  <ul class="user dashboard-dropmenu" *ngIf="userService.currentUser">
     <li>
       <a href="#" (click)="false">
         <span>Howdy, {{ userService.data?.displayName || 'User' }}</span>
         <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
       </a>
       <ul class="submenu" aria-label="submenu">
-        <li><a href="#">{{ userService.data?.displayName || 'User' }}</a></li>
-        <li><a href="#">Edit Profile</a></li>
-        <li><a href="#">Log Out</a></li>
+        <li><a [usefulRouterLink]="[userService.data?.username || 'account']">{{ userService.data?.displayName || 'User' }}</a></li>
+        <li><a [usefulRouterLink]="['account']">Edit Profile</a></li>
+        <li><a href="#" (click)="logOut(); false">Log Out</a></li>
       </ul>
     </li>
   </ul>

@@ -6,8 +6,8 @@ $font_body: 'Segoe UI', 'Ubuntu', sans-serif;
 $primary_background: #135e96;
 $primary_emphasis: #0a4b78;
 $primary_text: #ffffff;
-$primary_medium: #a7aaad;
-$primary_active: #72aee6;
+$primary_medium: #8c8f94;
+$primary_active: #2271b1;
 
 $light_background: #ffffff;
 $light_emphasis: #f0f0f1;
@@ -20,3 +20,33 @@ $dark_emphasis: #2c3338;
 $dark_text: #ffffff;
 $dark_medium: #a7aaad;
 $dark_active: #72aee6;
+
+// move this to unistylus
+@mixin icon_variant($path) {
+  background-size: 100% !important;
+  background: url('#{$icons}/#{$path}.svg');
+}
+
+@mixin icon_hover($path) {
+  &:hover, &:focus {
+    .icon {
+      @include icon_variant($path);
+    }
+  }
+}
+
+@mixin icon_active($path) {
+  &:active, &.active {
+    .icon {
+      @include icon_variant($path);
+    }
+  }
+}
+
+@mixin icon_hover_active($path) {
+  &:hover, &:focus, &:active, &.active {
+    .icon {
+      @include icon_variant($path);
+    }
+  }
+}

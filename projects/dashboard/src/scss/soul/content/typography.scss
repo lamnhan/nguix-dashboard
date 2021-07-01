@@ -1,9 +1,14 @@
-h1.x, h2.x, h3.x, h4.x, h5.x, h6.x {
+h1.dashboard,
+h2.dashboard,
+h3.dashboard,
+h4.dashboard,
+h5.dashboard,
+h6.dashboard {
   font-family: var(--app-font-head);
   font-weight: 500;
 }
 
-a.x {
+a.dashboard {
   color: $primary_background;
   text-decoration: none;
 

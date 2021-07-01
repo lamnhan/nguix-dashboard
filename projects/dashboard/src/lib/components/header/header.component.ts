@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem, AppService, NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
+import { MenuItem, AppService, NavService, SettingService, AuthService, UserService } from '@lamnhan/ngx-useful';
 
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
     public readonly appService: AppService,
     public readonly navService: NavService,
     public readonly settingService: SettingService,
+    public readonly authService: AuthService,
     public readonly userService: UserService,
     public readonly dashboardService: DashboardService,
   ) {}
@@ -26,5 +27,17 @@ export class HeaderComponent implements OnInit {
   exitDashboard() {
     this.settingService.changePersona('default');
     this.navService.navigate(['']);
+  }
+
+  logOut() {
+    const yes = confirm('Log out?');
+    if (yes) {
+      this.authService.signOut();
+    } else {
+      const exit = confirm('Exit dashboard?');
+      if (exit) {
+        this.exitDashboard();
+      }
+    }
   }
 }

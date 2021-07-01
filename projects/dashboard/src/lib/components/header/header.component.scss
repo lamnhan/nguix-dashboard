@@ -22,14 +22,11 @@
       border: none;
       width: 2.5rem;
       height: 2.5rem;
-      background-size: 100% !important;
       background-color: $dark_background;
       margin: 0 .5rem;
-
-      &:hover, &:focus, &:active, &.active {
-        background: url('#{$icons}/menu-light-active.svg');
-      }
     }
+
+    @include icon_hover_active('menu/dark/active');
   }
 
   .vendor {
@@ -37,17 +34,7 @@
     align-items: center;
 
     a:first-child {
-
-      i {
-        background-size: 100% !important;
-      }
-
-      &:hover, &:focus, &:active, &.active {
-
-        i {
-          background: url('#{$icons}/mola-light-active.svg');
-        }      
-      }
+      @include icon_hover_active('mola/dark/active');
     }
   }
   
@@ -56,20 +43,10 @@
     align-items: center;
 
     a:first-child {
+      @include icon_hover_active('home/dark/active');
 
       span {
         display: none;
-      }
-
-      i {
-        background-size: 100% !important;
-      }
-
-      &:hover, &:focus, &:active, &.active {
-
-        i {
-          background: url('#{$icons}/home-light-active.svg');
-        }      
       }
     }
   }
@@ -94,15 +71,12 @@
 
       .container {
         background: $dark_background;
-        width: 175px;
+        width: 200px;
         display: flex;
         flex-flow: column;
 
         ul.body {
-          list-style: none;
-          margin: 0;
           padding: 1rem 0;
-          width: 100%;
           flex: 1;
           overflow-x: hidden;
           overflow-y: scroll;
@@ -114,31 +88,38 @@
             display: none;
           }
 
-          li a {
-            padding: .75rem 1rem;
-            color: $dark_text;
-            text-decoration: none;
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            font-weight: 500;
-            border-left: 3px solid rgba(0,0,0,0);
+          li {
 
-            i {
-              width: 1.5rem;
-              height: 1.5rem;
+            a {
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: center;
+  
+              i {
+                width: 1.5rem;
+                height: 1.5rem;
+              }
+  
+              span {
+                flex: 1;
+                margin-left: 1rem;
+              }
             }
 
-            span {
-              flex: 1;
-              margin-left: 1rem;
+            &.home a:first-child {
+              @include icon_hover('dashboard/dark/active');
+              @include icon_active('dashboard/dark/text');
             }
 
-            &:hover {
-              color: $dark_active;
-              border-color: $dark_active;
+            &.pages a:first-child {
+              @include icon_hover('pages/dark/active');
+              @include icon_active('pages/dark/text');
             }
 
+            &.posts a:first-child {
+              @include icon_hover('posts/dark/active');
+              @include icon_active('posts/dark/text');
+            }
           }
         }
       }
@@ -205,7 +186,7 @@
     .secondary {
       left: 0;
       opacity: 1;
-      width: 175px;
+      width: 200px;
     }
   }
 }
