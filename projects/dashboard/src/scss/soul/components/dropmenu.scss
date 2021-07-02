@@ -1,79 +1,82 @@
-.dashboard-dropmenu {
-  z-index: 9;
-  
-  // main menu
-  & {
-    background: $dark;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.dashboard {
 
-    li {
-      color: $dark_contrast;
+  .dropmenu {
+    z-index: 9;
+    
+    // main menu
+    & {
       background: $dark;
-      display: block;
-      float: left;
+      list-style: none;
+      margin: 0;
       padding: 0;
-      position: relative;
-      text-decoration: none;
-      transition-duration: 0.5s;
-
-      a {
-        display: flex;
-        align-items: center;
-        text-decoration: none !important;
-        color: $medium_tint;
-        padding: .45rem .75rem;
+  
+      li {
+        color: $dark_contrast;
+        background: $dark;
+        display: block;
+        float: left;
+        padding: 0;
+        position: relative;
+        text-decoration: none;
+        transition-duration: 0.5s;
+  
+        a {
+          display: flex;
+          align-items: center;
+          text-decoration: none !important;
+          color: $medium_tint;
+          padding: .45rem .75rem;
+        }
+        
+        &:hover, &:focus-within {
+          background: $dark_tint;
+          cursor: pointer;
+  
+          a {
+            outline: none;
+          }
+        }
       }
-      
-      &:hover, &:focus-within {
+    }
+  
+    // sub-menu
+    & li ul {
+      width: 100vw;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      background: $dark_tint;
+      visibility: hidden;
+      opacity: 0;
+      min-width: 5rem;
+      position: fixed;
+      transition: all 0.5s ease;
+      left: 0;
+      display: none;
+  
+      li {
+        clear: both;
+        width: 100%;
         background: $dark_tint;
         cursor: pointer;
-
+  
         a {
-          outline: none;
+          display: block;
+          padding: .5rem 1rem;
+          white-space: nowrap;
+  
+          &:hover, &:focus, &:active, &.active {
+            color: $secondary;
+          }
         }
       }
     }
-  }
-
-  // sub-menu
-  & li ul {
-    width: 100vw;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background: $dark_tint;
-    visibility: hidden;
-    opacity: 0;
-    min-width: 5rem;
-    position: fixed;
-    transition: all 0.5s ease;
-    left: 0;
-    display: none;
-
-    li {
-      clear: both;
-      width: 100%;
-      background: $dark_tint;
-      cursor: pointer;
-
-      a {
-        display: block;
-        padding: .5rem 1rem;
-        white-space: nowrap;
-
-        &:hover, &:focus, &:active, &.active {
-          color: $secondary;
-        }
-      }
+  
+    // sub-menu visible
+    & li:hover > ul {
+      display: block;
+      visibility: visible;
+      opacity: 1;
     }
-  }
-
-  // sub-menu visible
-  & li:hover > ul {
-    display: block;
-    visibility: visible;
-    opacity: 1;
   }
 }

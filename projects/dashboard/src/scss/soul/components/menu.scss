@@ -1,69 +1,72 @@
-.dashboard-menu {
+.dashboard {
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
-
-  // menu
-  & {
-
-    li a {
-      padding: .75rem 1rem;
-      color: $dark_contrast;
-      text-decoration: none;
-      font-weight: 500;
-      border-left: 3px solid rgba(0,0,0,0);
-
-      &:hover, &:focus {
-        color: $secondary;
-        border-color: $secondary;
-      }
-
-      &:active, &.active {
-        background: $secondary;
-        color: $dark_contrast;
-
-        &:hover, &:focus {
-          border-color: $dark_contrast;
-        }
-      }
+  .menu {
+  
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
     }
-  }
-
-  // sub-menu
-  & li ul {
-    display: none;
-    background: $dark_tint;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-
-    li a {
-      padding: .5rem 1rem .5rem 2.5rem;
-      font-weight: 400;
-      color: $medium_tint;
-      
-      &:hover, &:focus {
-        color: $secondary;
-      }
-
-      &:active, &.active {
+  
+    // menu
+    & {
+  
+      li a {
+        padding: .75rem 1rem;
+        color: $dark_contrast;
+        text-decoration: none;
         font-weight: 500;
-        background: none;
-        color: $dark_contrast;
-
+        border-left: 3px solid rgba(0,0,0,0);
+  
         &:hover, &:focus {
-          border-color: $dark_contrast;
+          color: $secondary;
+          border-color: $secondary;
+        }
+  
+        &:active, &.active {
+          background: $secondary;
+          color: $dark_contrast;
+  
+          &:hover, &:focus {
+            border-color: $dark_contrast;
+          }
         }
       }
     }
+  
+    // sub-menu
+    & li ul {
+      display: none;
+      background: $dark_tint;
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+  
+      li a {
+        padding: .5rem 1rem .5rem 2.5rem;
+        font-weight: 400;
+        color: $medium_tint;
+        
+        &:hover, &:focus {
+          color: $secondary;
+        }
+  
+        &:active, &.active {
+          font-weight: 500;
+          background: none;
+          color: $dark_contrast;
+  
+          &:hover, &:focus {
+            border-color: $dark_contrast;
+          }
+        }
+      }
+    }
+  
+    // active
+    & li a.active + ul {
+      display: block;
+    }
+  
   }
-
-  // active
-  & li a.active + ul {
-    display: block;
-  }
-
 }

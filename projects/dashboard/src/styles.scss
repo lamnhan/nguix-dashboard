@@ -4,8 +4,11 @@
 // register soul
 @import './scss/soul/core';
 @import './scss/soul/content/typography';
+@import './scss/soul/forms/control';
+@import './scss/soul/components/button';
 @import './scss/soul/components/menu';
 @import './scss/soul/components/dropmenu';
+@import './scss/soul/components/card';
 
 // register lib
 @import './theming/dashboard.module';
