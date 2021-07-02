@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
+import { TagDataService } from '@lamnhan/ngx-schemata';
+
+import { GetAllResult, GetItemResult } from '../../services/config/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +28,13 @@ export class TagPartService {
     ]
   };
 
-  public readonly collection = 'tags';
+  constructor(private dataService: TagDataService) {}
 
-  constructor() { }
+  getAll() {
+    return this.dataService.getCollection(undefined, false) as unknown as GetAllResult;
+  }
+
+  getItem(id: string) {
+    return this.dataService.getDoc(id, false) as unknown as GetItemResult
+  }
 }

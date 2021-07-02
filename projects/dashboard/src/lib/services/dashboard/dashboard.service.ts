@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 
-import { ConfigService, CustomPart } from '../config/config.service';
+import { ConfigService, DashboardPart } from '../config/config.service';
 
 import { FrontPartService } from '../../parts/front/front.service';
 import { CategoryPartService } from '../../parts/category/category.service';
@@ -25,7 +25,7 @@ export class DashboardService {
     public readonly postPart: PostPartService,
   ) {}
 
-  getPart(part: string) {
+  getPart(part: string): undefined | DashboardPart {
     switch (part) {
       case 'front':
         return this.frontPart;
@@ -42,7 +42,7 @@ export class DashboardService {
           .getConfig()
           .parts
           .filter(item => typeof item !== 'string' && item.name === part)
-          .shift() as (undefined | CustomPart);
+          .shift() as (undefined | DashboardPart);
     }
   }
 

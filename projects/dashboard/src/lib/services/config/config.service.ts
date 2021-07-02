@@ -1,4 +1,5 @@
 import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
 import { MenuItem } from '@lamnhan/ngx-useful';
 
 export const DASHBOARD_CONFIG = new InjectionToken<DashboardConfig>('DashboardConfig');
@@ -8,14 +9,19 @@ export function dashboardConfig(config: DashboardConfig) {
 }
 
 export interface DashboardConfig {
-  parts: Array<string | CustomPart>;
+  parts: Array<string | DashboardPart>;
 }
 
-export interface CustomPart {
+export interface DashboardPart {
   name: string;
   menuItem: MenuItem;
-  collection?: string;
+  getAll?: () => GetAllResult;
+  getItem?: (id: string) => GetItemResult;
 }
+
+export type DatabaseItem = Record<string, any>;
+export type GetAllResult = Observable<DatabaseItem[]>;
+export type GetItemResult = Observable<DatabaseItem>;
 
 @Injectable({
   providedIn: 'root'

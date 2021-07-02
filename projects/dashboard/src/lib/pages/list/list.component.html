@@ -1,41 +1,58 @@
-<div class="host dashboard page">
+<div class="host dashboard page" *ngIf="data$ | async as data; else loading">
 
-  <section class="head">
-    <div class="major">
-      <div class="title">
-        <h1>Posts</h1>
-        <button class="button-outline-primary">Add New</button>
-      </div>
-      <div class="status">
-        <ul>
-          <li><strong>All</strong><span>(10)</span></li>
-          <li><a href="#">Published</a><span>(5)</span></li>
+  <div class="main" *ngIf="data.part; else notFound">
+
+    <section class="head">
+      <div class="major">
+        <div class="title">
+          <h1>Posts</h1>
+          <a
+            class="button-outline-primary"
+            [usefulRouterLink]="['admin', 'new', data.part.name]"
+          >Add New</a>
+        </div>
+        <ul class="status">
+          <li><strong>All</strong> <span>(10)</span></li>
+          <li><a href="#">Published</a> <span>(5)</span></li>
         </ul>
       </div>
-    </div>
-    <div class="search">
-      <input class="form-control" type="search" placeholder="Search ...">
-    </div>
-  </section>
-
-  <section class="body">
-
-    <div class="card">
-      <div class="card-head">
-        Head
+      <div class="filter">
+        <input class="form-control" type="search" placeholder="Filter items ...">
       </div>
-      <div class="card-body">
-        <ul>
-          <li><a href="#">Post 1</a></li>
-          <li><a href="#">Post 2</a></li>
-          <li><a href="#">Post 3</a></li>
+    </section>
+  
+    <section class="body">
+  
+      <div class="card">
+        <div class="card-head"><h4>All items</h4></div>
+        <ul class="card-body">
+          <li *ngFor="let item of data.items">
+            <a
+              [usefulRouterLink]="['admin', 'edit', data.part.name, item.origin.id]"
+            >{{ item.origin.title }}</a>
+            <ul class="i18n" *ngIf="item.localizedSiblings.length">
+              <li *ngFor="let localizedItem of item.localizedSiblings">
+                <strong>XXX: </strong>
+                <a href="#">{{ localizedItem.title }}</a>
+              </li>
+            </ul>
+          </li>
         </ul>
+        <div class="card-foot">
+          1 | 2 | 3
+        </div>
       </div>
-      <div class="card-foot">
-        1 | 2 | 3
-      </div>
-    </div>
+  
+    </section>
 
-  </section>
+  </div>
+
+  <ng-template #notFound>
+    <div class="none">Not found ...</div>
+  </ng-template>
 
 </div>
+
+<ng-template #loading>
+  <div class="loading">Loading ...</div>
+</ng-template>
