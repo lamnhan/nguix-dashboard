@@ -10,14 +10,15 @@
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  background: $dark_background;
+  background: $dark;
+  font-size: 16px !important;
 
   .toggler {
     display: flex;
     align-items: center;
 
     & {
-      @include icon_hover_active_filter('dark_active');
+      @include icon_hover_active_filter('secondary');
     }
 
     button {
@@ -36,7 +37,7 @@
     align-items: center;
 
     a:first-child {
-      @include icon_hover_active_filter('dark_active');
+      @include icon_hover_active_filter('secondary');
     }
   }
   
@@ -47,7 +48,7 @@
     a:first-child {
 
       & {
-        @include icon_hover_active_filter('dark_active');
+        @include icon_hover_active_filter('secondary');
       }
 
       span {
@@ -75,7 +76,7 @@
       }
 
       .container {
-        background: $dark_background;
+        background: $dark;
         width: 200px;
         display: flex;
         flex-flow: column;
@@ -112,8 +113,8 @@
             }
 
             a:first-child {
-              @include icon_hover_filter('dark_active');
-              @include icon_active_filter('dark_text');
+              @include icon_hover_filter('secondary');
+              @include icon_active_filter('dark_contrast');
             }
           }
         }
@@ -151,7 +152,7 @@
       right: 0;
 
       li:first-child a {
-        color: $dark_text;
+        color: $dark_contrast;
       }
     }
   }

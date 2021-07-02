@@ -12,22 +12,22 @@
 
     li a {
       padding: .75rem 1rem;
-      color: $dark_text;
+      color: $dark_contrast;
       text-decoration: none;
       font-weight: 500;
       border-left: 3px solid rgba(0,0,0,0);
 
       &:hover, &:focus {
-        color: $dark_active;
-        border-color: $dark_active;
+        color: $secondary;
+        border-color: $secondary;
       }
 
       &:active, &.active {
-        background: $primary_active;
-        color: $dark_text;
+        background: $secondary;
+        color: $dark_contrast;
 
         &:hover, &:focus {
-          border-color: $dark_text;
+          border-color: $dark_contrast;
         }
       }
     }
@@ -36,26 +36,26 @@
   // sub-menu
   & li ul {
     display: none;
-    background: $dark_emphasis;
+    background: $dark_tint;
     padding-top: .5rem;
     padding-bottom: .5rem;
 
     li a {
       padding: .5rem 1rem .5rem 2.5rem;
       font-weight: 400;
-      color: $dark_medium;
+      color: $medium_tint;
       
       &:hover, &:focus {
-        color: $dark_active;
+        color: $secondary;
       }
 
       &:active, &.active {
         font-weight: 500;
         background: none;
-        color: $dark_text;
+        color: $dark_contrast;
 
         &:hover, &:focus {
-          border-color: $dark_text;
+          border-color: $dark_contrast;
         }
       }
     }
