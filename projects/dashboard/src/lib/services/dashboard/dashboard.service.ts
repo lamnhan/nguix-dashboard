@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 
-import { ConfigService } from '../config/config.service';
+import { ConfigService, CustomPart } from '../config/config.service';
 
 import { FrontPartService } from '../../parts/front/front.service';
 import { CategoryPartService } from '../../parts/category/category.service';
@@ -25,24 +25,39 @@ export class DashboardService {
     public readonly postPart: PostPartService,
   ) {}
 
+  getPart(part: string) {
+    switch (part) {
+      case 'front':
+        return this.frontPart;
+      case 'category':
+        return this.categoryPart;
+      case 'tag':
+        return this.tagPart;
+      case 'page':
+        return this.pagePart;
+      case 'post':
+        return this.postPart;    
+      default:
+        return this.configService
+          .getConfig()
+          .parts
+          .filter(item => typeof item !== 'string' && item.name === part)
+          .shift() as (undefined | CustomPart);
+    }
+  }
+
   getMenu() {
-    const {parts} = this.configService.getConfig();
-    return parts
-      .map(part =>
-        typeof part !== 'string'
-        ? part.menuItem
-        : part === 'front'
-        ? this.frontPart.menuItem
-        : part === 'category'
-        ? this.categoryPart.menuItem
-        : part === 'tag'
-        ? this.tagPart.menuItem
-        : part === 'page'
-        ? this.pagePart.menuItem
-        : part === 'post'
-        ? this.postPart.menuItem
-        : null
-      )
+    return this.configService
+      .getConfig()
+      .parts
+      .map(item => {
+        if (typeof item === 'string') {
+          const part = this.getPart(item);
+          return !part ? null : part.menuItem;
+        } else {
+          return item.menuItem;
+        }
+      })
       .filter(item => !!item) as MenuItem[];
   }
 }

@@ -1,42 +1,45 @@
-.dashboard {
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: $font_head;
-    font-weight: 400;
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font_head;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 23px;
+}
+
+h2 {
+  font-size: 21px;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+p.subtitle {
+  font-size: 16px;
+  color: $medium_shade;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+
+  &:hover, &:focus, &:active {
+    color: $primary_shade;
+    border: none;
+    background: none;
+    outline: 0;
   }
   
-  h1 {
-    font-size: 23px;
-  }
-  
-  h2 {
-    font-size: 21px;
-  }
-  
-  h3 {
-    font-size: 16px;
-    font-size: 500;
-  }
-  
-  p.subtitle {
-    font-size: 16px;
-    color: $medium_shade;
-  }
-  
-  a {
-    color: $primary;
-    text-decoration: none;
-  
-    &:hover, &:focus, &:active {
-      color: $primary_shade;
-      border: none;
-      background: none;
-      outline: 0;
-    }
-    
-    &.muted {
-      color: $medium;
-      text-decoration: underline;
-    }
+  &.muted {
+    color: $medium;
+    text-decoration: underline;
   }
 }

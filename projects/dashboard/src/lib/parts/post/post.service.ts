@@ -5,23 +5,22 @@ import { MenuItem } from '@lamnhan/ngx-useful';
   providedIn: 'root'
 })
 export class PostPartService {
-
-  public readonly collection = 'posts';
+  public readonly name = 'post';
 
   public readonly menuItem: MenuItem = {
-    name: 'post',
+    name: this.name,
     text: 'Posts',
-    routerLink: ['admin', 'list', 'post'],
-    icon: 'icon-dashboard-post',
-    activeAlso: ['admin/new/post'],
+    routerLink: ['admin', 'list', this.name],
+    icon: `icon-dashboard-${this.name}`,
+    activeAlso: [`admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Posts',
-        routerLink: ['admin', 'list', 'post'],
+        routerLink: ['admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', 'post'],
+        routerLink: ['admin', 'new', this.name],
       },
       {
         text: 'Categories',
@@ -33,6 +32,8 @@ export class PostPartService {
       }
     ]
   };
+
+  public readonly collection = 'posts';
 
   constructor() { }
 }

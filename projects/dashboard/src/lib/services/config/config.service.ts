@@ -12,8 +12,9 @@ export interface DashboardConfig {
 }
 
 export interface CustomPart {
-  collection?: string;
+  name: string;
   menuItem: MenuItem;
+  collection?: string;
 }
 
 @Injectable({

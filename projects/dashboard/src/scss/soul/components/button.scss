@@ -1,3 +1,65 @@
-.dashboard {
+.button-primary {
+  display: inline-block;
+  border: none;
+  border-radius: 3px;
+  padding: .375rem .75rem;
+  background: $primary;
+  color: $primary_contrast;
+
+  & + & {
+    margin-right: .5rem;
+  }
   
+  &:hover, &:focus, &:active {
+    outline: 0;
+    background: $primary_shade;
+    color: $primary_contrast;
+    text-decoration: none;
+  }
+
+  &:disabled {
+    opacity: 1;
+    background: rgba($primary, .5);
+    color: rgba($primary_contrast, .5);
+    box-shadow: none;
+  }
+
+  // sizes
+  &-lg {
+    padding: .5rem 1.5rem;
+  }
+}
+
+.button-outline-primary {
+  display: inline-block;
+  border-radius: 3px;
+  padding: .375rem .75rem;
+  background: none;
+  border: 1px solid $primary;
+  color: $primary;
+
+  & + & {
+    margin-right: .5rem;
+  }
+  
+  &:hover, &:focus, &:active {
+    outline: 0;
+    background: none;
+    border-color: $primary_shade;
+    color: $primary_shade;
+    text-decoration: none;
+  }
+
+  &:disabled {
+    opacity: 1;
+    border: 1px solid rgba($primary, .5);
+    color: rgba($primary, .5);
+    box-shadow: none;
+    background: none;
+  }
+  
+  // sizes
+  &-lg {
+    padding: .5rem 1.5rem;
+  }
 }

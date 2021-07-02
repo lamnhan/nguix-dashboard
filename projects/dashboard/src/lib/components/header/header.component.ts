@@ -33,11 +33,6 @@ export class HeaderComponent implements OnInit {
     const yes = confirm('Log out?');
     if (yes) {
       this.authService.signOut();
-    } else {
-      const exit = confirm('Exit dashboard?');
-      if (exit) {
-        this.exitDashboard();
-      }
     }
   }
 }

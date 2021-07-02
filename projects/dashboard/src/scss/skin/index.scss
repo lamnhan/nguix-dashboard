@@ -3,29 +3,29 @@ $dashboard_icons: '/assets/icons';
 $font_head: 'Segoe UI', 'Ubuntu', sans-serif;;
 $font_body: 'Segoe UI', 'Ubuntu', sans-serif;
 
-$primary: #135e96;
-$primary_shade: #0a4b78;
-$primary_tint: #2271b1;
-$primary_contrast: #ffffff;
+$primary: rgb(19, 94, 150);
+$primary_shade: rgb(10, 75, 120);
+$primary_tint: rgb(34, 113, 177);
+$primary_contrast: rgb(255, 255, 255);
 
-$secondary: #72aee6;
-$success: #00a32a;
-$danger: #d63638;
+$secondary: rgb(114, 174, 230);
+$success: rgb(0, 163, 42);
+$danger: rgb(214, 54, 56);
 
-$medium: #8c8f94;
-$medium_shade: #646970;
-$medium_tint: #a7aaad;
-$medium_contrast: #1d2327;
+$medium: rgb(140, 143, 148);
+$medium_shade: rgb(100, 105, 112);
+$medium_tint: rgb(167, 170, 173);
+$medium_contrast: rgb(29, 35, 39);
 
-$light: #ffffff;
-$light_shade: #f0f0f1;
-$light_tint: #ffffff;
-$light_contrast: #1d2327;
+$light: rgb(255, 255, 255);
+$light_shade: rgb(240, 240, 241);
+$light_tint: rgb(255, 255, 255);
+$light_contrast: rgb(29, 35, 39);
 
-$dark: #1d2327;
-$dark_shade: #1c2225;
-$dark_tint: #2c3338;
-$dark_contrast: #ffffff;
+$dark: rgb(29, 35, 39);
+$dark_shade: rgb(28, 34, 37);
+$dark_tint: rgb(44, 51, 56);
+$dark_contrast: rgb(255, 255, 255);
 
 @mixin icon_filter($name) {
   // secondary

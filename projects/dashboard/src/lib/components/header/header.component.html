@@ -74,8 +74,13 @@
         <img [src]="userService.data?.photoURL || 'https://www.gravatar.com/avatar/none?d=mp'"/>
       </a>
       <ul class="submenu" aria-label="submenu">
-        <li><a [usefulRouterLink]="[userService.data?.username || 'account']">{{ userService.data?.displayName || 'User' }}</a></li>
+        <li>
+          <a
+            [usefulRouterLink]="[userService.data?.username || 'account']"
+          >{{ userService.data?.displayName || 'User' }}</a>
+        </li>
         <li><a [usefulRouterLink]="['account']">Edit Profile</a></li>
+        <li><a href="#" (click)="exitDashboard(); false">Log Off</a></li>
         <li><a href="#" (click)="logOut(); false">Log Out</a></li>
       </ul>
     </li>

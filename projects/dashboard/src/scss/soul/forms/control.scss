@@ -1,3 +1,38 @@
-.dashboard {
-  
+.form-label {
+  display: inline-block;
+  margin-bottom: .5rem;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  background: $light;
+  border-radius: 3px;
+  color: $light_contrast;
+  border: 1px solid $medium;
+
+  & + & {
+    margin-top: .5rem;
+  }
+
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 1px $primary;
+    border-color: $primary;
+  }
+
+  &:disabled, &[readonly] {
+    opacity: 1;
+    background: $light_shade;
+    border-color: $medium;
+  }
+
+  &[type=file] {
+    overflow: hidden;
+
+    &:not(:disabled):not([readonly]) {
+      cursor: pointer;
+    }
+  }
 }

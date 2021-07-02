@@ -5,26 +5,27 @@ import { MenuItem } from '@lamnhan/ngx-useful';
   providedIn: 'root'
 })
 export class TagPartService {
-
-  public readonly collection = 'tags';
+  public readonly name = 'tag';
 
   public readonly menuItem: MenuItem = {
-    name: 'tag',
+    name: this.name,
     text: 'Tags',
-    routerLink: ['admin', 'list', 'tag'],
-    icon: 'icon-dashboard-tag',
-    activeAlso: ['admin/new/tag'],
+    routerLink: ['admin', 'list', this.name],
+    icon: `icon-dashboard-${this.name}`,
+    activeAlso: [`admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Tags',
-        routerLink: ['admin', 'list', 'tag'],
+        routerLink: ['admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', 'tag'],
+        routerLink: ['admin', 'new', this.name],
       }
     ]
   };
+
+  public readonly collection = 'tags';
 
   constructor() { }
 }

@@ -5,12 +5,13 @@ import { MenuItem } from '@lamnhan/ngx-useful';
   providedIn: 'root'
 })
 export class FrontPartService {
+  public readonly name = 'front';
 
   public readonly menuItem: MenuItem = {
-    name: 'front',
+    name: this.name,
     text: 'Dashboard',
     routerLink: ['admin'],
-    icon: 'icon-dashboard-front',
+    icon: `icon-dashboard-${this.name}`,
     activeAlso: ['admin/about'],
     subItems: [
       {
