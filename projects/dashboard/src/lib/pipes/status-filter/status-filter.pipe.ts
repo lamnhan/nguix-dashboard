@@ -5,11 +5,9 @@ import { DashboardListingItem } from '../../services/dashboard/dashboard.service
   name: 'statusFilter'
 })
 export class StatusFilterPipe implements PipeTransform {
-
   transform(items: DashboardListingItem[], status?: string): DashboardListingItem[] {
     return !status || status === 'all'
       ? items
-      : items.filter(item => !!item);
+      : items.filter(item => !item.origin.status || item.origin.status === status);
   }
-
 }

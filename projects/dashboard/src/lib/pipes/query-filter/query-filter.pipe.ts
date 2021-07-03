@@ -5,11 +5,9 @@ import { DashboardListingItem } from '../../services/dashboard/dashboard.service
   name: 'queryFilter'
 })
 export class QueryFilterPipe implements PipeTransform {
-
   transform(items: DashboardListingItem[], query?: string): DashboardListingItem[] {
     return !query
       ? items
-      : items.filter(item => !!item);
+      : items.filter(item => item.searchText.indexOf(query) !== -1);
   }
-
 }

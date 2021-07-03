@@ -24,7 +24,6 @@ import { PostPartService } from './parts/post/post.service';
     {
       provide: DASHBOARD_CONFIG,
       useValue: dashboardConfig({
-        defaultLocale: 'en-US',
         parts: [
           'front',
           'post',

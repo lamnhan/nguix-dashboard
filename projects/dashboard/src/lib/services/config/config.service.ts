@@ -10,7 +10,6 @@ export function dashboardConfig(config: DashboardConfig) {
 
 export interface DashboardConfig {
   parts: Array<string | DashboardPart>;
-  defaultLocale: string;
 }
 
 export interface DashboardPart {

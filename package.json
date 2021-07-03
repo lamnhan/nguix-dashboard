@@ -44,11 +44,12 @@
     "@angular/router": "~12.0.3",
     "@lamnhan/nguix-starter": "0.0.9",
     "@lamnhan/ngx-schemata": "0.0.4",
-    "@lamnhan/ngx-useful": "0.0.17",
+    "@lamnhan/ngx-useful": "0.0.18",
     "@lamnhan/schemata": "0.0.12",
     "@unistylus/bootstrap": "0.0.2",
     "@unistylus/core": "0.0.1",
     "firebase": "8.6.1",
+    "ngx-pagination": "^5.1.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"

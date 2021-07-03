@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
 import { NguixDashboardQueryFilterPipeModule } from '../../pipes/query-filter/query-filter.module';
@@ -16,6 +18,8 @@ import { ListPage } from './list.component';
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    NgxPaginationModule,
     RouterLinkDirectiveModule,
     NguixDashboardQueryFilterPipeModule,
     NguixDashboardStatusFilterPipeModule,

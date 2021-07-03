@@ -5,7 +5,6 @@ import { DashboardListingItem, DashboardListingStatus } from '../../services/das
   name: 'extractStatuses'
 })
 export class ExtractStatusesPipe implements PipeTransform {
-
   transform(items: DashboardListingItem[]): DashboardListingStatus[] {
     const all: DashboardListingStatus = {
       title: 'All',
@@ -49,5 +48,4 @@ export class ExtractStatusesPipe implements PipeTransform {
     // result
     return [all, published, draft, archive, trash];
   }
-
 }

@@ -12,6 +12,7 @@
   
   &:hover, &:focus, &:active {
     outline: 0;
+    box-shadow: none;
     background: $primary_shade;
     color: $primary_contrast;
     text-decoration: none;
@@ -25,6 +26,11 @@
   }
 
   // sizes
+  &-sm {
+    padding: .25rem .5rem;
+    font-size: 11px;
+  }
+
   &-lg {
     padding: .5rem 1.5rem;
   }
@@ -44,6 +50,7 @@
   
   &:hover, &:focus, &:active {
     outline: 0;
+    box-shadow: none;
     background: none;
     border: 1px solid $primary_shade !important;
     color: $primary_shade;
@@ -59,6 +66,11 @@
   }
   
   // sizes
+  &-sm {
+    padding: .25rem .5rem;
+    font-size: 11px;
+  }
+
   &-lg {
     padding: .5rem 1.5rem;
   }

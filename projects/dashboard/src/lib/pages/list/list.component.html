@@ -1,75 +1,165 @@
 <div class="host dashboard page" *ngIf="data$ | async as data; else loading">
 
   <div class="main" *ngIf="data.part as part; else notFound">
+  <ng-container *ngIf="data.items | queryFilter : query; let filteredItems">
 
-    <ng-container *ngIf="data.items | queryFilter : query; let filteredItems">
+    <div class="head">
+      <div class="major">
 
-      <section class="head">
-        <div class="major">
-          <div class="title">
-            <h1>Posts</h1>
-            <a
-              class="button-outline-primary"
-              [usefulRouterLink]="['admin', 'new', part.name]"
-            >Add New</a>
-          </div>
-          <ul class="status" *ngIf="filteredItems | extractStatuses as listingStatuses">
-            <li *ngFor="let listingStatus of listingStatuses">
+        <div class="title">
+          <h1>Posts</h1>
+          <a
+            class="button-outline-primary"
+            [usefulRouterLink]="['admin', 'new', part.name]"
+          >Add New</a>
+        </div>
+
+        <ul class="status" *ngIf="filteredItems | extractStatuses as listingStatuses">
+          <ng-container *ngFor="let listingStatus of listingStatuses">
+            <li *ngIf="listingStatus.count">
               <strong *ngIf="listingStatus.value === status; else inactive">{{ listingStatus.title }}</strong>
               <ng-template #inactive>
                 <a href="#" (click)="status=listingStatus.value; false">{{ listingStatus.title }}</a>
               </ng-template>
               <span>({{ listingStatus.count }})</span>
             </li>
-          </ul>
-        </div>
-        <div class="filter">
-          <input
-            class="form-control"
-            type="search"
-            placeholder="Filter items ..."
-            (change)="queryChanged($event)"
-          >
-        </div>
-      </section>
-    
-      <section class="body">
-    
-        <div class="card">
-          <div class="card-head"><h4>All items</h4></div>
-          <ul class="card-body">
-            <li *ngFor="let item of filteredItems | statusFilter : status">
-  
-              <div class="origin" *ngIf="item.origin; let origin">
+          </ng-container>
+        </ul>
+
+      </div>
+      <div class="filter">
+
+        <input
+          class="form-control"
+          type="search"
+          placeholder="Filter items ..."
+          [(ngModel)]="query"
+        >
+
+      </div>
+    </div>
+
+    <table class="body table">
+
+      <thead>
+        <tr>
+          <th class="title">Title</th>
+          <th class="author">Author</th>
+          <th class="comment">Comment</th>
+          <th class="date">Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of filteredItems | statusFilter : status | paginate: {itemsPerPage: 30, currentPage: p}">
+        <ng-container *ngIf="item.origin; let origin">
+
+          <td class="title">
+
+            <div class="origin">
+
+              <div class="major">
                 <a
                   [usefulRouterLink]="['admin', 'edit', part.name, origin.id]"
                 >{{ origin.title }}</a>
               </div>
-              
-              <ul class="localized" *ngIf="data.listingLocales.length">
-                <li *ngFor="let listingLocale of data.listingLocales">
+
+              <ul class="actions">
+                <li><a href="#">Edit</a></li>
+                <li><a href="#">Trash</a></li>
+                <li><a href="#">Preview</a></li>
+              </ul>
+
+              <div class="mobile-info">
+                <button>Toggler</button>
+                <ul>
+                  <li>Author: <a href="#">Lam Nhan</a></li>
+                  <li>Comment: -</li>
+                  <li>Date: Published 2018/10/02 at 1:04 pm</li>
+                </ul>
+              </div>
+
+            </div>
+            
+            <ul class="localized" *ngIf="data.listingLocales.length">
+              <li *ngFor="let listingLocale of data.listingLocales">
+
+              <ng-container *ngIf="item.localizedSiblings[listingLocale.value] as localizedItem; else noLocalized">
+
+                <div class="major">
                   <strong>{{ listingLocale.text }}: </strong>
                   <a
-                    href="#"
-                    *ngIf="item.localizedSiblings[item.origin.id] as localizedItem; else noLocalized"
+                    [usefulRouterLink]="['admin', 'edit', part.name, localizedItem.id]"
                   >{{ localizedItem.title }}</a>
-                  <ng-template #noLocalized>
-                    <a href="#">Add Translation</a>
-                  </ng-template>
-                </li>
-              </ul>
+                </div>
   
-            </li>
-          </ul>
-          <div class="card-foot">
-            1 | 2 | 3
-          </div>
-        </div>
-    
-      </section>
+                
+                <ul class="actions">
+                  <li><a href="#">Edit</a></li>
+                  <li><a href="#">Trash</a></li>
+                  <li><a href="#">Preview</a></li>
+                </ul>
+  
+                <div class="mobile-info">
+                  <button>Toggler</button>
+                  <ul>
+                    <li>Author: <a href="#">Lam Nhan</a></li>
+                    <li>Comment: -</li>
+                    <li>Date: Published 2018/10/02 at 1:04 pm</li>
+                  </ul>
+                </div>
 
-    </ng-container>
+              </ng-container>
 
+              <ng-template #noLocalized>
+                <strong>{{ listingLocale.text }}: </strong>
+                <a href="#">Add Translation</a>
+              </ng-template>
+
+              </li>
+            </ul>
+
+          </td>
+          <td class="author">
+
+            <div class="origin">
+              <a href="#">Lam Nhan</a>
+            </div>
+
+          </td>
+          <td class="comment">
+
+            <div class="origin">
+              —
+            </div>
+
+          </td>
+          <td class="date">
+
+            <div class="origin">
+              Published 2018/10/02 at 1:04 pm
+            </div>
+
+          </td>
+
+        </ng-container>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <pagination-controls
+              (pageChange)="p=$event"
+              [directionLinks]="false"
+            ></pagination-controls>
+          </td>
+        </tr>
+      </tfoot>
+
+    </table>
+
+  </ng-container>
   </div>
 
   <ng-template #notFound>
