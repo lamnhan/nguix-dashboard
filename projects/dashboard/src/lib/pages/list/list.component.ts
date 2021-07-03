@@ -2,21 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of, combineLatest } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { SettingService, BuiltinListingItem } from '@lamnhan/ngx-useful';
+import { SettingService } from '@lamnhan/ngx-useful';
 
-import { DashboardPart, DatabaseItem } from '../../services/config/config.service';
-import { DashboardService } from '../../services/dashboard/dashboard.service';
-
-interface Status {
-  text: string;
-  count: number;
-}
-
-interface GroupingItem {
-  origin: DatabaseItem;
-  localizedSiblings: DatabaseItem[];
-  searching: string;
-}
+import { DatabaseItem } from '../../services/config/config.service';
+import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
 
 @Component({
   selector: 'nguix-dashboard-list-page',
@@ -24,8 +13,8 @@ interface GroupingItem {
   styleUrls: ['./list.component.scss']
 })
 export class ListPage implements OnInit {
-  query: string = '';
-  status: string = 'all';
+  query?: string;
+  status = 'all';
 
   public readonly data$ = this.route.params.pipe(
     switchMap(params => {
@@ -39,13 +28,14 @@ export class ListPage implements OnInit {
         return of([]);
       }
     }),
-    map(([part, allItems]) => {
-      const locale = (this.settingService as any).defaultLocale as string;
-      const locales = this.settingService.locales;
-      const items = this.groupItems(allItems, locale);
+    map(([part, databaseItems]) => {
+      const defaultLocale = this.dashboardService.getConfig().defaultLocale;
+      const listingLocales = this.settingService.locales.filter(item => item.value !== defaultLocale);
+      const items = this.localeFiltering(databaseItems, defaultLocale);
+      console.log(items);
       return {
-        locale,
-        locales,
+        defaultLocale,
+        listingLocales,
         part,
         items,
       };
@@ -58,36 +48,50 @@ export class ListPage implements OnInit {
     private dashboardService: DashboardService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  queryChanged(e: any) {
+    console.log(e.target?.value);
+    this.query = e.target?.value;
   }
 
-  groupItems(items: DatabaseItem[], locale: string): GroupingItem[] {
-    return [];
+  private localeFiltering(
+    databaseItems: DatabaseItem[],
+    defaultLocale: string
+  ): DashboardListingItem[] {
+    console.log({databaseItems, defaultLocale});
+    const items: DashboardListingItem[] = [];
+    const localizedRecord: Record<string, Record<string, DatabaseItem>> = {};
+    // extract origin & localized items
+    databaseItems.forEach(dbItem => {
+      console.log({dbItem});
+      if (!dbItem?.locale || dbItem?.locale === defaultLocale) {
+        items.push({
+          origin: dbItem,
+          localizedSiblings: {},
+          searchText: '',
+        });
+      } else {
+        const origin = dbItem.origin as string;
+        const locale = dbItem.locale as string;
+        if (!localizedRecord[origin]) {
+          localizedRecord[origin] = {};
+        }
+        localizedRecord[origin][locale] = dbItem;
+      }
+    });
+    return items.map(item => {
+      const id = item.origin.id as string;
+      // set siblings
+      if (localizedRecord[id]) {
+        item.localizedSiblings = localizedRecord[id];
+      }
+      // build search text
+      let searchText = '';
+      searchText += item.origin.title + ' ';
+      item.searchText = searchText;
+      // final
+      return item;
+    });
   }
-
-  // private setStatuses() {
-  //   const all: Status = {
-  //     text: 'All',
-  //     count: 0
-  //   };
-  //   const published: Status = {
-  //     text: 'Published',
-  //     count: 0
-  //   };
-  //   const draft: Status = {
-  //     text: 'Draft',
-  //     count: 0
-  //   };
-  //   this.items.forEach(item => {
-  //     if (item.locale === this.locale) {
-  //       if (item.status === 'publish') {
-  //         published.count++;
-  //       } else if (item.status === 'draft') {
-  //         draft.count++;
-  //       }
-  //       all.count++;
-  //     }
-  //   });
-  //   this.statuses.push(all, published, draft);
-  // }
 }

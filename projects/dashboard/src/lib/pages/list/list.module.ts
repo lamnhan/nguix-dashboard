@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
+import { NguixDashboardQueryFilterPipeModule } from '../../pipes/query-filter/query-filter.module';
+import { NguixDashboardStatusFilterPipeModule } from '../../pipes/status-filter/status-filter.module';
+import { NguixDashboardExtractStatusesPipeModule } from '../../pipes/extract-statuses/extract-statuses.module';
+
 import { ListRoutingModule } from './list-routing.module';
 import { ListPage } from './list.component';
 
@@ -13,7 +17,10 @@ import { ListPage } from './list.component';
   imports: [
     CommonModule,
     RouterLinkDirectiveModule,
-    ListRoutingModule
+    NguixDashboardQueryFilterPipeModule,
+    NguixDashboardStatusFilterPipeModule,
+    NguixDashboardExtractStatusesPipeModule,
+    ListRoutingModule,
   ]
 })
 export class NguixDashboardListPageModule { }

@@ -1,49 +1,74 @@
 <div class="host dashboard page" *ngIf="data$ | async as data; else loading">
 
-  <div class="main" *ngIf="data.part; else notFound">
+  <div class="main" *ngIf="data.part as part; else notFound">
 
-    <section class="head">
-      <div class="major">
-        <div class="title">
-          <h1>Posts</h1>
-          <a
-            class="button-outline-primary"
-            [usefulRouterLink]="['admin', 'new', data.part.name]"
-          >Add New</a>
-        </div>
-        <ul class="status">
-          <li><strong>All</strong> <span>(10)</span></li>
-          <li><a href="#">Published</a> <span>(5)</span></li>
-        </ul>
-      </div>
-      <div class="filter">
-        <input class="form-control" type="search" placeholder="Filter items ...">
-      </div>
-    </section>
-  
-    <section class="body">
-  
-      <div class="card">
-        <div class="card-head"><h4>All items</h4></div>
-        <ul class="card-body">
-          <li *ngFor="let item of data.items">
+    <ng-container *ngIf="data.items | queryFilter : query; let filteredItems">
+
+      <section class="head">
+        <div class="major">
+          <div class="title">
+            <h1>Posts</h1>
             <a
-              [usefulRouterLink]="['admin', 'edit', data.part.name, item.origin.id]"
-            >{{ item.origin.title }}</a>
-            <ul class="i18n" *ngIf="item.localizedSiblings.length">
-              <li *ngFor="let localizedItem of item.localizedSiblings">
-                <strong>XXX: </strong>
-                <a href="#">{{ localizedItem.title }}</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <div class="card-foot">
-          1 | 2 | 3
+              class="button-outline-primary"
+              [usefulRouterLink]="['admin', 'new', part.name]"
+            >Add New</a>
+          </div>
+          <ul class="status" *ngIf="filteredItems | extractStatuses as listingStatuses">
+            <li *ngFor="let listingStatus of listingStatuses">
+              <strong *ngIf="listingStatus.value === status; else inactive">{{ listingStatus.title }}</strong>
+              <ng-template #inactive>
+                <a href="#" (click)="status=listingStatus.value; false">{{ listingStatus.title }}</a>
+              </ng-template>
+              <span>({{ listingStatus.count }})</span>
+            </li>
+          </ul>
         </div>
-      </div>
+        <div class="filter">
+          <input
+            class="form-control"
+            type="search"
+            placeholder="Filter items ..."
+            (change)="queryChanged($event)"
+          >
+        </div>
+      </section>
+    
+      <section class="body">
+    
+        <div class="card">
+          <div class="card-head"><h4>All items</h4></div>
+          <ul class="card-body">
+            <li *ngFor="let item of filteredItems | statusFilter : status">
   
-    </section>
+              <div class="origin" *ngIf="item.origin; let origin">
+                <a
+                  [usefulRouterLink]="['admin', 'edit', part.name, origin.id]"
+                >{{ origin.title }}</a>
+              </div>
+              
+              <ul class="localized" *ngIf="data.listingLocales.length">
+                <li *ngFor="let listingLocale of data.listingLocales">
+                  <strong>{{ listingLocale.text }}: </strong>
+                  <a
+                    href="#"
+                    *ngIf="item.localizedSiblings[item.origin.id] as localizedItem; else noLocalized"
+                  >{{ localizedItem.title }}</a>
+                  <ng-template #noLocalized>
+                    <a href="#">Add Translation</a>
+                  </ng-template>
+                </li>
+              </ul>
+  
+            </li>
+          </ul>
+          <div class="card-foot">
+            1 | 2 | 3
+          </div>
+        </div>
+    
+      </section>
+
+    </ng-container>
 
   </div>
 

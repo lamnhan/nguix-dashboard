@@ -45,7 +45,7 @@
   &:hover, &:focus, &:active {
     outline: 0;
     background: none;
-    border-color: $primary_shade;
+    border: 1px solid $primary_shade !important;
     color: $primary_shade;
     text-decoration: none;
   }

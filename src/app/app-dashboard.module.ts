@@ -8,6 +8,7 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
     {
       provide: DASHBOARD_CONFIG,
       useValue: dashboardConfig({
+        defaultLocale: 'en-US',
         parts: [
           'post',
           'page',

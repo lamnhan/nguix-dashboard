@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardTranslationModule } from './dashboard-translation.module';
 
 import { NguixDashboardHeaderComponentModule } from './components/header/header.module';
 
@@ -18,7 +17,6 @@ import { PostPartService } from './parts/post/post.service';
   declarations: [],
   imports: [
     DashboardRoutingModule,
-    DashboardTranslationModule,
     NguixDashboardHeaderComponentModule
   ],
   providers: [
@@ -26,7 +24,9 @@ import { PostPartService } from './parts/post/post.service';
     {
       provide: DASHBOARD_CONFIG,
       useValue: dashboardConfig({
+        defaultLocale: 'en-US',
         parts: [
+          'front',
           'post',
           'page',
         ]
