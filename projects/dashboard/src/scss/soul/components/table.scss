@@ -1,0 +1,45 @@
+.table-striped {
+  width: 100%;
+  text-align: left;
+  background: $light;
+  color: $light_contrast;
+  border: 1px solid $medium;
+
+  tr {
+    margin: 0;
+    padding: 0;
+  }
+  
+  th {
+    font-weight: 700;
+  }
+
+  th, td {
+    padding: .5rem;
+  }
+
+  thead th {
+    border-bottom: 1px solid $medium;
+  }
+
+  tfoot td {
+    border-top: 1px solid $medium;
+  }
+
+  tbody td,
+  tfoot td {
+    border: none;   
+  }
+
+  thead tr {
+    background: $light;
+  }
+
+  tbody tr:nth-of-type(even) {
+    background: $light;
+  }
+
+  tbody tr:nth-of-type(odd) {
+    background: $light_shade;
+  }
+}

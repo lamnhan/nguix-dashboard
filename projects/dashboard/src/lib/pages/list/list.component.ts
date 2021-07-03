@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of, combineLatest } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
-import { SettingService, HelperService } from '@lamnhan/ngx-useful';
+import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
 import { DatabaseItem } from '../../services/config/config.service';
 import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
@@ -34,11 +34,14 @@ export class ListPage implements OnInit {
         return {};
       }
       const defaultLocale = this.settingService.defaultLocale;
-      const listingLocales = this.settingService.locales.filter(item => item.value !== defaultLocale);
+      const recordLocales = this.settingService.locales.reduce(
+        (result, item) => { result[item.value] = item; return result; },
+        {} as Record<string, BuiltinListingItem>
+      );
       const items = this.localeFiltering(databaseItems, defaultLocale);
       return {
         defaultLocale,
-        listingLocales,
+        recordLocales,
         part,
         items,
       };
@@ -56,51 +59,56 @@ export class ListPage implements OnInit {
 
   private localeFiltering(
     databaseItems: DatabaseItem[],
-    defaultLocale: string
+    defaultLocale: string,
   ): DashboardListingItem[] {
-    const items: DashboardListingItem[] = [];
-    const localizedRecord: Record<string, Record<string, DatabaseItem>> = {};
-    // extract origin & localized items
+    const items: DatabaseItem[] = [];
+    const missingTranlationRecord: Record<string, string[]> = {};
+    const localizedRecord: Record<string, DatabaseItem[]> = {};
+    // extract items
+    const allTranslations = this.settingService.locales.map(item => item.value);
     databaseItems.forEach(dbItem => {
+      // origin item
       if (!dbItem?.locale || dbItem?.locale === defaultLocale) {
-        items.push({
-          origin: dbItem,
-          localizedSiblings: {},
-          searchText: '',
-        });
-      } else {
+        items.push(dbItem);
+        missingTranlationRecord[dbItem.id] = [...allTranslations];
+      }
+      // localized items
+      else {
         const origin = dbItem.origin as string;
-        const locale = dbItem.locale as string;
         if (!localizedRecord[origin]) {
-          localizedRecord[origin] = {};
+          localizedRecord[origin] = [];
         }
-        localizedRecord[origin][locale] = dbItem;
+        localizedRecord[origin].push(dbItem);
       }
     });
-    return items.map(item => {
-      // set siblings
-      const id = item.origin.id as string;
-      if (localizedRecord[id]) {
-        item.localizedSiblings = localizedRecord[id];
-      }
-      // build search text
+    return items.map(origin => {
+      const id = origin.id as string;
       const EOL = ' | ';
-      item.searchText =
-        ['origin', ...Object.keys(item.localizedSiblings)]
-        .map(key => {
-          const { title, description, keywords } =
-            key === 'origin' ? item.origin : item.localizedSiblings[key];
+      // all items
+      const all: DatabaseItem[] = [origin].concat(localizedRecord[id]);
+      // missing translations
+      all.forEach(item => {
+        const index = !item.locale ? -1 : missingTranlationRecord[id].indexOf(item.locale);
+        if(index !== -1) {
+          missingTranlationRecord[id].splice(index, 1);
+        }
+      });
+      const missingTranslations = missingTranlationRecord[id];
+      // search text
+      const searchText = all
+        .map(item => {
+          const { title, description, keywords, locale } = item;
           const text =
             (!title ? '' : (title + EOL)) +
             (!description ? '' : (description + EOL)) +
             (!keywords ? '' : keywords);
           return text +
             (EOL + text.toLowerCase()) +
-            (key !== 'vi-VN' ? '' : EOL + this.helperService.cleanupStr(text));
+            (locale !== 'vi-VN' ? '' : EOL + this.helperService.cleanupStr(text));
         })
         .join(EOL);
       // final
-      return item;
+      return { origin, all, missingTranslations, searchText };
     });
   }
 }

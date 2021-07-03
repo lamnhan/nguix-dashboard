@@ -1,0 +1,37 @@
+.host {
+
+  .main {
+
+    .head {}
+
+    .body {
+
+      .headbar {}
+
+      table.listing {
+
+        thead tr th,
+        tbody tr td {
+          display: none;
+        }
+
+        thead tr th:first-child,
+        tbody tr td:first-child {
+          display: block;
+        }
+
+      }
+
+      .foorbar {}
+
+    }
+    
+  }
+
+  .not-found {
+
+  }
+
+}
+
+.loading {}

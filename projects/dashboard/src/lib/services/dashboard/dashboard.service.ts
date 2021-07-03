@@ -17,7 +17,8 @@ export interface DashboardListingStatus {
 
 export interface DashboardListingItem {
   origin: DatabaseItem;
-  localizedSiblings: Record<string, DatabaseItem>;
+  all: DatabaseItem[];
+  missingTranslations: string[];
   searchText: string;
 }
 
