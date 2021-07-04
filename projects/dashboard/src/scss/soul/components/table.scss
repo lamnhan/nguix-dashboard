@@ -2,44 +2,31 @@
   width: 100%;
   text-align: left;
   background: $light;
-  color: $light_contrast;
+  color: $light-contrast;
   border: 1px solid $medium;
 
   tr {
     margin: 0;
     padding: 0;
+    background: $light !important;
   }
   
   th {
     font-weight: 700;
+    padding: .5rem;
   }
 
-  th, td {
+  td {
     padding: .5rem;
   }
 
   thead th {
-    border-bottom: 1px solid $medium;
-  }
-
-  tfoot td {
-    border-top: 1px solid $medium;
+    border: none;
   }
 
   tbody td,
   tfoot td {
-    border: none;   
-  }
-
-  thead tr {
-    background: $light;
-  }
-
-  tbody tr:nth-of-type(even) {
-    background: $light;
-  }
-
-  tbody tr:nth-of-type(odd) {
-    background: $light_shade;
+    border: none;
+    border-top: 1px solid $medium;
   }
 }

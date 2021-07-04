@@ -1,0 +1,23 @@
+@mixin _base {
+  display: inline-block;
+  content: '';
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  width: 2rem;
+  height: 2rem;
+}
+
+.icon {
+
+  & {
+    @include _base();
+  }
+  
+  @each $name, $value in $recolors { 
+    &-#{$name} {
+      @include _base();
+      filter: brightness(0) saturate(100%) #{$value};
+    }
+  }
+}

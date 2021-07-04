@@ -16,8 +16,8 @@
     display: flex;
     align-items: center;
 
-    & {
-      @include icon_hover_active_filter('secondary');
+    &:hover, &:focus, &:active, &.active {
+      @include icon_recolor('secondary');
     }
 
     button {
@@ -36,7 +36,9 @@
     align-items: center;
 
     a:first-child {
-      @include icon_hover_active_filter('secondary');
+      &:hover i, &:focus i, &:active i, &.active i {
+        @include icon_recolor('secondary');
+      }
     }
   }
   
@@ -46,8 +48,8 @@
 
     a:first-child {
 
-      & {
-        @include icon_hover_active_filter('secondary');
+      &:hover i, &:focus i, &:active i, &.active i {
+        @include icon_recolor('secondary');
       }
 
       span {
@@ -112,8 +114,12 @@
             }
 
             a:first-child {
-              @include icon_hover_filter('secondary');
-              @include icon_active_filter('dark_contrast');
+              &:hover i, &:focus i {
+                @include icon_recolor('secondary');
+              }
+              &:active i, &.active i {
+                @include icon_recolor('dark-contrast');
+              }
             }
           }
         }
@@ -151,7 +157,7 @@
       right: 0;
 
       li:first-child a {
-        color: $dark_contrast;
+        color: $dark-contrast;
       }
     }
   }

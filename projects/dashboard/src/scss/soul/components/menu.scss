@@ -12,7 +12,7 @@
 
     li a {
       padding: .75rem 1rem;
-      color: $dark_contrast;
+      color: $dark-contrast;
       text-decoration: none;
       font-weight: 500;
       border-left: 3px solid rgba(0,0,0,0);
@@ -24,10 +24,10 @@
 
       &:active, &.active {
         background: $secondary;
-        color: $dark_contrast;
+        color: $dark-contrast;
 
         &:hover, &:focus {
-          border-color: $dark_contrast;
+          border-color: $dark-contrast;
         }
       }
     }
@@ -36,14 +36,14 @@
   // sub-menu
   & li ul {
     display: none;
-    background: $dark_tint;
+    background: $dark-tint;
     padding-top: .5rem;
     padding-bottom: .5rem;
 
     li a {
       padding: .5rem 1rem .5rem 2.5rem;
       font-weight: 400;
-      color: $medium_tint;
+      color: $medium-tint;
       
       &:hover, &:focus {
         color: $secondary;
@@ -52,10 +52,10 @@
       &:active, &.active {
         font-weight: 500;
         background: none;
-        color: $dark_contrast;
+        color: $dark-contrast;
 
         &:hover, &:focus {
-          border-color: $dark_contrast;
+          border-color: $dark-contrast;
         }
       }
     }

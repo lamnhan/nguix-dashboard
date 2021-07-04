@@ -2,12 +2,12 @@
 <header class="host dashboard">
 
   <div class="toggler">
-    <button class="icon icon-dashboard-menu" (click)="navService.toggleMenu()"></button>
+    <button class="icon-medium-tint icon-dashboard-menu" (click)="navService.toggleMenu()"></button>
   </div>
 
   <ul class="vendor dropmenu">
     <li>
-      <a href="#" (click)="false"><i class="icon icon-dashboard-mola"></i></a>
+      <a href="#" (click)="false"><i class="icon-medium-tint icon-dashboard-mola"></i></a>
       <ul class="submenu" aria-label="submenu">
         <li><a [usefulRouterLink]="['admin', 'about']">About Dashboard</a></li>
         <li><a href="https://mola.lamnhan.com" target="_blank">Mola Home</a></li>
@@ -20,7 +20,9 @@
 
   <ul class="app dropmenu">
     <li>
-      <a href="#" (click)="false"><i class="icon icon-dashboard-home"></i><span>My App</span></a>
+      <a href="#" (click)="false">
+        <i class="icon-medium-tint icon-dashboard-home"></i><span>My App</span>
+      </a>
       <ul class="submenu" aria-label="submenu">
         <li><a href="#" (click)="exitDashboard(); false">Visit App</a></li>
       </ul>
@@ -42,7 +44,7 @@
               [usefulRouterLinkActiveOptions]="{exact: true, also: menuItem.activeAlso || []}"
               [usefulRouterBackwardable]="false"
             >
-              <i class="icon" [class]="menuItem.icon"></i>
+              <i class="icon-medium-tint" [class]="menuItem.icon"></i>
               <span>{{ t(menuItem.text || '') || menuItem.text }}</span>
             </a>
             <ul class="submenu">

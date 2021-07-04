@@ -9,7 +9,7 @@
   padding: .375rem .75rem;
   background: $light;
   border-radius: 3px;
-  color: $light_contrast;
+  color: $light-contrast;
   border: 1px solid $medium;
 
   & + & {
@@ -24,7 +24,7 @@
 
   &:disabled, &[readonly] {
     opacity: 1;
-    background: $light_shade;
+    background: $light-shade;
     border-color: $medium;
   }
 

@@ -1,17 +1,17 @@
-@import '@unistylus/core/scss/mixins';
 @import '../scss/skin';
 
 $icons: (
   // general
-  dashboard-mola: '#{$dashboard_icons}/mola.svg',
-  dashboard-menu: '#{$dashboard_icons}/menu.svg',
-  dashboard-home: '#{$dashboard_icons}/home.svg',
+  dashboard-mola: ('direct', 'http://localhost:4200/assets/icons/mola.svg'),
+  dashboard-menu: ('bootstrap', 'list'),
+  dashboard-home: ('bootstrap', 'house-fill'),
+  dashboard-comment: ('material', 'comment'),
   // parts
-  dashboard-front: '#{$dashboard_icons}/front.svg',
-  dashboard-category: '#{$dashboard_icons}/category.svg',
-  dashboard-tag: '#{$dashboard_icons}/tag.svg',
-  dashboard-page: '#{$dashboard_icons}/page.svg',
-  dashboard-post: '#{$dashboard_icons}/post.svg',
+  dashboard-front: ('material', 'gauge'),
+  dashboard-category: ('material', 'shape'),
+  dashboard-tag: ('material', 'tag-multiple'),
+  dashboard-page: ('material', 'view-carousel'),
+  dashboard-post: ('material', 'text-box'),
 );
 
-@include register_app_icons((default: $icons));
+@include register_icons($icons);

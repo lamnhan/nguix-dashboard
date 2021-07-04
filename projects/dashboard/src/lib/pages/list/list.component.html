@@ -13,7 +13,7 @@
         >Add New</a>
       </div>
 
-      <ul *ngIf="filteredItems | extractStatuses as listingStatuses">
+      <ul class="statuses" *ngIf="filteredItems | extractStatuses as listingStatuses">
         <ng-container *ngFor="let listingStatus of listingStatuses">
           <li *ngIf="listingStatus.count">
             <strong *ngIf="listingStatus.value === status; else inactive">{{ listingStatus.title }}</strong>
@@ -29,7 +29,7 @@
     
     <div class="body">
 
-      <div class="headbar">
+      <ng-template #listingBar>
         <div class="filter">    
           <input
             class="form-control"
@@ -38,7 +38,11 @@
             [(ngModel)]="query"
           >    
         </div>
-        <div class="count">3 items</div>
+        <div class="counter">3 items</div>
+      </ng-template>
+
+      <div class="headbar">
+        <ng-container *ngTemplateOutlet="listingBar"></ng-container>
       </div>
 
       <table class="listing table-striped">  
@@ -46,7 +50,7 @@
           <tr>
             <th class="title">Title</th>
             <th class="author">Author</th>
-            <th class="comment">Comment</th>
+            <!-- <th class="comment"><i class="icon-dark icon-dashboard-comment"></i></th> -->
             <th class="date">Date</th>
           </tr>
         </thead>  
@@ -60,23 +64,21 @@
 
                   <div class="major">
                     <em>{{ data.recordLocales[item.locale].text }}</em>
-                    <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]"><strong>{{ item.title }}</strong></a>
+                    <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">{{ item.title }}</a>
                   </div>  
   
                   <ul class="actions">
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Trash</a></li>
-                    <li><a href="#">Preview</a></li>
+                    <li class="edit"><a href="#">Edit</a></li>
+                    <li class="trash"><a href="#">Trash</a></li>
+                    <li class="preview"><a href="#">Preview</a></li>
+                    <li class="detail"><a href="#" (click)="detail=detail&&detail===item.id?'':item.id; false">Detail</a></li>
                   </ul>  
   
-                  <div class="mobile-defail">
-                    <button>Toggler</button>
-                    <ul>
-                      <li>Author: <a href="#">Lam Nhan</a></li>
-                      <li>Comment: -</li>
-                      <li>Date: Published 2018/10/02 at 1:04 pm</li>
-                    </ul>
-                  </div>
+                  <ul class="mobile-detail" [class.show]="item.id===detail">
+                    <li><span>Author</span><a href="#">Lam Nhan</a></li>
+                    <!-- <li><span>Comment</span><em>-</em></li> -->
+                    <li><span>Date</span><em>Published — 2018/10/02 at 1:04 pm</em></li>
+                  </ul>
 
                 </li>
 
@@ -98,18 +100,18 @@
               </ul>  
             </td>
 
-            <td class="comment">              
+            <!-- <td class="comment">              
               <ul>
                 <li *ngFor="let item of items">
                   —
                 </li>
               </ul>  
-            </td>
+            </td> -->
 
             <td class="date">
               <ul>
                 <li *ngFor="let item of items">
-                  Published 2018/10/02 at 1:04 pm
+                  <strong>Published</strong><span>—</span><em>2018/10/02 at 1:04 pm</em>
                 </li>
               </ul>  
             </td>
@@ -119,7 +121,7 @@
         </tbody>  
         <tfoot>
           <tr>
-            <td colspan="4">
+            <td colspan="42">
               <pagination-controls
                 (pageChange)="p=$event"
                 [directionLinks]="false"
@@ -130,7 +132,7 @@
       </table>
 
       <div class="footbar">
-        <div class="count">3 items</div>
+        <ng-container *ngTemplateOutlet="listingBar"></ng-container>
       </div>
 
     </div>

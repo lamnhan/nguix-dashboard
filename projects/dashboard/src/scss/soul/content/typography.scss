@@ -1,6 +1,6 @@
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: $font_head;
+  font-family: $font-head;
   font-weight: 400;
 }
 
@@ -24,15 +24,15 @@ h4 {
 
 p.subtitle {
   font-size: 18px;
-  color: $medium_shade;
+  color: $medium-shade;
 }
 
 a {
   color: $primary;
   text-decoration: none;
-
+  
   &:hover, &:focus, &:active {
-    color: $primary_shade;
+    color: $primary-shade;
     border: none;
     background: none;
     outline: 0;

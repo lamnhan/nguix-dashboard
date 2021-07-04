@@ -16,6 +16,7 @@ export class ListPage implements OnInit {
   query?: string;
   status = 'all';
   p = 1;
+  detail = '';
 
   public readonly data$ = this.route.params.pipe(
     switchMap(params => {
