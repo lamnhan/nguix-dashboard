@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { TagDataService } from '@lamnhan/ngx-schemata';
 
-import { GetAllResult, GetItemResult } from '../../services/config/config.service';
+import { GetAllResult, GetItemResult, FormSchemaItem, FormResult } from '../../services/config/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,8 @@ export class TagPartService {
     ]
   };
 
+  public readonly formSchema: FormSchemaItem[] = [];
+
   constructor(private dataService: TagDataService) {}
 
   getAll() {
@@ -37,4 +39,13 @@ export class TagPartService {
   getItem(id: string) {
     return this.dataService.getDoc(id, false) as unknown as GetItemResult
   }
+
+  formHandler(result: FormResult) {
+    const { mode, data } = result;
+    if (mode === 'new') {
+      data.count = 0;
+    }
+    console.log({mode, data});
+  }
+
 }

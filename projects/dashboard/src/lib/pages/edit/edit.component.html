@@ -1,3 +1,84 @@
-<div class="host dashboard page">
-  edit works
+<div class="host dashboard page"  *ngIf="data$ | async as data; else loading">
+
+  <div class="main" *ngIf="data.part as part; else notFound">
+  <ng-container *ngIf="part.formHandler">
+
+    <div class="head">
+
+      <div class="title">
+        <h1>Add New Post</h1>
+      </div>
+
+    </div>
+
+    <div class="body">
+      <form
+        [formGroup]="data.formGroup"
+        (ngSubmit)="submit(part, data.formGroup)"
+        #theForm="ngForm"
+      >
+
+        <label class="group" *ngFor="let schema of data.formSchema">
+          <span class="form-label">{{ schema.label }}</span>
+
+          <ng-container *ngIf="schema.type==='input'">
+            <input
+              class="form-control"
+              [type]="schema.type"
+              [formControlName]="schema.name"
+              [placeholder]="schema.placeholder || ''"
+            >
+          </ng-container>
+
+          <ng-container *ngIf="schema.type==='textarea'">
+            <textarea
+              class="form-control"
+              [formControlName]="schema.name"
+              [placeholder]="schema.placeholder || ''"
+            ></textarea>
+          </ng-container>
+
+          <ng-container *ngIf="schema.type==='checkbox'">
+            <div *ngFor="let checkboxItem of schema.children || []">
+              <input type="checkbox" [name]="checkboxItem.name" (change)="checkboxChanged(schema.name, formGroup, schema.children, checkboxItem, $event)" >
+              <label [for]="checkboxItem.name" >{{ checkboxItem.text }}</label>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="schema.type==='status'">
+            <select [formControlName]="schema.name">
+              <option value="publish">Publish</option>
+              <option value="draft">Draft</option>
+              <option value="archive">Archive</option>
+            </select>
+          </ng-container>
+
+          <ng-container *ngIf="schema.type==='locale'">
+            <select [formControlName]="schema.name">
+              <option
+                *ngFor="let localeItem of settingService.locales"
+                [value]="localeItem.value"
+              >{{ localeItem.text }}</option>
+            </select>
+          </ng-container>
+
+        </label>
+
+        <div class="action">
+          <button class="button-primary" type="submit" [disabled]="!theForm.form.valid">Save</button>
+        </div>
+
+      </form>
+    </div>
+
+  </ng-container>
+  </div>
+  
+  <ng-template #notFound>
+    <div class="not-found">Not found ...</div>
+  </ng-template>
 </div>
+
+<ng-template #loading>
+  <div class="loading">Loading ...</div>
+</ng-template>
