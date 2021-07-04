@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { CategoryDataService } from '@lamnhan/ngx-schemata';
 
-import { GetAllResult, GetItemResult, FormSchemaItem, FormResult } from '../../services/config/config.service';
+import { FormSchemaItem } from '../../services/config/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +33,10 @@ export class CategoryPartService {
     { label: 'Thumbnail', name: 'thumbnail', type: 'input' },
     { label: 'Image', name: 'image', type: 'input'},
     {
+      label: 'Count', name: 'count', type: 'number',
+      defaultValue: 0
+    },
+    {
       label: 'Only',
       name: 'only',
       type: 'checkbox',
@@ -43,22 +47,6 @@ export class CategoryPartService {
     },
   ];
 
-  constructor(private dataService: CategoryDataService) {}
-
-  getAll() {
-    return this.dataService.getCollection(undefined, false) as unknown as GetAllResult;
-  }
-
-  getItem(id: string) {
-    return this.dataService.getDoc(id, false) as unknown as GetItemResult
-  }
-
-  formHandler(result: FormResult) {
-    const { mode, data } = result;
-    if (mode === 'new') {
-      data.count = 0;
-    }
-    console.log({mode, data});
-  }
+  constructor(public readonly dataService: CategoryDataService) {}
 
 }

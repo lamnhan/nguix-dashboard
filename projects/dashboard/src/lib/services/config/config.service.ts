@@ -1,7 +1,7 @@
 import { Injectable, Inject, InjectionToken } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { MenuItem } from '@lamnhan/ngx-useful';
+import { MenuItem, DatabaseData } from '@lamnhan/ngx-useful';
 
 export const DASHBOARD_CONFIG = new InjectionToken<DashboardConfig>('DashboardConfig');
 
@@ -16,9 +16,8 @@ export interface DashboardConfig {
 export interface DashboardPart {
   name: string;
   menuItem: MenuItem;
+  dataService?: DatabaseData<any>;
   formSchema?: FormSchemaItem[];
-  getAll?: () => GetAllResult;
-  getItem?: (id: string) => GetItemResult;
   formHandler?: (result: FormResult, formGroup: FormGroup) => void;
 }
 
@@ -30,6 +29,7 @@ export interface FormSchemaItem {
   label: string;
   name: string;
   type: string;
+  defaultValue?: any;
   placeholder?: string;
   description?: string;
   validators?: any[];
@@ -38,7 +38,7 @@ export interface FormSchemaItem {
 }
 
 export interface FormResult {
-  mode: string;
+  mode: 'new' | 'update' | 'trash' | 'delete';
   data: Record<string, any>;
 }
 

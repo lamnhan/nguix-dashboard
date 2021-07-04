@@ -1,7 +1,6 @@
 <div class="host dashboard page"  *ngIf="data$ | async as data; else loading">
 
   <div class="main" *ngIf="data.part as part; else notFound">
-  <ng-container *ngIf="part.formHandler">
 
     <div class="head">
 
@@ -18,12 +17,18 @@
         #theForm="ngForm"
       >
 
-        <label class="group" *ngFor="let schema of data.formSchema">
-          <span class="form-label">{{ schema.label }}</span>
+        <div class="group" *ngFor="let schema of data.formSchema">
+          <label class="form-label" [for]="schema.name">{{ schema.label }}</label>
 
-          <ng-container *ngIf="schema.type==='input'">
+          <ng-container
+            *ngIf="
+              schema.type==='input' ||
+              schema.type==='number'
+            "
+          >
             <input
               class="form-control"
+              [id]="schema.name"
               [type]="schema.type"
               [formControlName]="schema.name"
               [placeholder]="schema.placeholder || ''"
@@ -33,20 +38,30 @@
           <ng-container *ngIf="schema.type==='textarea'">
             <textarea
               class="form-control"
+              [id]="schema.name"
               [formControlName]="schema.name"
               [placeholder]="schema.placeholder || ''"
             ></textarea>
           </ng-container>
 
           <ng-container *ngIf="schema.type==='checkbox'">
-            <div *ngFor="let checkboxItem of schema.children || []">
-              <input type="checkbox" [name]="checkboxItem.name" (change)="checkboxChanged(schema.name, formGroup, schema.children, checkboxItem, $event)" >
-              <label [for]="checkboxItem.name" >{{ checkboxItem.text }}</label>
-            </div>
+            <label *ngFor="let checkboxItem of schema.children || []">
+              <input
+                type="checkbox"
+                (change)="checkboxChanges(
+                  schema.name,
+                  data.formGroup,
+                  schema.children,
+                  checkboxItem,
+                  $event
+                )"
+              >
+              <span>{{ checkboxItem.text }}</span>
+            </label>
           </ng-container>
 
           <ng-container *ngIf="schema.type==='status'">
-            <select [formControlName]="schema.name">
+            <select [id]="schema.name" [formControlName]="schema.name">
               <option value="publish">Publish</option>
               <option value="draft">Draft</option>
               <option value="archive">Archive</option>
@@ -54,7 +69,7 @@
           </ng-container>
 
           <ng-container *ngIf="schema.type==='locale'">
-            <select [formControlName]="schema.name">
+            <select [id]="schema.name" [formControlName]="schema.name">
               <option
                 *ngFor="let localeItem of settingService.locales"
                 [value]="localeItem.value"
@@ -62,16 +77,19 @@
             </select>
           </ng-container>
 
-        </label>
+        </div>
 
-        <div class="action">
-          <button class="button-primary" type="submit" [disabled]="!theForm.form.valid">Save</button>
+        <div class="actions">
+          <button
+            class="button-primary"
+            type="submit"
+            [disabled]="!theForm.form.valid"
+          >{{ submitText }}</button>
         </div>
 
       </form>
     </div>
 
-  </ng-container>
   </div>
   
   <ng-template #notFound>

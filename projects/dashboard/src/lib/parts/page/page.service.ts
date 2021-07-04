@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { PageDataService } from '@lamnhan/ngx-schemata';
 
-import { GetAllResult, GetItemResult } from '../../services/config/config.service';
+import { FormSchemaItem } from '../../services/config/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,13 +28,8 @@ export class PagePartService {
     ]
   };
   
-  constructor(private dataService: PageDataService) {}
+  public readonly formSchema: FormSchemaItem[] = [];
+  
+  constructor(public readonly dataService: PageDataService) {}
 
-  getAll() {
-    return this.dataService.getCollection(undefined, false) as unknown as GetAllResult;
-  }
-
-  getItem(id: string) {
-    return this.dataService.getDoc(id, false) as unknown as GetItemResult
-  }
 }

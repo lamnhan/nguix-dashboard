@@ -21,10 +21,13 @@ export class ListPage implements OnInit {
   public readonly data$ = this.route.params.pipe(
     switchMap(params => {
       const part = this.dashboardService.getPart(params.part);
-      if (part?.getAll) {
+      if (part?.dataService) {
         return combineLatest([
           of(part),
-          part.getAll().pipe(catchError(() => of(null))),
+          part
+            .dataService
+            .getCollection(undefined, false)
+            .pipe(catchError(() => of(null))),
         ]);
       } else {
         return of([]);
@@ -71,6 +74,7 @@ export class ListPage implements OnInit {
       // origin item
       if (!dbItem?.locale || dbItem?.locale === defaultLocale) {
         items.push(dbItem);
+        // util recording
         missingTranlationRecord[dbItem.id] = [...allTranslations];
       }
       // localized items
@@ -86,7 +90,7 @@ export class ListPage implements OnInit {
       const id = origin.id as string;
       const EOL = ' | ';
       // all items
-      const all: DatabaseItem[] = [origin].concat(localizedRecord[id]);
+      const all: DatabaseItem[] = [origin].concat(localizedRecord[id] || []);
       // missing translations
       all.forEach(item => {
         const index = !item.locale ? -1 : missingTranlationRecord[id].indexOf(item.locale);
