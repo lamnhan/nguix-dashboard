@@ -4,7 +4,7 @@ import { of, combineLatest } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
-import { DatabaseItem } from '../../services/config/config.service';
+import { DashboardPart, DatabaseItem } from '../../services/config/config.service';
 import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
 
 @Component({
@@ -56,7 +56,7 @@ export class ListPage implements OnInit {
     private route: ActivatedRoute,
     private helperService: HelperService,
     private settingService: SettingService,
-    private dashboardService: DashboardService
+    public dashboardService: DashboardService
   ) {}
 
   ngOnInit(): void {}

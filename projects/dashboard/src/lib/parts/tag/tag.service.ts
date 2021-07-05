@@ -3,6 +3,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { TagDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,12 +30,7 @@ export class TagPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    {
-      label: 'Count',
-      name: 'count',
-      type: 'number',
-      defaultValue: 0
-    }
+    Schemas.count,
   ];
 
   constructor(public readonly dataService: TagDataService) {}

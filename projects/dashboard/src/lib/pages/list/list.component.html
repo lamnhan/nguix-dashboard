@@ -6,7 +6,7 @@
     <div class="head">
 
       <div class="title">
-        <h1>Posts</h1>
+        <h1>All {{ part.menuItem.text || 'Items' }}</h1>
         <a
           class="button-outline-primary"
           [usefulRouterLink]="['admin', 'new', part.name]"
@@ -68,10 +68,18 @@
                   </div>  
   
                   <ul class="actions">
-                    <li class="edit"><a href="#">Edit</a></li>
-                    <li class="trash"><a href="#">Trash</a></li>
-                    <li class="preview"><a href="#">Preview</a></li>
-                    <li class="detail"><a href="#" (click)="detail=detail&&detail===item.id?'':item.id; false">Detail</a></li>
+                    <li class="edit">
+                      <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">Edit</a>
+                    </li>
+                    <li class="trash">
+                      <a href="#" (click)="dashboardService.removeItem(part, item.id); false">Trash</a>
+                    </li>
+                    <li class="preview">
+                      <a href="#" (click)="dashboardService.previewItem(part); false">Preview</a>
+                    </li>
+                    <li class="detail">
+                      <a href="#" (click)="detail=detail&&detail===item.id?'':item.id; false">Detail</a>
+                    </li>
                   </ul>  
   
                   <ul class="mobile-detail" [class.show]="item.id===detail">
@@ -84,8 +92,10 @@
 
                 <ng-container *ngFor="let missingTranslation of listingItem.missingTranslations">
                 <li>
-                  <em>{{ data.recordLocales[missingTranslation].text }}</em>
-                  <a href="#">Add Translation</a>
+                  <div class="major">
+                    <em>{{ data.recordLocales[missingTranslation].text }}</em>
+                    <a href="#">Add the translation</a>
+                  </div>
                 </li>
                 </ng-container>
 

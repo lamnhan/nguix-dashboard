@@ -3,6 +3,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { CategoryDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,22 +30,11 @@ export class CategoryPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    { label: 'Description', name: 'description', type: 'textarea' },
-    { label: 'Thumbnail', name: 'thumbnail', type: 'input' },
-    { label: 'Image', name: 'image', type: 'input'},
-    {
-      label: 'Count', name: 'count', type: 'number',
-      defaultValue: 0
-    },
-    {
-      label: 'Only',
-      name: 'only',
-      type: 'checkbox',
-      children: [
-        { text: 'Post', name: 'post', checked: false },
-        { text: 'Product', name: 'product', checked: false },
-      ]
-    },
+    Schemas.description,
+    Schemas.thumbnail,
+    Schemas.image,
+    Schemas.count,
+    Schemas.only,
   ];
 
   constructor(public readonly dataService: CategoryDataService) {}

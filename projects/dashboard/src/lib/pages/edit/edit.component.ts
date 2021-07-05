@@ -6,6 +6,7 @@ import { tap, map, switchMap, catchError, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem, FormSchemaItem } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
 @Component({
@@ -83,7 +84,7 @@ export class EditPage implements OnInit, OnDestroy {
     private navService: NavService,
     public settingService: SettingService,
     private userService: UserService,
-    private dashboardService: DashboardService,
+    public dashboardService: DashboardService,
   ) {}
 
   ngOnInit(): void {}
@@ -183,36 +184,19 @@ export class EditPage implements OnInit, OnDestroy {
     }
     // set id & title
     else {
-      const schema = [...part.formSchema];
+      const schema = part.formSchema.map(item => this.processSchema(item));
       // title
-      schema.unshift({
-        label: 'Title', name: 'title', type: 'input',
-        validators: [Validators.required],
-      });
+      schema.unshift(Schemas.title);
       // id (new only)
       if (this.isNew) {
-        schema.unshift({
-          label: 'ID', name: 'id', type: 'input',
-          validators: [Validators.required],
-        });
+        schema.unshift(Schemas.id);
       }
       // locale
-      schema.push({
-        label: 'Locale', name: 'locale', type: 'locale',
-        defaultValue: this.settingService.defaultLocale,
-        validators: [Validators.required]
-      });
+      schema.push({ ...Schemas.locale, defaultValue: this.settingService.defaultLocale });
       // origin
-      schema.push({
-        label: 'Origin', name: 'origin', type: 'input',
-        validators: [Validators.required]
-      });
+      schema.push(Schemas.origin);
       // status
-      schema.push({
-        label: 'Status', name: 'status', type: 'status',
-        defaultValue: 'draft',
-        validators: [Validators.required]
-      });
+      schema.push(Schemas.status);
       // result
       return schema;
     }
@@ -223,6 +207,7 @@ export class EditPage implements OnInit, OnDestroy {
     databaseItem?: null | DatabaseItem
   ): FormGroup {
     const fields = {} as Record<string, any>;
+    // build fields
     formSchema.forEach(schema => {
       const {name, defaultValue, validators} = schema;
       const value = !databaseItem || !databaseItem[name] ? '' : databaseItem[name];
@@ -232,9 +217,34 @@ export class EditPage implements OnInit, OnDestroy {
         control.markAsDirty();
       }
       fields[name] = control;
+      // further process for special data types
+      this.processSchemaData(schema, value);
     });
     // result
     return this.formBuilder.group(fields);
   }
 
+  private processSchema(schema: FormSchemaItem) {
+    const item = {...schema};
+    const { type } = schema;
+    // 1. only
+    if (type === 'only') {
+      item.children = this.dashboardService.getParts()
+        .filter(item => ['front', 'tag'].indexOf(item.name) === -1) // excludes
+        .map(item => ({ text: item.menuItem.text as string, name: item.name, checked: false }));
+    }
+    // 2. ...
+    // result
+    return item;
+  }
+
+  private processSchemaData(schema: FormSchemaItem, value: any) {
+    const { type, children } = schema;
+    if (!value || !children) { return; }
+    // 1. checkbox alike
+    if (type === 'checkbox' || type === 'only') {
+      children.forEach(child => (value as string[]).indexOf(child.name) ? false : child.checked = true);
+    }
+    // 2. ...
+  }
 }

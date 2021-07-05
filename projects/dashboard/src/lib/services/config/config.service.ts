@@ -28,13 +28,21 @@ export type GetItemResult = Observable<DatabaseItem>;
 export interface FormSchemaItem {
   label: string;
   name: string;
-  type: string;
+  type: SchemaType;
   defaultValue?: any;
   placeholder?: string;
   description?: string;
   validators?: any[];
-  children?: any[];
+  children?: CheckboxAlikeChild[];
   data?: Record<string, any>;
+}
+
+export type SchemaType = string;
+
+export interface CheckboxAlikeChild {
+  text: string;
+  name: string;
+  checked: boolean;
 }
 
 export interface FormResult {

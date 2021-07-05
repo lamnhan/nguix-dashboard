@@ -5,12 +5,17 @@
     <div class="head">
 
       <div class="title">
-        <h1>Add New Post</h1>
+        <h1>{{ isNew ? 'Add New ' : 'Update' }} {{ part.name }}</h1>
+        <a
+          class="button-outline-primary"
+          [usefulRouterLink]="['admin', 'list', part.name]"
+        >All {{ part.menuItem.text || 'Items' }}</a>
       </div>
 
     </div>
 
     <div class="body">
+
       <form
         [formGroup]="data.formGroup"
         (ngSubmit)="submit(part, data.formGroup)"
@@ -44,7 +49,12 @@
             ></textarea>
           </ng-container>
 
-          <ng-container *ngIf="schema.type==='checkbox'">
+          <ng-container
+            *ngIf="
+              schema.type==='checkbox' ||
+              schema.type==='only'
+            "
+          >
             <label *ngFor="let checkboxItem of schema.children || []">
               <input
                 type="checkbox"
@@ -80,14 +90,25 @@
         </div>
 
         <div class="actions">
-          <button
-            class="button-primary"
-            type="submit"
-            [disabled]="!theForm.form.valid"
-          >{{ submitText }}</button>
+          <div>
+            <button
+              class="button-primary"
+              type="submit"
+              [disabled]="!theForm.form.valid"
+            >{{ submitText }}</button>
+            <a
+              class="button-outline-primary"
+              href="#"
+              (click)="dashboardService.previewItem(part); false"
+            >Preview</a>
+          </div>
+          <div class="danger-area" *ngIf="!isNew && itemId">
+            <a href="#" (click)="dashboardService.removeItem(part, itemId); false">Trash</a>
+          </div>
         </div>
 
       </form>
+
     </div>
 
   </div>

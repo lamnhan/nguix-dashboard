@@ -42,6 +42,14 @@ export class DashboardService {
     return this.configService.getConfig();
   }
 
+  getParts() {
+    return this
+      .getConfig()
+      .parts
+      .map(item => typeof item === 'string' ? this.getPart(item) : item)
+      .filter(item => !!item) as DashboardPart[];
+  }
+
   getPart(part: string): undefined | DashboardPart {
     switch (part) {
       case 'front':
@@ -55,7 +63,7 @@ export class DashboardService {
       case 'post':
         return this.postPart;    
       default:
-        return this.configService
+        return this
           .getConfig()
           .parts
           .filter(item => typeof item !== 'string' && item.name === part)
@@ -64,18 +72,19 @@ export class DashboardService {
   }
 
   getMenu() {
-    return this.configService
-      .getConfig()
-      .parts
-      .map(item => {
-        if (typeof item === 'string') {
-          const part = this.getPart(item);
-          return !part ? null : part.menuItem;
-        } else {
-          return item.menuItem;
-        }
-      })
-      .filter(item => !!item) as MenuItem[];
+    return this.getParts().map(item => item.menuItem);
+  }
+
+  previewItem(part: DashboardPart) {
+    alert('// TODO: Preview ...');
+  }
+
+  removeItem(part: DashboardPart, id: string) {
+    const yes = confirm('Trash item?');
+    // TODO: include delete permanently in the confirm alert
+    if (yes && part.dataService) {
+      part.dataService.trash(id);
+    }
   }
 
 }

@@ -5,6 +5,7 @@
 export * from './lib/dashboard.module';
 
 export * from './lib/services/config/config.service';
+export * from './lib/services/schema/schema.service';
 export * from './lib/services/dashboard/dashboard.service';
 
 export * from './lib/parts/front/front.service';

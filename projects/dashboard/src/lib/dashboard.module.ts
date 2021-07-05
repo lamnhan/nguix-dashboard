@@ -5,6 +5,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { NguixDashboardHeaderComponentModule } from './components/header/header.module';
 
 import { ConfigService, DASHBOARD_CONFIG, dashboardConfig } from './services/config/config.service';
+import { SchemaService } from './services/schema/schema.service';
 import { DashboardService } from './services/dashboard/dashboard.service';
 
 import { FrontPartService } from './parts/front/front.service';
@@ -32,6 +33,7 @@ import { PostPartService } from './parts/post/post.service';
       })
     },
     ConfigService,
+    SchemaService,
     DashboardService,
     // parts
     FrontPartService,
