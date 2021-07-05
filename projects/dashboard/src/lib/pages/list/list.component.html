@@ -55,31 +55,67 @@
           </tr>
         </thead>  
         <tbody>
-          <tr *ngFor="let listingItem of filteredItems | statusFilter : status | paginate: {itemsPerPage: 30, currentPage: p}">
+          <tr *ngFor="let listingItem of filteredItems | statusFilter : status | paginate: {itemsPerPage: 30, currentPage: pageNo}">
           <ng-container *ngIf="listingItem.all as items">
   
             <td class="title">  
               <ul>
                 <li *ngFor="let item of items">
 
+                  <div class="locale">{{ data.recordLocales[item.locale].text }}</div>
+
                   <div class="major">
-                    <em>{{ data.recordLocales[item.locale].text }}</em>
-                    <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">{{ item.title }}</a>
+                    <span class="label" [class]="item.status" *ngIf="item.status!=='publish'">{{ item.status }}</span>
+                    <!-- draft / publish -->
+                    <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
+                      <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">{{ item.title }}</a>
+                    </ng-container>
+                    <!-- archive -->
+                    <ng-container *ngIf="item.status==='archive'">
+                      <a href="javascript:void(0)" (click)="dashboardService.unarchiveItem(part, item.id)">{{ item.title }}</a>
+                    </ng-container>
+                    <!-- trash -->
+                    <ng-container *ngIf="item.status==='trash'">
+                      <a href="javascript:void(0)" (click)="dashboardService.restoreItem(part, item.id)">{{ item.title }}</a>
+                    </ng-container>
                   </div>  
   
                   <ul class="actions">
+
+                    <!-- draft / publish -->
+                    <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
                     <li class="edit">
                       <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">Edit</a>
                     </li>
+                    <li class="archive">
+                      <a href="javascript:void(0)" (click)="dashboardService.archiveItem(part, listingItem)">Archive</a>
+                    </li>
                     <li class="trash">
-                      <a href="#" (click)="dashboardService.removeItem(part, item.id); false">Trash</a>
+                      <a href="javascript:void(0)" (click)="dashboardService.removeItem(part, listingItem)">Trash</a>
                     </li>
                     <li class="preview">
-                      <a href="#" (click)="dashboardService.previewItem(part); false">Preview</a>
+                      <a href="javascript:void(0)" (click)="dashboardService.previewItem(part)">Preview</a>
                     </li>
+                    </ng-container>
+
+                    <!-- archive -->
+                    <ng-container *ngIf="item.status==='archive'">
+                    <li class="unarchive">
+                      <a href="javascript:void(0)" (click)="dashboardService.unarchiveItem(part, listingItem)">Unarchive</a>
+                    </li>
+                    </ng-container>
+
+                    <!-- trash -->
+                    <ng-container *ngIf="item.status==='trash'">
+                    <li class="restore">
+                      <a href="javascript:void(0)" (click)="dashboardService.restoreItem(part, listingItem)">Restore</a>
+                    </li>
+                    </ng-container>
+
                     <li class="detail">
-                      <a href="#" (click)="detail=detail&&detail===item.id?'':item.id; false">Detail</a>
+                      <a href="javascript:void(0)" (click)="detail=detail&&detail===item.id?'':item.id">Detail</a>
                     </li>
+
                   </ul>  
   
                   <ul class="mobile-detail" [class.show]="item.id===detail">
@@ -91,9 +127,9 @@
                 </li>
 
                 <ng-container *ngFor="let missingTranslation of listingItem.missingTranslations">
-                <li>
+                <li class="missing-item">
+                  <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
                   <div class="major">
-                    <em>{{ data.recordLocales[missingTranslation].text }}</em>
                     <a href="#">Add the translation</a>
                   </div>
                 </li>
@@ -133,7 +169,7 @@
           <tr>
             <td colspan="42">
               <pagination-controls
-                (pageChange)="p=$event"
+                (pageChange)="pageNo=$event"
                 [directionLinks]="false"
               ></pagination-controls>
             </td>

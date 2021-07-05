@@ -29,6 +29,7 @@ export interface FormSchemaItem {
   label: string;
   name: string;
   type: SchemaType;
+  disabled?: boolean;
   defaultValue?: any;
   placeholder?: string;
   description?: string;

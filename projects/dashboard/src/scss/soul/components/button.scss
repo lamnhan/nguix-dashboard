@@ -10,7 +10,7 @@
     margin-right: .5rem;
   }
   
-  &:hover, &:focus, &:active {
+  &:hover, &:focus, &:active, &.active {
     outline: 0;
     box-shadow: none;
     background: $primary-shade;
@@ -18,7 +18,7 @@
     text-decoration: none;
   }
   
-  &:disabled {
+  &:disabled, &.disabled {
     opacity: 1;
     background: rgba($primary, .5);
     color: rgba($primary-contrast, .5);
@@ -38,7 +38,7 @@
     margin-right: .5rem;
   }
   
-  &:hover, &:focus, &:active {
+  &:hover, &:focus, &:active, &.active {
     outline: 0;
     box-shadow: none;
     background: none;
@@ -47,7 +47,7 @@
     text-decoration: none;
   }
 
-  &:disabled {
+  &:disabled, &.disabled {
     opacity: 1;
     border: 1px solid rgba($primary, .5);
     color: rgba($primary, .5);
@@ -72,6 +72,28 @@
   }
 }
 
+  
+// colors
+.button-dark {
+  @include _primary_base();
+  background: $dark;
+  color: $light;
+  
+  &:hover, &:focus, &:active, &.active {
+    background: $dark-shade;
+  }
+}
+
+.button-danger {
+  @include _primary_base();
+  background: $danger;
+  color: $light;
+  
+  &:hover, &:focus, &:active, &.active {
+    background: $danger-shade;
+  }
+}
+
 .button-outline-primary {
   @include _outline_primary_base();
   
@@ -80,8 +102,7 @@
     @include _outline_primary_base();
     padding: .25rem .5rem;
     font-size: 11px;
-  }
-  
+  }  
   &-lg {
     @include _outline_primary_base();
     padding: .5rem 1.5rem;

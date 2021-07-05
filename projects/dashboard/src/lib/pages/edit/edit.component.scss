@@ -1,0 +1,35 @@
+@import '../../../scss/skin';
+
+.host {
+
+  .main {
+
+    .head {
+
+      .title {
+        display: flex;
+        flex-wrap: nowrap;
+
+        h1 {
+          margin-right: 1rem;
+        }
+      }
+    }
+
+    .body {
+
+      form {
+
+        .actions {}
+      }
+    }
+
+  }
+
+  .not-found {
+
+  }
+
+}
+
+.loading {}

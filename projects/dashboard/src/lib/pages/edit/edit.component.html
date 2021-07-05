@@ -65,6 +65,7 @@
                   checkboxItem,
                   $event
                 )"
+                [checked]="checkboxItem.checked"
               >
               <span>{{ checkboxItem.text }}</span>
             </label>
@@ -74,7 +75,6 @@
             <select [id]="schema.name" [formControlName]="schema.name">
               <option value="publish">Publish</option>
               <option value="draft">Draft</option>
-              <option value="archive">Archive</option>
             </select>
           </ng-container>
 
@@ -90,21 +90,56 @@
         </div>
 
         <div class="actions">
-          <div>
-            <button
-              class="button-primary"
-              type="submit"
-              [disabled]="!theForm.form.valid"
-            >{{ submitText }}</button>
+
+          <button
+            class="submit button-primary"
+            type="submit"
+            [disabled]="!theForm.form.valid || lockdown"
+          >{{ submitText }}</button>
+          <a
+            class="preview button-outline-primary"
+            [class.disabled]="!theForm.form.valid || lockdown"
+            href="#"
+            (click)="
+              !theForm.form.valid || lockdown
+                ? false
+                : dashboardService.previewItem(part);
+              false
+            "
+          >Preview</a>
+  
+          <ng-container *ngIf="!isNew && databaseItem">
+
             <a
-              class="button-outline-primary"
+              class="unarchive button-success"
+              *ngIf="databaseItem.status==='archive'; else archived"
               href="#"
-              (click)="dashboardService.previewItem(part); false"
-            >Preview</a>
-          </div>
-          <div class="danger-area" *ngIf="!isNew && itemId">
-            <a href="#" (click)="dashboardService.removeItem(part, itemId); false">Trash</a>
-          </div>
+              (click)="dashboardService.unarchiveItem(part, databaseItem.id); false"
+            >Unarchive</a>
+            <ng-template #archived>
+              <a
+                class="archive button-dark"                
+                href="#"
+                (click)="dashboardService.archiveItem(part, databaseItem.id); false"
+              >Archive</a>
+            </ng-template>
+
+            <a
+              class="trash button-success"
+              *ngIf="databaseItem.status==='trash'; else trash"
+              href="#"
+              (click)="dashboardService.restoreItem(part, databaseItem.id); false"
+            >Restore</a>
+            <ng-template #trash>
+              <a
+                class="trash button-danger"
+                href="#"
+                (click)="dashboardService.removeItem(part, databaseItem.id); false"
+              >Trash</a>
+            </ng-template>
+
+          </ng-container>
+  
         </div>
 
       </form>

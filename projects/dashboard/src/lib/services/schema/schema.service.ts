@@ -4,8 +4,8 @@ import { Validators } from '@angular/forms';
 import { FormSchemaItem } from '../config/config.service';
 
 export const Schemas = {
-  id: { label: 'Title', name: 'title', type: 'input', validators: [Validators.required] },
-  title: { label: 'ID', name: 'id', type: 'input', validators: [Validators.required] },
+  id: { label: 'ID', name: 'id', type: 'input', validators: [Validators.required] },
+  title: { label: 'Title', name: 'title', type: 'input', validators: [Validators.required] },
   description: { label: 'Description', name: 'description', type: 'textarea' },
   thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'input' },
   image: { label: 'Image', name: 'image', type: 'input'},

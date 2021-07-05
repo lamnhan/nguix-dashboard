@@ -15,14 +15,13 @@ import { DashboardService } from '../../services/dashboard/dashboard.service';
   styleUrls: ['./edit.component.scss']
 })
 export class EditPage implements OnInit, OnDestroy {
-  itemId?: string;
+  lockdown = false;
   isNew = false;
-  submitText = 'Submit';
+  databaseItem?: DatabaseItem;
+  submitText = '-';
 
   public readonly data$ = this.route.params.pipe(
     switchMap(params => {
-      this.itemId = params.id;
-      this.isNew = !params.id;
       const part = this.dashboardService.getPart(params.part);
       if (part?.dataService) {
         return combineLatest([
@@ -42,6 +41,8 @@ export class EditPage implements OnInit, OnDestroy {
       if (!part || !part.formSchema) {
         return {};
       }
+      this.isNew = !databaseItem;
+      this.databaseItem = databaseItem;
       const formSchema = this.getFormSchema(part);
       const formGroup = this.getFormGroup(formSchema, databaseItem);
       return {
@@ -52,7 +53,7 @@ export class EditPage implements OnInit, OnDestroy {
     }),
     tap(data => {
       // submit text
-      this.submitText = this.getSubmitText(data.formGroup?.get('status')?.value || 'draft');
+      this.submitText = this.getSubmitText(this.databaseItem?.status || 'draft');
       const statusControl = data.formGroup?.get('status');
       if (statusControl) {
         this.statusChangesSubscription = statusControl.valueChanges.subscribe(status => {
@@ -116,7 +117,8 @@ export class EditPage implements OnInit, OnDestroy {
     }
   }
 
-  submit(part: DashboardPart, formGroup: FormGroup) {    
+  submit(part: DashboardPart, formGroup: FormGroup) {
+    this.lockdown = true;
     // mode
     const mode = this.isNew ? 'new' : 'update';
     // changed data
@@ -144,14 +146,18 @@ export class EditPage implements OnInit, OnDestroy {
         part.dataService
           .add(data.id as string, data)
           .pipe(take(1))
-          .subscribe(() =>
-            this.navService.navigate(['admin', 'edit', part.name, data.id as string])
-          );
+          .subscribe(() => {
+            this.lockdown = false;
+            this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
+          });
       } else {
         part.dataService
-          .update(this.itemId as string, data)
+          .update((this.databaseItem as DatabaseItem).id as string, data)
           .pipe(take(1))
-          .subscribe(() => alert('Update successfully!'));
+          .subscribe(() => {
+            this.lockdown = false;
+            alert('Update successfully!');
+          });
       }
     } else {
       return alert('No form handler nor data service for this part.');
@@ -162,19 +168,15 @@ export class EditPage implements OnInit, OnDestroy {
     if (this.isNew) {
       return status === 'publish'
         ? 'Publish now'
-        : status === 'archive'
-        ? 'Add archive'
         : status === 'draft'
         ? 'Save draft'
-        : 'Submit';
+        : '-';
     } else {
       return status === 'publish'
-        ? 'Update item'
-        : status === 'archive'
-        ? 'Archive item'
+        ? 'Update now'
         : status === 'draft'
-        ? 'Draft item'
-        : 'Submit';
+        ? 'Save draft'
+        : '-';
     }
   }
 
@@ -188,15 +190,15 @@ export class EditPage implements OnInit, OnDestroy {
       // title
       schema.unshift(Schemas.title);
       // id (new only)
-      if (this.isNew) {
-        schema.unshift(Schemas.id);
-      }
+      schema.unshift({ ...Schemas.id, disabled: !this.isNew });
       // locale
       schema.push({ ...Schemas.locale, defaultValue: this.settingService.defaultLocale });
       // origin
-      schema.push(Schemas.origin);
+      schema.push({ ...Schemas.origin, disabled: !this.isNew });
       // status
-      schema.push(Schemas.status);
+      if (this.isNew || (this.databaseItem?.status === 'draft')) {
+        schema.push(Schemas.status);
+      }
       // result
       return schema;
     }
@@ -209,9 +211,12 @@ export class EditPage implements OnInit, OnDestroy {
     const fields = {} as Record<string, any>;
     // build fields
     formSchema.forEach(schema => {
-      const {name, defaultValue, validators} = schema;
+      const {name, defaultValue, disabled, validators} = schema;
       const value = !databaseItem || !databaseItem[name] ? '' : databaseItem[name];
-      const control = new FormControl(value, validators || []);
+      const control = new FormControl(
+        !disabled ? value : {value, disabled},
+        validators || []
+      );
       if (!value && defaultValue !== undefined && defaultValue !== null) {
         control.setValue(defaultValue);
         control.markAsDirty();
@@ -230,7 +235,7 @@ export class EditPage implements OnInit, OnDestroy {
     // 1. only
     if (type === 'only') {
       item.children = this.dashboardService.getParts()
-        .filter(item => ['front', 'tag'].indexOf(item.name) === -1) // excludes
+        .filter(item => ['front', 'category', 'tag'].indexOf(item.name) === -1) // excludes
         .map(item => ({ text: item.menuItem.text as string, name: item.name, checked: false }));
     }
     // 2. ...

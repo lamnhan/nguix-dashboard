@@ -4,7 +4,7 @@ import { of, combineLatest } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
-import { DashboardPart, DatabaseItem } from '../../services/config/config.service';
+import { DatabaseItem } from '../../services/config/config.service';
 import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { DashboardService, DashboardListingItem } from '../../services/dashboard
 export class ListPage implements OnInit {
   query?: string;
   status = 'all';
-  p = 1;
+  pageNo = 1;
   detail = '';
 
   public readonly data$ = this.route.params.pipe(
@@ -26,7 +26,7 @@ export class ListPage implements OnInit {
           of(part),
           part
             .dataService
-            .getCollection(undefined, false)
+            .getCollection(ref => ref.orderBy('createdAt', 'desc'), false)
             .pipe(catchError(() => of(null))),
         ]);
       } else {
@@ -42,7 +42,7 @@ export class ListPage implements OnInit {
         (result, item) => { result[item.value] = item; return result; },
         {} as Record<string, BuiltinListingItem>
       );
-      const items = this.localeFiltering(databaseItems, defaultLocale);
+      const items = this.buildListingItems(databaseItems, defaultLocale);
       return {
         defaultLocale,
         recordLocales,
@@ -61,7 +61,7 @@ export class ListPage implements OnInit {
 
   ngOnInit(): void {}
 
-  private localeFiltering(
+  private buildListingItems(
     databaseItems: DatabaseItem[],
     defaultLocale: string,
   ): DashboardListingItem[] {

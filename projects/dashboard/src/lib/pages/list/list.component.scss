@@ -23,7 +23,7 @@
 
       .statuses {
         display: flex;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         margin-top: .5rem;
 
         li {
@@ -95,15 +95,12 @@
               padding: 0;
               margin-bottom: 1rem;
 
-              .major {
+              .locale {
+                display: none;
+              }
 
-                em {
-                  display: none;
-                }
-
-                a {
+              .major a {
                   font-weight: 600;
-                }
               }
             }
 
@@ -112,14 +109,38 @@
               border: 1px solid $light_shade;
               padding: .5rem 1rem;
               margin-bottom: .5rem;
+
+              .locale {
+                display: block;
+                color: $medium;
+                font-size: 13px;
+                text-transform: uppercase;
+              }
   
               .major {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
 
-                em {
-                  display: block;
-                  color: $medium;
-                  font-size: 13px;
+                .label {
+                  font-size: 11px;
+                  padding: 1px 5px;
+                  margin-right: .5rem;
+                  border-radius: 3px;
                   text-transform: uppercase;
+
+                  &.draft {
+                    background: $secondary;
+                    color: $light;
+                  }
+                  &.archive {
+                    background: $dark;
+                    color: $dark_contrast;
+                  }
+                  &.trash {
+                    background: $danger;
+                    color: $light;
+                  }
                 }
 
                 a {
@@ -137,6 +158,10 @@
   
                   &.trash a {
                     color: $danger;
+                  }
+
+                  &.restore a, &.unarchive a {
+                    color: $success;
                   }
                 }
                 
@@ -166,6 +191,13 @@
                   color: $medium;
                   margin-right: 1rem;
                 }
+              }
+            }
+
+            .missing-item {
+
+              .major a {
+                font-size: 13px !important;
               }
             }
           }

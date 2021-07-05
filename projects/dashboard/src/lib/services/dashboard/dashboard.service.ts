@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { MenuItem } from '@lamnhan/ngx-useful';
+import { Observable, combineLatest, of } from 'rxjs';
+import { take, map, switchMap } from 'rxjs/operators';
+import { DatabaseData } from '@lamnhan/ngx-useful';
 
 import { ConfigService, DashboardPart, DatabaseItem } from '../config/config.service';
 
@@ -79,12 +81,98 @@ export class DashboardService {
     alert('// TODO: Preview ...');
   }
 
-  removeItem(part: DashboardPart, id: string) {
+  archiveItem(
+    part: DashboardPart,
+    input: string | DashboardListingItem
+  ) {
+    const yes = confirm('Archive item?');
+    if (yes) {
+      this.changeNetworkStatus(part, input, 'archive');
+    }
+  }
+
+  unarchiveItem(
+    part: DashboardPart,
+    input: string | DashboardListingItem
+  ) {
+    const yes = confirm('Un-archive item?');
+    if (yes) {
+      this.changeNetworkStatus(part, input, 'draft');
+    }
+  }
+
+  removeItem(
+    part: DashboardPart,
+    input: string | DashboardListingItem
+  ) {
     const yes = confirm('Trash item?');
     // TODO: include delete permanently in the confirm alert
-    if (yes && part.dataService) {
-      part.dataService.trash(id);
+    if (yes) {
+      this.changeNetworkStatus(part, input, 'trash');
     }
+  }
+
+  restoreItem(
+    part: DashboardPart,
+    input: string | DashboardListingItem
+  ) {
+    const yes = confirm('Restore item?');
+    if (yes) {
+      this.changeNetworkStatus(part, input, 'draft');
+    }
+  }
+
+  private changeNetworkStatus(
+    part: DashboardPart,
+    input: string | DashboardListingItem,
+    status: string
+  ) {
+    this.runNetworkAction(
+      part,
+      input,
+      id =>
+        (part.dataService as DatabaseData<any>).update(id, {status}),
+      () => {
+        if (typeof input !== 'string') {
+          input.origin.status = status;
+          input.all.forEach(item => item.status = status);
+        }
+        alert('Status changed to: ' + status);
+      }
+    );
+  }
+
+  private runNetworkAction(
+    part: DashboardPart,
+    input: string | DashboardListingItem,
+    handler: (id: string) => Observable<any>,
+    done: () => void,
+  ) {
+    if (part.dataService) {
+      (
+        typeof input === 'string'
+        ? this.getIdsByOrigin(part.dataService, input)
+        : of(input.all.map(item => item.id as string))
+      )
+      .pipe(
+        switchMap(ids =>
+          combineLatest(ids.map(id => handler(id)))
+        )
+      )
+      .subscribe(() => done());
+    }
+  }
+
+  private getIdsByOrigin(dataService: DatabaseData<any>, origin: string) {
+    return dataService
+    .collection(ref => ref.where('origin', '==', origin))
+    .get()
+    .pipe(
+      take(1),
+      map(collection =>
+        collection.docs.map(doc => doc.data().id as string)
+      )
+    );
   }
 
 }
