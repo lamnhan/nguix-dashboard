@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { of, combineLatest } from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { Store, Select } from '@ngxs/store';
+import { Observable, of, combineLatest } from 'rxjs';
+import { switchMap, map, tap, catchError } from 'rxjs/operators';
 import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
-import { DatabaseItem } from '../../services/config/config.service';
+import { DatabaseItem, DashboardPart } from '../../services/config/config.service';
 import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
+
+import { GetPart, DatabaseStateModel } from '../../states/database.state';
 
 @Component({
   selector: 'nguix-dashboard-list-page',
@@ -13,47 +16,50 @@ import { DashboardService, DashboardListingItem } from '../../services/dashboard
   styleUrls: ['./list.component.scss']
 })
 export class ListPage implements OnInit {
-  query?: string;
+  private part?: DashboardPart;
+
+  query = '';
   status = 'all';
   pageNo = 1;
   detail = '';
 
-  public readonly data$ = this.route.params.pipe(
-    switchMap(params => {
+  public readonly page$ = this.route.params.pipe(
+    tap(console.log),
+    map(params => {
       const part = this.dashboardService.getPart(params.part);
-      if (part?.dataService) {
-        return combineLatest([
-          of(part),
-          part
-            .dataService
-            .getCollection(ref => ref.orderBy('createdAt', 'desc'), false)
-            .pipe(catchError(() => of(null))),
-        ]);
-      } else {
-        return of([]);
-      }
+      return !part?.dataService ? {} : {part};
     }),
-    map(([part, databaseItems]) => {
-      if (!part || !databaseItems) {
-        return {};
+    tap(page => {
+      this.part = page.part;
+      if (this.part) {
+        this.store.dispatch(new GetPart(this.part))
       }
-      const defaultLocale = this.settingService.defaultLocale;
-      const recordLocales = this.settingService.locales.reduce(
-        (result, item) => { result[item.value] = item; return result; },
-        {} as Record<string, BuiltinListingItem>
-      );
-      const items = this.buildListingItems(databaseItems, defaultLocale);
-      return {
-        defaultLocale,
-        recordLocales,
-        part,
-        items,
-      };
     }),
   );
 
+  public readonly data$ = this.store
+    .select(state => state.database)
+    .pipe(
+      map(database => {
+        const part = this.part as DashboardPart;
+        const defaultLocale = this.settingService.defaultLocale;
+        const recordLocales = this.settingService.locales.reduce(
+          (result, item) => { result[item.value] = item; return result; },
+          {} as Record<string, BuiltinListingItem>
+        );
+        const listingItems = this.buildListingItems(database[part.name] || [], defaultLocale);
+        return {
+          part,
+          defaultLocale,
+          recordLocales,
+          listingItems,
+        };
+      }),
+    );
+
   constructor(
     private route: ActivatedRoute,
+    private store: Store,
     private helperService: HelperService,
     private settingService: SettingService,
     public dashboardService: DashboardService

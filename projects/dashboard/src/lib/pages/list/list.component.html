@@ -1,7 +1,8 @@
-<div class="host dashboard page" *ngIf="data$ | async as data; else loading">
+<div class="host dashboard page" *ngIf="page$ | async as page; else loading">
 
-  <div class="main" *ngIf="data.part as part; else notFound">
-  <ng-container *ngIf="data.items | queryFilter : query; let filteredItems">
+  <div class="main" *ngIf="page.part as part; else notFound">
+  <ng-container *ngIf="data$ | async; let data">
+  <ng-container *ngIf="data.listingItems | queryFilter : query; let filteredItems">
 
     <div class="head">
 
@@ -183,6 +184,7 @@
 
     </div>
 
+  </ng-container>
   </ng-container>
   </div>
 

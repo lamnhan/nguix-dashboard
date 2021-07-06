@@ -7,7 +7,8 @@
       "@lamnhan/ngx-useful": "ng.lamnhan.useful",
       "@lamnhan/ngx-schemata": "ng.lamnhan.schemata",
       "@ngneat/transloco": "transloco",
-      "ngx-pagination": "pagination"
+      "ngx-pagination": "pagination",
+      "@ngxs/store" : "ngxs"
     }
   },
   "allowedNonPeerDependencies": [

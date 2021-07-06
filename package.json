@@ -46,6 +46,7 @@
     "@lamnhan/ngx-schemata": "0.0.4",
     "@lamnhan/ngx-useful": "0.0.18",
     "@lamnhan/schemata": "0.0.12",
+    "@ngxs/store": "^3.7.2",
     "@unistylus/bootstrap": "0.0.2",
     "@unistylus/core": "0.0.1",
     "firebase": "8.6.1",
