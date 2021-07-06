@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, combineLatest, of } from 'rxjs';
-import { take, map, switchMap } from 'rxjs/operators';
-import { DatabaseData } from '@lamnhan/ngx-useful';
+import { Store } from '@ngxs/store';
+import { ToastrService } from 'ngx-toastr';
 
 import { ConfigService, DashboardPart, DatabaseItem } from '../config/config.service';
 
@@ -10,6 +9,8 @@ import { CategoryPartService } from '../../parts/category/category.service';
 import { TagPartService } from '../../parts/tag/tag.service';
 import { PagePartService } from '../../parts/page/page.service';
 import { PostPartService } from '../../parts/post/post.service';
+
+import { ChangeStatus } from '../../states/database/database.state';
 
 export interface DashboardListingStatus {
   title: string;
@@ -30,6 +31,8 @@ export interface DashboardListingItem {
 export class DashboardService {
 
   constructor(
+    private store: Store,
+    private toastr: ToastrService,
     // services
     private configService: ConfigService,
     // parts
@@ -83,96 +86,51 @@ export class DashboardService {
 
   archiveItem(
     part: DashboardPart,
-    input: string | DashboardListingItem
+    origin: string
   ) {
     const yes = confirm('Archive item?');
     if (yes) {
-      this.changeNetworkStatus(part, input, 'archive');
+      this.changeStatusByOrigin(part, origin, 'archive');
     }
   }
 
   unarchiveItem(
     part: DashboardPart,
-    input: string | DashboardListingItem
+    origin: string
   ) {
-    const yes = confirm('Un-archive item?');
+    const yes = confirm('Unarchive item?');
     if (yes) {
-      this.changeNetworkStatus(part, input, 'draft');
+      this.changeStatusByOrigin(part, origin, 'draft');
     }
   }
 
   removeItem(
     part: DashboardPart,
-    input: string | DashboardListingItem
+    origin: string
   ) {
     const yes = confirm('Trash item?');
     // TODO: include delete permanently in the confirm alert
     if (yes) {
-      this.changeNetworkStatus(part, input, 'trash');
+      this.changeStatusByOrigin(part, origin, 'trash');
     }
   }
 
   restoreItem(
     part: DashboardPart,
-    input: string | DashboardListingItem
+    origin: string
   ) {
     const yes = confirm('Restore item?');
     if (yes) {
-      this.changeNetworkStatus(part, input, 'draft');
+      this.changeStatusByOrigin(part, origin, 'draft');
     }
   }
 
-  private changeNetworkStatus(
+  private changeStatusByOrigin(
     part: DashboardPart,
-    input: string | DashboardListingItem,
+    origin: string,
     status: string
   ) {
-    this.runNetworkAction(
-      part,
-      input,
-      id =>
-        (part.dataService as DatabaseData<any>).update(id, {status}),
-      () => {
-        if (typeof input !== 'string') {
-          input.origin.status = status;
-          input.all.forEach(item => item.status = status);
-        }
-        alert('Status changed to: ' + status);
-      }
-    );
-  }
-
-  private runNetworkAction(
-    part: DashboardPart,
-    input: string | DashboardListingItem,
-    handler: (id: string) => Observable<any>,
-    done: () => void,
-  ) {
-    if (part.dataService) {
-      (
-        typeof input === 'string'
-        ? this.getIdsByOrigin(part.dataService, input)
-        : of(input.all.map(item => item.id as string))
-      )
-      .pipe(
-        switchMap(ids =>
-          combineLatest(ids.map(id => handler(id)))
-        )
-      )
-      .subscribe(() => done());
-    }
-  }
-
-  private getIdsByOrigin(dataService: DatabaseData<any>, origin: string) {
-    return dataService
-    .collection(ref => ref.where('origin', '==', origin))
-    .get()
-    .pipe(
-      take(1),
-      map(collection =>
-        collection.docs.map(doc => doc.data().id as string)
-      )
-    );
+    this.store.dispatch(new ChangeStatus(part, origin, status));
   }
 
 }

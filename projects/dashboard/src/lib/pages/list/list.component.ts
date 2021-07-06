@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Store, Select } from '@ngxs/store';
-import { Observable, of, combineLatest } from 'rxjs';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { map, tap } from 'rxjs/operators';
 import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
 import { DatabaseItem, DashboardPart } from '../../services/config/config.service';
 import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
 
-import { GetPart, DatabaseStateModel } from '../../states/database.state';
+import { GetPart } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-list-page',
@@ -24,13 +23,11 @@ export class ListPage implements OnInit {
   detail = '';
 
   public readonly page$ = this.route.params.pipe(
-    tap(console.log),
     map(params => {
-      const part = this.dashboardService.getPart(params.part);
-      return !part?.dataService ? {} : {part};
+      this.part = this.dashboardService.getPart(params.part);
+      return !this.part?.dataService ? {} : {part: this.part};
     }),
-    tap(page => {
-      this.part = page.part;
+    tap(() => {
       if (this.part) {
         this.store.dispatch(new GetPart(this.part))
       }

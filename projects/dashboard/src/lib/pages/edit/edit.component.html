@@ -1,9 +1,10 @@
-<div class="host dashboard page"  *ngIf="data$ | async as data; else loading">
+<div class="host dashboard page"  *ngIf="page$ | async as page; else loading">
 
-  <div class="main" *ngIf="data.part as part; else notFound">
-
+  <div class="main" *ngIf="page.part as part; else notFound">
+  <ng-container *ngIf="data$ | async; let data">
+    
     <div class="head">
-
+  
       <div class="title">
         <h1>{{ isNew ? 'Add New ' : 'Update' }} {{ part.name }}</h1>
         <a
@@ -11,20 +12,20 @@
           [usefulRouterLink]="['admin', 'list', part.name]"
         >All {{ part.menuItem.text || 'Items' }}</a>
       </div>
-
+  
     </div>
-
+  
     <div class="body">
-
+  
       <form
         [formGroup]="data.formGroup"
         (ngSubmit)="submit(part, data.formGroup)"
         #theForm="ngForm"
       >
-
+  
         <div class="group" *ngFor="let schema of data.formSchema">
           <label class="form-label" [for]="schema.name">{{ schema.label }}</label>
-
+  
           <ng-container
             *ngIf="
               schema.type==='input' ||
@@ -39,7 +40,7 @@
               [placeholder]="schema.placeholder || ''"
             >
           </ng-container>
-
+  
           <ng-container *ngIf="schema.type==='textarea'">
             <textarea
               class="form-control"
@@ -48,7 +49,7 @@
               [placeholder]="schema.placeholder || ''"
             ></textarea>
           </ng-container>
-
+  
           <ng-container
             *ngIf="
               schema.type==='checkbox' ||
@@ -70,14 +71,14 @@
               <span>{{ checkboxItem.text }}</span>
             </label>
           </ng-container>
-
+  
           <ng-container *ngIf="schema.type==='status'">
             <select [id]="schema.name" [formControlName]="schema.name">
               <option value="publish">Publish</option>
               <option value="draft">Draft</option>
             </select>
           </ng-container>
-
+  
           <ng-container *ngIf="schema.type==='locale'">
             <select [id]="schema.name" [formControlName]="schema.name">
               <option
@@ -86,11 +87,11 @@
               >{{ localeItem.text }}</option>
             </select>
           </ng-container>
-
+  
         </div>
-
+  
         <div class="actions">
-
+  
           <button
             class="submit button-primary"
             type="submit"
@@ -109,43 +110,44 @@
           >Preview</a>
   
           <ng-container *ngIf="!isNew && databaseItem">
-
+  
             <a
               class="unarchive button-success"
               *ngIf="databaseItem.status==='archive'; else archived"
               href="#"
-              (click)="dashboardService.unarchiveItem(part, databaseItem.id); false"
+              (click)="dashboardService.unarchiveItem(part, databaseItem.origin); false"
             >Unarchive</a>
             <ng-template #archived>
               <a
                 class="archive button-dark"                
                 href="#"
-                (click)="dashboardService.archiveItem(part, databaseItem.id); false"
+                (click)="dashboardService.archiveItem(part, databaseItem.origin); false"
               >Archive</a>
             </ng-template>
-
+  
             <a
               class="trash button-success"
               *ngIf="databaseItem.status==='trash'; else trash"
               href="#"
-              (click)="dashboardService.restoreItem(part, databaseItem.id); false"
+              (click)="dashboardService.restoreItem(part, databaseItem.origin); false"
             >Restore</a>
             <ng-template #trash>
               <a
                 class="trash button-danger"
                 href="#"
-                (click)="dashboardService.removeItem(part, databaseItem.id); false"
+                (click)="dashboardService.removeItem(part, databaseItem.origin); false"
               >Trash</a>
             </ng-template>
-
+  
           </ng-container>
   
         </div>
-
+  
       </form>
-
+  
     </div>
 
+  </ng-container>
   </div>
   
   <ng-template #notFound>

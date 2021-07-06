@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Store } from '@ngxs/store';
 import { of, combineLatest, Subscription } from 'rxjs';
 import { tap, map, switchMap, catchError, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
@@ -9,78 +10,84 @@ import { DashboardPart, DatabaseItem, FormSchemaItem } from '../../services/conf
 import { Schemas } from '../../services/schema/schema.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
+import { GetPart } from '../../states/database/database.state';
+
 @Component({
   selector: 'nguix-dashboard-edit-page',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
 export class EditPage implements OnInit, OnDestroy {
-  lockdown = false;
+  private part?: DashboardPart;
+  private itemId?: string;
+  
   isNew = false;
   databaseItem?: DatabaseItem;
+  lockdown = false;
   submitText = '-';
 
-  public readonly data$ = this.route.params.pipe(
-    switchMap(params => {
-      const part = this.dashboardService.getPart(params.part);
-      if (part?.dataService) {
-        return combineLatest([
-          of(part),
-          !params.id
-            ? of(null)
-            : part
-                .dataService
-                .getDoc(params.id, false)
-                .pipe(catchError(() => of(null))),
-        ]);
-      } else {
-        return of([]);
-      }
+  public readonly page$ = this.route.params.pipe(
+    map(params => {
+      this.itemId = params.id;
+      this.part = this.dashboardService.getPart(params.part);
+      return !this.part?.dataService ? {} : {part: this.part};
     }),
-    map(([part, databaseItem]) => {
-      if (!part || !part.formSchema) {
-        return {};
-      }
-      this.isNew = !databaseItem;
-      this.databaseItem = databaseItem;
-      const formSchema = this.getFormSchema(part);
-      const formGroup = this.getFormGroup(formSchema, databaseItem);
-      return {
-        part,
-        formSchema,
-        formGroup,
-      };
-    }),
-    tap(data => {
-      // submit text
-      this.submitText = this.getSubmitText(this.databaseItem?.status || 'draft');
-      const statusControl = data.formGroup?.get('status');
-      if (statusControl) {
-        this.statusChangesSubscription = statusControl.valueChanges.subscribe(status => {
-          this.submitText = this.getSubmitText(status);
-        });
-      }
-      // set origin for default locale
-      const idControl = data.formGroup?.get('id');
-      if (idControl) {
-        this.idChangesSubscription = idControl.valueChanges.subscribe(id => {
-          const defaultLocale = this.settingService.defaultLocale;
-          const locale = data.formGroup?.get('locale')?.value || defaultLocale;
-          const originControl = data.formGroup?.get('origin');
-          if (originControl && locale === defaultLocale) {
-            originControl.setValue(id);
-            originControl.markAsDirty();
-          }
-        });
+    tap(() => {
+      if (this.part) {
+        this.store.dispatch(new GetPart(this.part))
       }
     }),
   );
+
+  public readonly data$ = this.store
+    .select(state => state.database)
+    .pipe(
+      map(database => {
+        const part = this.part as DashboardPart;
+        const itemId = this.itemId as string;
+        this.databaseItem = (database[part.name] || [])
+          .filter((item: any) => item.id === itemId)
+          .shift() as DatabaseItem;
+        this.isNew = !this.databaseItem;
+        const formSchema = this.getFormSchema(part);
+        const formGroup = this.getFormGroup(formSchema, this.databaseItem);
+        return {
+          part,
+          formSchema,
+          formGroup,
+        };
+      }),
+      tap(data => {
+        // submit text
+        this.submitText = this.getSubmitText(this.databaseItem?.status || 'draft');
+        const statusControl = data.formGroup?.get('status');
+        if (statusControl) {
+          this.statusChangesSubscription = statusControl.valueChanges.subscribe(status => {
+            this.submitText = this.getSubmitText(status);
+          });
+        }
+        // set origin for default locale
+        const idControl = data.formGroup?.get('id');
+        if (idControl) {
+          this.idChangesSubscription = idControl.valueChanges.subscribe(id => {
+            const defaultLocale = this.settingService.defaultLocale;
+            const locale = data.formGroup?.get('locale')?.value || defaultLocale;
+            const originControl = data.formGroup?.get('origin');
+            if (originControl && locale === defaultLocale) {
+              originControl.setValue(id);
+              originControl.markAsDirty();
+            }
+          });
+        }
+      }),
+    );
 
   private idChangesSubscription?: Subscription;
   private statusChangesSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
+    private store: Store,
     private formBuilder: FormBuilder,
     private navService: NavService,
     public settingService: SettingService,
@@ -143,21 +150,21 @@ export class EditPage implements OnInit, OnDestroy {
       return part.formHandler({mode, data}, formGroup);
     } else if (part.dataService) {
       if (mode === 'new') {
-        part.dataService
-          .add(data.id as string, data)
-          .pipe(take(1))
-          .subscribe(() => {
-            this.lockdown = false;
-            this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
-          });
+        // part.dataService
+        //   .add(data.id as string, data)
+        //   .pipe(take(1))
+        //   .subscribe(() => {
+        //     this.lockdown = false;
+        //     this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
+        //   });
       } else {
-        part.dataService
-          .update((this.databaseItem as DatabaseItem).id as string, data)
-          .pipe(take(1))
-          .subscribe(() => {
-            this.lockdown = false;
-            alert('Update successfully!');
-          });
+        // part.dataService
+        //   .update((this.databaseItem as DatabaseItem).id as string, data)
+        //   .pipe(take(1))
+        //   .subscribe(() => {
+        //     this.lockdown = false;
+        //     alert('Update successfully!');
+        //   });
       }
     } else {
       return alert('No form handler nor data service for this part.');

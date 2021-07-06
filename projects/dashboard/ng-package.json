@@ -8,10 +8,12 @@
       "@lamnhan/ngx-schemata": "ng.lamnhan.schemata",
       "@ngneat/transloco": "transloco",
       "ngx-pagination": "pagination",
-      "@ngxs/store" : "ngxs"
+      "@ngxs/store" : "ngxs",
+      "ngx-toastr": "toaster"
     }
   },
   "allowedNonPeerDependencies": [
-    "ngx-pagination"
+    "ngx-pagination",
+    "ngx-toastr"
   ]
 }

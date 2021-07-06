@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule } from '@ngxs/store';
+import { ToastrModule } from 'ngx-toastr';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { NguixDashboardHeaderComponentModule } from './components/header/header.module';
@@ -13,14 +15,16 @@ import { TagPartService } from './parts/tag/tag.service';
 import { PagePartService } from './parts/page/page.service';
 import { PostPartService } from './parts/post/post.service';
 
-import { DatabaseState } from './states/database.state';
+import { DatabaseState } from './states/database/database.state';
 
 @NgModule({
   declarations: [],
   imports: [
+    BrowserAnimationsModule,
     DashboardRoutingModule,
     NguixDashboardHeaderComponentModule,
     NgxsModule.forRoot([DatabaseState], {developmentMode: false}),
+    ToastrModule.forRoot(),
   ],
   providers: [
     // services
