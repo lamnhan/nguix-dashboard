@@ -19,7 +19,7 @@
   }
   
   &:disabled, &.disabled {
-    cursor: pointer;
+    cursor: default;
     opacity: 1;
     background: rgba($primary, .5);
     color: rgba($primary-contrast, .5);
@@ -49,7 +49,7 @@
   }
 
   &:disabled, &.disabled {
-    cursor: pointer;
+    cursor: default;
     opacity: 1;
     border: 1px solid rgba($primary, .5);
     color: rgba($primary, .5);

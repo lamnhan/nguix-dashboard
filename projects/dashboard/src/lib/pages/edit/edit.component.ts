@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 
@@ -21,14 +21,25 @@ export class EditPage implements OnInit, OnDestroy {
   private part?: DashboardPart;
   private itemId?: string;
   
-  isNew = false;
-  databaseItem?: DatabaseItem;
   lockdown = false;
   submitText = '-';
 
-  public readonly page$ = this.route.params.pipe(
-    map(params => {
+  isNew = false;
+  isCopy = false;
+  databaseItem?: DatabaseItem;
+  prioritizedData: Record<string, any> = {};
+
+  public readonly page$ = combineLatest([
+    this.route.params,
+    this.route.data,
+    this.route.queryParams,
+  ])
+  .pipe(
+    map(([params, data, queryParams]) => {
       this.itemId = params.id;
+      this.isCopy = data.copy;
+      this.prioritizedData = queryParams;
+      this.isNew = !this.itemId || this.isCopy;
       this.part = this.dashboardService.getPart(params.part);
       return !this.part?.dataService ? {} : {part: this.part};
     }),
@@ -48,7 +59,6 @@ export class EditPage implements OnInit, OnDestroy {
         this.databaseItem = (database[part.name] || [])
           .filter((item: any) => item.id === itemId)
           .shift() as DatabaseItem;
-        this.isNew = !this.databaseItem;
         const formSchema = this.getFormSchema(part);
         const formGroup = this.getFormGroup(formSchema, this.databaseItem);
         return {
@@ -59,7 +69,11 @@ export class EditPage implements OnInit, OnDestroy {
       }),
       tap(data => {
         // submit text
-        this.submitText = this.getSubmitText(this.databaseItem?.status || 'draft');
+        this.submitText = this.getSubmitText(
+          this.isCopy || !this.databaseItem?.status
+            ? 'draft'
+            : this.databaseItem?.status
+        );
         const statusControl = data.formGroup?.get('status');
         if (statusControl) {
           this.statusChangesSubscription = statusControl.valueChanges.subscribe(status => {
@@ -193,6 +207,7 @@ export class EditPage implements OnInit, OnDestroy {
     // set id & title
     else {
       const schema = part.formSchema.map(item => this.processSchema(item));
+      const isTranslation = this.isCopy && this.prioritizedData.locale;
       // title
       schema.unshift(Schemas.title);
       // id (new only)
@@ -200,11 +215,11 @@ export class EditPage implements OnInit, OnDestroy {
       // locale
       schema.push({
         ...Schemas.locale,
-        disabled: !this.isNew,
+        disabled: !this.isNew || isTranslation,
         defaultValue: this.settingService.defaultLocale,
       });
       // origin
-      schema.push({ ...Schemas.origin, disabled: !this.isNew });
+      schema.push({ ...Schemas.origin, disabled: !this.isNew || isTranslation });
       // status
       if (this.isNew || (this.databaseItem?.status === 'draft')) {
         schema.push(Schemas.status);
@@ -223,17 +238,67 @@ export class EditPage implements OnInit, OnDestroy {
     formSchema.forEach(schema => {
       const {name, defaultValue, disabled, validators} = schema;
       const value = !databaseItem || !databaseItem[name] ? '' : databaseItem[name];
+      let isDirty = false;
       const control = new FormControl(
         !disabled ? value : {value, disabled},
         validators || []
       );
+      // default value
       if (!value && defaultValue !== undefined && defaultValue !== null) {
         control.setValue(defaultValue);
+        isDirty = true;
+      }
+      // modify id and origin
+      if (value && this.isCopy) {
+        // id
+        if (name === 'id') {
+          control.setValue(
+            this.prioritizedData.locale
+              // localized
+              ? value + '-' + (this.prioritizedData.locale as string).toLowerCase()
+              // copying
+              : value + '-copy'
+          );
+        }
+        // title
+        if (name === 'title') {
+          control.setValue(
+            this.prioritizedData.locale
+              // localized
+              ? value
+              // copying
+              : value + ' Copy'
+          );
+        }
+        // origin
+        if (name === 'origin') {
+          control.setValue(
+            this.prioritizedData.locale
+              // localized
+              ? value
+              // copying
+              : value + '-copy'
+          );
+        }
+        // status
+        if (name === 'status') {
+          control.setValue('draft');
+        }
+        // mark as dirty
+        isDirty = true;
+      }
+      // prioritized data
+      if (this.prioritizedData[name]) {
+        control.setValue(this.prioritizedData[name]);
+        isDirty = true;
+      }
+      // save control
+      if (isDirty || (this.isCopy && value)) {
         control.markAsDirty();
       }
       fields[name] = control;
       // further process for special data types
-      this.processSchemaData(schema, value);
+      this.processSchemaData(schema, this.prioritizedData[name] || value);
     });
     // result
     return this.formBuilder.group(fields);

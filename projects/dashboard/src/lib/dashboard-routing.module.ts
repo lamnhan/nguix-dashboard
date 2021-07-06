@@ -18,6 +18,11 @@ const routes: Routes = [
   {
     path: 'admin/edit/:part/:id', canLoad: [AdminGuard], canActivate: [AdminGuard],
     loadChildren: () => import('./pages/edit/edit.module').then(m => m.NguixDashboardEditPageModule),
+  },
+  {
+    path: 'admin/copy/:part/:id', canLoad: [AdminGuard], canActivate: [AdminGuard],
+    loadChildren: () => import('./pages/edit/edit.module').then(m => m.NguixDashboardEditPageModule),
+    data: {copy: true},
   }
 ];
 

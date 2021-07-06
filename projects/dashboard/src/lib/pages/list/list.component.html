@@ -95,6 +95,9 @@
                     <li class="edit">
                       <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">Edit</a>
                     </li>
+                    <li class="copy">
+                      <a [usefulRouterLink]="['admin', 'copy', part.name, item.id]">Copy</a>
+                    </li>
                     <li class="archive">
                       <a href="javascript:void(0)" (click)="dashboardService.archiveItem(part, item.origin)">Archive</a>
                     </li>
@@ -138,7 +141,10 @@
                 <li class="missing-item">
                   <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
                   <div class="major">
-                    <a href="#">Add the translation</a>
+                    <a
+                      [usefulRouterLink]="['admin', 'copy', part.name, listingItem.origin.id]"
+                      [usefulRouteExtras]="{queryParams: {locale: missingTranslation}}"
+                    >Add the translation</a>
                   </div>
                 </li>
                 </ng-container>

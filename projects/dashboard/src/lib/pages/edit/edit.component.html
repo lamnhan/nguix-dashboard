@@ -111,7 +111,7 @@
             >Preview</a>
           </ng-container>
 
-          <ng-container *ngIf="databaseItem">
+          <ng-container *ngIf="databaseItem && !isCopy">
 
             <ng-container
               *ngIf="databaseItem.status==='draft' || databaseItem.status==='publish'">
