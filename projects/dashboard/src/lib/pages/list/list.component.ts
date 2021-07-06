@@ -21,6 +21,9 @@ export class ListPage implements OnInit {
   status = 'all';
   pageNo = 1;
   detail = '';
+  counting = {
+    total: 0,
+  };
 
   public readonly page$ = this.route.params.pipe(
     map(params => {

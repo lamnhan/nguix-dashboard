@@ -19,6 +19,7 @@
   }
   
   &:disabled, &.disabled {
+    cursor: pointer;
     opacity: 1;
     background: rgba($primary, .5);
     color: rgba($primary-contrast, .5);
@@ -42,12 +43,13 @@
     outline: 0;
     box-shadow: none;
     background: none;
-    border: 1px solid $primary-shade !important;
+    border: 1px solid $primary-shade;
     color: $primary-shade;
     text-decoration: none;
   }
 
   &:disabled, &.disabled {
+    cursor: pointer;
     opacity: 1;
     border: 1px solid rgba($primary, .5);
     color: rgba($primary, .5);
@@ -77,17 +79,27 @@
 .button-dark {
   @include _primary_base();
   background: $dark;
-  color: $light;
+  color: $dark-contrast;
   
   &:hover, &:focus, &:active, &.active {
     background: $dark-shade;
   }
 }
 
+.button-success {
+  @include _primary_base();
+  background: $success;
+  color: $success-contrast;
+  
+  &:hover, &:focus, &:active, &.active {
+    background: $success-shade;
+  }
+}
+
 .button-danger {
   @include _primary_base();
   background: $danger;
-  color: $light;
+  color: $danger-contrast;
   
   &:hover, &:focus, &:active, &.active {
     background: $danger-shade;

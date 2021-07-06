@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, combineLatest } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { DatabaseData } from '@lamnhan/ngx-useful';
 
@@ -11,13 +11,23 @@ export interface DatabaseStateModel {
 }
 
 export class GetPart {
-  static readonly type = '[Database] Get part';
+  static readonly type = '[Database] Get part data (collection items)';
   constructor(public part: DashboardPart) {}
 }
 
 export class ChangeStatus {
-  static readonly type = '[Database] Change status';
+  static readonly type = '[Database] Change status by origin';
   constructor(public part: DashboardPart, public origin: string, public status: string) {}
+}
+
+export class AddItem {
+  static readonly type = '[Database] Add item';
+  constructor(public part: DashboardPart, public id: string, public data: any) {}
+}
+
+export class UpdateItem {
+  static readonly type = '[Database] Update item';
+  constructor(public part: DashboardPart, public id: string, public data: any) {}
 }
 
 @State<DatabaseStateModel>({
@@ -70,6 +80,42 @@ export class DatabaseState {
         })
       )
     );
+  }
+
+  @Action(AddItem)
+  addItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: AddItem) {
+    const state = getState();
+    const {part, id, data} = action;
+    return  !part.dataService
+      ? false
+      : part.dataService.add(id, data).pipe(
+        take(1),
+        tap(() => 
+          patchState({
+            [part.name]: ([data] as any[]).concat(state[part.name]),
+          })
+        )
+      );
+  }
+
+  @Action(UpdateItem)
+  updateItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateItem) {
+    const state = getState();
+    const {part, id, data} = action;
+    return  !part.dataService
+      ? false
+      : part.dataService.update(id, data).pipe(
+        take(1),
+        tap(() => {
+          const items = state[part.name].map(item => {
+            if (item.id === id) {
+              item = {...item, ...data};
+            }
+            return item;
+          });
+          return patchState({ [part.name]: items});
+        })
+      );
   }
 
 }

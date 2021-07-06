@@ -91,53 +91,57 @@
         </div>
   
         <div class="actions">
-  
-          <button
-            class="submit button-primary"
-            type="submit"
-            [disabled]="!theForm.form.valid || lockdown"
-          >{{ submitText }}</button>
-          <a
-            class="preview button-outline-primary"
-            [class.disabled]="!theForm.form.valid || lockdown"
-            href="#"
-            (click)="
-              !theForm.form.valid || lockdown
-                ? false
-                : dashboardService.previewItem(part);
-              false
-            "
-          >Preview</a>
-  
-          <ng-container *ngIf="!isNew && databaseItem">
-  
+
+          <ng-container
+            *ngIf="isNew || databaseItem?.status==='draft' || databaseItem?.status==='publish'">
+            <button
+              class="submit button-primary"
+              type="submit"
+              [disabled]="!theForm.form.valid || lockdown"
+            >{{ submitText }}</button>
             <a
-              class="unarchive button-success"
-              *ngIf="databaseItem.status==='archive'; else archived"
-              href="#"
-              (click)="dashboardService.unarchiveItem(part, databaseItem.origin); false"
-            >Unarchive</a>
-            <ng-template #archived>
+              class="preview button-outline-primary"
+              [class.disabled]="!theForm.form.valid || lockdown"
+              href="javascript:void(0)"
+              (click)="
+                !theForm.form.valid || lockdown
+                  ? false
+                  : dashboardService.previewItem(part)
+              "
+            >Preview</a>
+          </ng-container>
+
+          <ng-container *ngIf="databaseItem">
+
+            <ng-container
+              *ngIf="databaseItem.status==='draft' || databaseItem.status==='publish'">
               <a
                 class="archive button-dark"                
-                href="#"
-                (click)="dashboardService.archiveItem(part, databaseItem.origin); false"
+                href="javascript:void(0)"
+                (click)="dashboardService.archiveItem(part, databaseItem.origin)"
               >Archive</a>
-            </ng-template>
-  
-            <a
-              class="trash button-success"
-              *ngIf="databaseItem.status==='trash'; else trash"
-              href="#"
-              (click)="dashboardService.restoreItem(part, databaseItem.origin); false"
-            >Restore</a>
-            <ng-template #trash>
               <a
                 class="trash button-danger"
-                href="#"
-                (click)="dashboardService.removeItem(part, databaseItem.origin); false"
+                href="javascript:void(0)"
+                (click)="dashboardService.removeItem(part, databaseItem.origin)"
               >Trash</a>
-            </ng-template>
+            </ng-container>
+    
+            <ng-container *ngIf="databaseItem.status==='archive'">  
+              <a
+                class="unarchive button-success"
+                href="javascript:void(0)"
+                (click)="dashboardService.unarchiveItem(part, databaseItem.origin)"
+              >Unarchive</a>
+            </ng-container>
+  
+            <ng-container *ngIf="databaseItem.status==='trash'">
+              <a
+                class="trash button-success"
+                href="javascript:void(0)"
+                (click)="dashboardService.restoreItem(part, databaseItem.origin)"
+              >Restore</a>  
+            </ng-container>
   
           </ng-container>
   

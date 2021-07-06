@@ -2,15 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { of, combineLatest, Subscription } from 'rxjs';
-import { tap, map, switchMap, catchError, take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem, FormSchemaItem } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
-import { GetPart } from '../../states/database/database.state';
+import { GetPart, AddItem, UpdateItem } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-edit-page',
@@ -150,21 +150,20 @@ export class EditPage implements OnInit, OnDestroy {
       return part.formHandler({mode, data}, formGroup);
     } else if (part.dataService) {
       if (mode === 'new') {
-        // part.dataService
-        //   .add(data.id as string, data)
-        //   .pipe(take(1))
-        //   .subscribe(() => {
-        //     this.lockdown = false;
-        //     this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
-        //   });
+        return this.store
+          .dispatch(new AddItem(part, data.id, data))
+          .subscribe(() => {
+            this.lockdown = false;
+            this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
+          });
+      } else if(mode === 'update' && this.databaseItem) {
+        return this.store
+          .dispatch(new UpdateItem(part, this.databaseItem.id, data))
+          .subscribe(() => {
+            this.lockdown = false;
+          });
       } else {
-        // part.dataService
-        //   .update((this.databaseItem as DatabaseItem).id as string, data)
-        //   .pipe(take(1))
-        //   .subscribe(() => {
-        //     this.lockdown = false;
-        //     alert('Update successfully!');
-        //   });
+        return alert('No default action for mode: ' + mode);
       }
     } else {
       return alert('No form handler nor data service for this part.');
@@ -199,7 +198,11 @@ export class EditPage implements OnInit, OnDestroy {
       // id (new only)
       schema.unshift({ ...Schemas.id, disabled: !this.isNew });
       // locale
-      schema.push({ ...Schemas.locale, defaultValue: this.settingService.defaultLocale });
+      schema.push({
+        ...Schemas.locale,
+        disabled: !this.isNew,
+        defaultValue: this.settingService.defaultLocale,
+      });
       // origin
       schema.push({ ...Schemas.origin, disabled: !this.isNew });
       // status

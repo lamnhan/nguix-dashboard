@@ -39,7 +39,7 @@
             [(ngModel)]="query"
           >    
         </div>
-        <div class="counter">3 items</div>
+        <div class="counter">{{ counting.total }} items</div>
       </ng-template>
 
       <div class="headbar">
@@ -56,7 +56,14 @@
           </tr>
         </thead>  
         <tbody>
-          <tr *ngFor="let listingItem of filteredItems | statusFilter : status | paginate: {itemsPerPage: 30, currentPage: pageNo}">
+          <tr
+            *ngFor="
+              let listingItem of filteredItems
+              | statusFilter : status
+              | paginate: {itemsPerPage: 30, currentPage: pageNo}
+              | listingCounter : counting
+            "
+          >
           <ng-container *ngIf="listingItem.all as items">
   
             <td class="title">  

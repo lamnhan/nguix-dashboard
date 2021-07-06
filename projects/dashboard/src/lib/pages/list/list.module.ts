@@ -7,6 +7,7 @@ import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 import { NguixDashboardQueryFilterPipeModule } from '../../pipes/query-filter/query-filter.module';
 import { NguixDashboardStatusFilterPipeModule } from '../../pipes/status-filter/status-filter.module';
 import { NguixDashboardExtractStatusesPipeModule } from '../../pipes/extract-statuses/extract-statuses.module';
+import { NguixDashboardListingCounterPipeModule } from '../../pipes/listing-counter/listing-counter.module';
 
 import { ListRoutingModule } from './list-routing.module';
 import { ListPage } from './list.component';
@@ -24,6 +25,7 @@ import { ListPage } from './list.component';
     NguixDashboardQueryFilterPipeModule,
     NguixDashboardStatusFilterPipeModule,
     NguixDashboardExtractStatusesPipeModule,
+    NguixDashboardListingCounterPipeModule,
     ListRoutingModule,
   ]
 })

@@ -22,11 +22,11 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
   ) {
     this.loginFormGroup = this.formBuilder.group({
-      'email': new FormControl('', [
+      'email': new FormControl('admin@lamnhan.com', [
         Validators.required,
         Validators.email
       ]),
-      'password': new FormControl('', [
+      'password': new FormControl('1234567890', [
         Validators.required,
         Validators.minLength(7)
       ])
