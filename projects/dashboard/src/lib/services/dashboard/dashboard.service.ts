@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { ToastrService } from 'ngx-toastr';
 
 import { ConfigService, DashboardPart, DatabaseItem } from '../config/config.service';
 
@@ -9,8 +7,6 @@ import { CategoryPartService } from '../../parts/category/category.service';
 import { TagPartService } from '../../parts/tag/tag.service';
 import { PagePartService } from '../../parts/page/page.service';
 import { PostPartService } from '../../parts/post/post.service';
-
-import { ChangeStatus } from '../../states/database/database.state';
 
 export interface DashboardListingStatus {
   title: string;
@@ -31,9 +27,6 @@ export interface DashboardListingItem {
 export class DashboardService {
 
   constructor(
-    private store: Store,
-    private toastr: ToastrService,
-    // services
     private configService: ConfigService,
     // parts
     public readonly frontPart: FrontPartService,
@@ -41,14 +34,14 @@ export class DashboardService {
     public readonly tagPart: TagPartService,
     public readonly pagePart: PagePartService,
     public readonly postPart: PostPartService,
-  ) {}
-
-  getConfig() {
-    return this.configService.getConfig();
+  ) {
+    // run plugins
+    (this.configService.getConfig().plugins || [])
+      .forEach(plugin => plugin(this));
   }
 
   getParts() {
-    return this
+    return this.configService
       .getConfig()
       .parts
       .map(item => typeof item === 'string' ? this.getPart(item) : item)
@@ -68,7 +61,7 @@ export class DashboardService {
       case 'post':
         return this.postPart;    
       default:
-        return this
+        return this.configService
           .getConfig()
           .parts
           .filter(item => typeof item !== 'string' && item.name === part)
@@ -79,58 +72,4 @@ export class DashboardService {
   getMenu() {
     return this.getParts().map(item => item.menuItem);
   }
-
-  previewItem(part: DashboardPart) {
-    alert('// TODO: Preview ...');
-  }
-
-  archiveItem(
-    part: DashboardPart,
-    origin: string
-  ) {
-    const yes = confirm('Archive item?');
-    if (yes) {
-      this.changeStatusByOrigin(part, origin, 'archive');
-    }
-  }
-
-  unarchiveItem(
-    part: DashboardPart,
-    origin: string
-  ) {
-    const yes = confirm('Unarchive item?');
-    if (yes) {
-      this.changeStatusByOrigin(part, origin, 'draft');
-    }
-  }
-
-  removeItem(
-    part: DashboardPart,
-    origin: string
-  ) {
-    const yes = confirm('Trash item?');
-    // TODO: include delete permanently in the confirm alert
-    if (yes) {
-      this.changeStatusByOrigin(part, origin, 'trash');
-    }
-  }
-
-  restoreItem(
-    part: DashboardPart,
-    origin: string
-  ) {
-    const yes = confirm('Restore item?');
-    if (yes) {
-      this.changeStatusByOrigin(part, origin, 'draft');
-    }
-  }
-
-  private changeStatusByOrigin(
-    part: DashboardPart,
-    origin: string,
-    status: string
-  ) {
-    this.store.dispatch(new ChangeStatus(part, origin, status));
-  }
-
 }

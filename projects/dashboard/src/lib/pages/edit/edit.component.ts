@@ -8,6 +8,7 @@ import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem, FormSchemaItem } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
+import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
 import { GetPart, AddItem, UpdateItem } from '../../states/database/database.state';
@@ -106,7 +107,8 @@ export class EditPage implements OnInit, OnDestroy {
     private navService: NavService,
     public settingService: SettingService,
     private userService: UserService,
-    public dashboardService: DashboardService,
+    private dashboardService: DashboardService,
+    public dataService: DataService
   ) {}
 
   ngOnInit(): void {}

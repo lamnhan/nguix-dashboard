@@ -80,11 +80,11 @@
                     </ng-container>
                     <!-- archive -->
                     <ng-container *ngIf="item.status==='archive'">
-                      <a href="javascript:void(0)" (click)="dashboardService.unarchiveItem(part, item.origin)">{{ item.title }}</a>
+                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item.origin)">{{ item.title }}</a>
                     </ng-container>
                     <!-- trash -->
                     <ng-container *ngIf="item.status==='trash'">
-                      <a href="javascript:void(0)" (click)="dashboardService.restoreItem(part, item.origin)">{{ item.title }}</a>
+                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item.origin)">{{ item.title }}</a>
                     </ng-container>
                   </div>  
   
@@ -99,27 +99,27 @@
                       <a [usefulRouterLink]="['admin', 'copy', part.name, item.id]">Copy</a>
                     </li>
                     <li class="archive">
-                      <a href="javascript:void(0)" (click)="dashboardService.archiveItem(part, item.origin)">Archive</a>
+                      <a href="javascript:void(0)" (click)="dataService.archiveItem(part, item.origin)">Archive</a>
                     </li>
                     <li class="trash">
-                      <a href="javascript:void(0)" (click)="dashboardService.removeItem(part, item.origin)">Trash</a>
+                      <a href="javascript:void(0)" (click)="dataService.removeItem(part, item.origin)">Trash</a>
                     </li>
                     <li class="preview">
-                      <a href="javascript:void(0)" (click)="dashboardService.previewItem(part)">Preview</a>
+                      <a href="javascript:void(0)" (click)="dataService.previewItem(part)">Preview</a>
                     </li>
                     </ng-container>
 
                     <!-- archive -->
                     <ng-container *ngIf="item.status==='archive'">
                     <li class="unarchive">
-                      <a href="javascript:void(0)" (click)="dashboardService.unarchiveItem(part, item.origin)">Unarchive</a>
+                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item.origin)">Unarchive</a>
                     </li>
                     </ng-container>
 
                     <!-- trash -->
                     <ng-container *ngIf="item.status==='trash'">
                     <li class="restore">
-                      <a href="javascript:void(0)" (click)="dashboardService.restoreItem(part, item.origin)">Restore</a>
+                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item.origin)">Restore</a>
                     </li>
                     </ng-container>
 

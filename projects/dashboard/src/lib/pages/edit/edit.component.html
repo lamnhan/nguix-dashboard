@@ -106,7 +106,7 @@
               (click)="
                 !theForm.form.valid || lockdown
                   ? false
-                  : dashboardService.previewItem(part)
+                  : dataService.previewItem(part)
               "
             >Preview</a>
           </ng-container>
@@ -118,12 +118,12 @@
               <a
                 class="archive button-dark"                
                 href="javascript:void(0)"
-                (click)="dashboardService.archiveItem(part, databaseItem.origin)"
+                (click)="dataService.archiveItem(part, databaseItem.origin)"
               >Archive</a>
               <a
                 class="trash button-danger"
                 href="javascript:void(0)"
-                (click)="dashboardService.removeItem(part, databaseItem.origin)"
+                (click)="dataService.removeItem(part, databaseItem.origin)"
               >Trash</a>
             </ng-container>
     
@@ -131,7 +131,7 @@
               <a
                 class="unarchive button-success"
                 href="javascript:void(0)"
-                (click)="dashboardService.unarchiveItem(part, databaseItem.origin)"
+                (click)="dataService.unarchiveItem(part, databaseItem.origin)"
               >Unarchive</a>
             </ng-container>
   
@@ -139,7 +139,7 @@
               <a
                 class="trash button-success"
                 href="javascript:void(0)"
-                (click)="dashboardService.restoreItem(part, databaseItem.origin)"
+                (click)="dataService.restoreItem(part, databaseItem.origin)"
               >Restore</a>  
             </ng-container>
   

@@ -3,6 +3,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { PageDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,14 @@ export class PagePartService {
     ]
   };
   
-  public readonly formSchema: FormSchemaItem[] = [];
+  public readonly formSchema: FormSchemaItem[] = [
+    Schemas.type,
+    Schemas.description,
+    Schemas.thumbnail,
+    Schemas.image,
+    Schemas.contentSrc,
+    Schemas.content,
+  ];
   
   constructor(public readonly dataService: PageDataService) {}
 

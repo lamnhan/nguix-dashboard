@@ -5,6 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
 import { DatabaseItem, DashboardPart } from '../../services/config/config.service';
+import { DataService } from '../../services/data/data.service';
 import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
 
 import { GetPart } from '../../states/database/database.state';
@@ -62,7 +63,8 @@ export class ListPage implements OnInit {
     private store: Store,
     private helperService: HelperService,
     private settingService: SettingService,
-    public dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    public dataService: DataService
   ) {}
 
   ngOnInit(): void {}

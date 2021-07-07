@@ -8,6 +8,7 @@ import { NguixDashboardHeaderComponentModule } from './components/header/header.
 
 import { ConfigService, DASHBOARD_CONFIG, dashboardConfig } from './services/config/config.service';
 import { SchemaService } from './services/schema/schema.service';
+import { DataService } from './services/data/data.service';
 import { DashboardService } from './services/dashboard/dashboard.service';
 import { FrontPartService } from './parts/front/front.service';
 import { CategoryPartService } from './parts/category/category.service';
@@ -35,11 +36,14 @@ import { DatabaseState } from './states/database/database.state';
           'front',
           'post',
           'page',
+          'category',
+          'tag',
         ]
-      })
+      }),
     },
     ConfigService,
     SchemaService,
+    DataService,
     DashboardService,
     // parts
     FrontPartService,

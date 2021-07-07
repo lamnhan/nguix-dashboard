@@ -3,6 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { MenuItem, DatabaseData } from '@lamnhan/ngx-useful';
 
+import { DashboardService } from '../dashboard/dashboard.service';
+
 export const DASHBOARD_CONFIG = new InjectionToken<DashboardConfig>('DashboardConfig');
 
 export function dashboardConfig(config: DashboardConfig) {
@@ -11,6 +13,7 @@ export function dashboardConfig(config: DashboardConfig) {
 
 export interface DashboardConfig {
   parts: Array<string | DashboardPart>;
+  plugins?: DashboardPlugin[];
 }
 
 export interface DashboardPart {
@@ -20,6 +23,8 @@ export interface DashboardPart {
   formSchema?: FormSchemaItem[];
   formHandler?: (result: FormResult, formGroup: FormGroup) => void;
 }
+
+export type DashboardPlugin = (dashboardService: DashboardService) => any;
 
 export type DatabaseItem = Record<string, any>;
 export type GetAllResult = Observable<DatabaseItem[]>;
@@ -47,7 +52,7 @@ export interface CheckboxAlikeChild {
 }
 
 export interface FormResult {
-  mode: 'new' | 'update' | 'trash' | 'delete';
+  mode: 'new' | 'update';
   data: Record<string, any>;
 }
 

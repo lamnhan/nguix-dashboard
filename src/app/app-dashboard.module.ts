@@ -9,10 +9,19 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
       provide: DASHBOARD_CONFIG,
       useValue: dashboardConfig({
         parts: [
+          'front',
           'post',
           'page',
           'category',
           'tag'
+        ],
+        plugins: [
+          dashboardService => {
+            dashboardService.frontPart.menuItem.subItems?.push({
+              text: 'Test menu',
+              routerLink: []
+            });
+          },
         ]
       }),
     }
