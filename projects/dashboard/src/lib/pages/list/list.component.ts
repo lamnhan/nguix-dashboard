@@ -29,12 +29,21 @@ export class ListPage implements OnInit {
 
   public readonly page$ = this.route.params.pipe(
     map(params => {
+      // reset filter
+      this.type = '';
+      this.query = '';
+      this.status = 'all';
+      this.pageNo = 1;
+      this.detail = '';
+      // get part
       this.part = this.dashboardService.getPart(params.part);
       return !this.part?.dataService ? {} : {part: this.part};
     }),
     tap(() => {
       if (this.part) {
+        // get items
         this.store.dispatch(new GetPart(this.part));
+        // set type
         if (this.part.dataTypes && this.part.dataTypes.length > 1) {
           this.type = this.part.dataTypes[0].value || '';
         }

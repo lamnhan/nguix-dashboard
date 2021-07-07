@@ -22,6 +22,9 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
               routerLink: []
             });
           },
+          dashboardService => {
+            dashboardService.pagePart.dataTypes.push({text: 'Test', value: 'test'});
+          },
         ]
       }),
     }

@@ -8,7 +8,10 @@
 .dashboard {
   @import './scss/soul/core';
   @import './scss/soul/content/typography';
+  @import './scss/soul/forms/label';
   @import './scss/soul/forms/control';
+  @import './scss/soul/forms/select';
+  @import './scss/soul/forms/checkbox';
   @import './scss/soul/components/icon';
   @import './scss/soul/components/button';
   @import './scss/soul/components/menu';

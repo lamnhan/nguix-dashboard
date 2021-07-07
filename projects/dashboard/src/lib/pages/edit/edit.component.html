@@ -23,7 +23,8 @@
         #theForm="ngForm"
       >
   
-        <div class="group" *ngFor="let schema of data.formSchema">
+        <div class="item" [class.required]="!!schema.required" *ngFor="let schema of data.formSchema">
+
           <label class="form-label" [for]="schema.name">{{ schema.label }}</label>
   
           <ng-container
@@ -56,7 +57,7 @@
               schema.type==='only'
             "
           >
-            <label *ngFor="let checkboxItem of schema.children || []">
+            <label class="form-checkbox" *ngFor="let checkboxItem of schema.children || []">
               <input
                 type="checkbox"
                 (change)="checkboxChanges(
@@ -73,7 +74,7 @@
           </ng-container>
   
           <ng-container *ngIf="schema.type==='locale'">
-            <select [id]="schema.name" [formControlName]="schema.name">
+            <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
               <option
                 *ngFor="let localeItem of settingService.locales"
                 [value]="localeItem.value"
@@ -82,13 +83,13 @@
           </ng-container>
   
           <ng-container *ngIf="schema.type==='type' && part.dataTypes">
-            <select [id]="schema.name" [formControlName]="schema.name">
+            <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
               <option *ngFor="let type of part.dataTypes" [value]="type.value">{{ type.text }}</option>
             </select>
           </ng-container>
 
           <ng-container *ngIf="schema.type==='status'">
-            <select [id]="schema.name" [formControlName]="schema.name">
+            <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
               <option value="publish">Publish</option>
               <option value="draft">Draft</option>
             </select>

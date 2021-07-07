@@ -37,10 +37,14 @@ export class EditPage implements OnInit, OnDestroy {
   ])
   .pipe(
     map(([params, data, queryParams]) => {
+      // reset
+      this.lockdown = false;      
+      // set data
       this.itemId = params.id;
       this.isCopy = data.copy;
       this.prioritizedData = queryParams;
       this.isNew = !this.itemId || this.isCopy;
+      // get part
       this.part = this.dashboardService.getPart(params.part);
       return !this.part?.dataService ? {} : {part: this.part};
     }),
@@ -143,7 +147,7 @@ export class EditPage implements OnInit, OnDestroy {
   submit(part: DashboardPart, formGroup: FormGroup) {
     this.lockdown = true;
     // mode
-    const mode = this.isNew ? 'new' : 'update';
+    
     // changed data
     const data = Object.keys(formGroup.controls).reduce(
       (result, name) => {
@@ -162,26 +166,37 @@ export class EditPage implements OnInit, OnDestroy {
       data.updatedAt = data.createdAt;
     }
     // has form handler
+    const mode = this.isNew ? 'new' : 'update';
     if (part.formHandler) {
       return part.formHandler({mode, data}, formGroup);
-    } else if (part.dataService) {
+    }
+    // default handler
+    else if (part.dataService) {
       if (mode === 'new') {
-        return this.store
-          .dispatch(new AddItem(part, data.id, data))
-          .subscribe(() => {
-            this.lockdown = false;
-            this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
-          });
+        return this.dataService
+          .addItem(part, data.id, data)
+          .subscribe(
+            () => {
+              this.lockdown = false;
+              this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
+            },
+            error => {
+              this.lockdown = false;
+              alert(error.message);
+            }
+          );
       } else if(mode === 'update' && this.databaseItem) {
-        return this.store
-          .dispatch(new UpdateItem(part, this.databaseItem.id, data))
+        return this.dataService
+          .updateItem(part, this.databaseItem.id, data)
           .subscribe(() => {
             this.lockdown = false;
           });
       } else {
         return alert('No default action for mode: ' + mode);
       }
-    } else {
+    }
+    // nothing
+    else {
       return alert('No form handler nor data service for this part.');
     }
   }

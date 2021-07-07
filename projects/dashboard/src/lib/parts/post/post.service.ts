@@ -3,6 +3,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { PostDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem, DataType } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,17 @@ export class PostPartService {
     ]
   };
 
-  public readonly formSchema: FormSchemaItem[] = [];
+  public readonly formSchema: FormSchemaItem[] = [
+    Schemas.type,
+    Schemas.description,
+    { label: 'TLDR', name: 'tldr', type: 'textarea' },
+    Schemas.thumbnail,
+    Schemas.image,
+    Schemas.duration,
+    Schemas.contentSrc,
+    Schemas.content,
+    Schemas.keywords,
+  ];
 
   public readonly dataTypes: DataType[]  = [
     { text: 'Post', value: 'post', icon: `icon-dashboard-${this.name}` },
