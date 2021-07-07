@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { TagDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem } from '../../services/config/config.service';
+import { FormSchemaItem, UpdateEffect } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -31,6 +31,10 @@ export class TagPartService {
 
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.count,
+  ];
+
+  public readonly updateEffects: UpdateEffect[] = [
+    { part: 'post', key: 'tags', props: ['id', 'title'] },
   ];
 
   constructor(public readonly dataService: TagDataService) {}

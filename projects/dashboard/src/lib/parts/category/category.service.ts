@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { CategoryDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem } from '../../services/config/config.service';
+import { FormSchemaItem, UpdateEffect } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -35,6 +35,10 @@ export class CategoryPartService {
     Schemas.image,
     Schemas.count,
     Schemas.only,
+  ];
+
+  public readonly updateEffects: UpdateEffect[] = [
+    { part: 'post', key: 'categories', props: ['id', 'title'] },
   ];
 
   constructor(public readonly dataService: CategoryDataService) {}

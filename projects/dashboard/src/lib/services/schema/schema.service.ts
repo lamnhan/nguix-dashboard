@@ -7,7 +7,6 @@ export const Schemas = {
   id: { label: 'ID', name: 'id', type: 'input', validators: [Validators.required] },
   title: { label: 'Title', name: 'title', type: 'input', validators: [Validators.required] },
   description: { label: 'Description', name: 'description', type: 'textarea' },
-  type: { label: 'Type', name: 'type', type: 'input' },
   thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'input' },
   image: { label: 'Image', name: 'image', type: 'input'},
   contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'input'},
@@ -16,6 +15,7 @@ export const Schemas = {
   only: { label: 'Only', name: 'only', type: 'only' },
   locale: { label: 'Locale', name: 'locale', type: 'locale', validators: [Validators.required] },
   origin: { label: 'Origin', name: 'origin', type: 'input', validators: [Validators.required] },
+  type: { label: 'Type', name: 'type', type: 'type', validators: [Validators.required] },
   status: {
     label: 'Status', name: 'status', type: 'status', defaultValue: 'draft', validators: [Validators.required]
   },

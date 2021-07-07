@@ -16,15 +16,22 @@ export interface DashboardConfig {
   plugins?: DashboardPlugin[];
 }
 
+export type DashboardPlugin = (dashboardService: DashboardService) => any;
+
 export interface DashboardPart {
   name: string;
   menuItem: MenuItem;
+  dataTypes?: DataType[];
   dataService?: DatabaseData<any>;
   formSchema?: FormSchemaItem[];
+  updateEffects?: UpdateEffect[];
   formHandler?: (result: FormResult, formGroup: FormGroup) => void;
 }
 
-export type DashboardPlugin = (dashboardService: DashboardService) => any;
+export interface FormResult {
+  mode: 'new' | 'update';
+  data: Record<string, any>;
+}
 
 export type DatabaseItem = Record<string, any>;
 export type GetAllResult = Observable<DatabaseItem[]>;
@@ -51,9 +58,16 @@ export interface CheckboxAlikeChild {
   checked: boolean;
 }
 
-export interface FormResult {
-  mode: 'new' | 'update';
-  data: Record<string, any>;
+export interface DataType {
+  text: string;
+  value: string;
+  icon?: string;
+}
+
+export interface UpdateEffect {
+  part: string;
+  key: string;
+  props: string[];
 }
 
 @Injectable({

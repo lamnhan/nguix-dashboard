@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { PageDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem } from '../../services/config/config.service';
+import { FormSchemaItem, DataType } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -36,6 +36,10 @@ export class PagePartService {
     Schemas.image,
     Schemas.contentSrc,
     Schemas.content,
+  ];
+
+  public readonly dataTypes: DataType[]  = [
+    { text: 'Page', value: 'page', icon: `icon-dashboard-${this.name}` },
   ];
   
   constructor(public readonly dataService: PageDataService) {}

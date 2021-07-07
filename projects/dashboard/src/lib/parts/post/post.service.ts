@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { PostDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem } from '../../services/config/config.service';
+import { FormSchemaItem, DataType } from '../../services/config/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +37,10 @@ export class PostPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [];
+
+  public readonly dataTypes: DataType[]  = [
+    { text: 'Post', value: 'post', icon: `icon-dashboard-${this.name}` },
+  ];
 
   constructor(public readonly dataService: PostDataService) {}
 }
