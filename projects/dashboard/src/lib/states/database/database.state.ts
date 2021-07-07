@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, combineLatest } from 'rxjs';
-import { tap, take } from 'rxjs/operators';
+import { tap, take, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { DatabaseData } from '@lamnhan/ngx-useful';
 
@@ -63,48 +63,55 @@ export class DatabaseState {
   changeStatus({ getState, patchState }: StateContext<DatabaseStateModel>, action: ChangeStatus) {
     const state = getState();
     const {part, origin, status} = action;
-    return combineLatest(
-      state[part.name]
-        .filter(item => item.origin === origin)
-        .map(item => (part.dataService as DatabaseData<any>).update(item.id, {status}))
-    )
-    .pipe(
-      tap(() =>
-        patchState({
-          [part.name]: state[part.name].map(item => {
-            if (item.origin === origin) {
-              item.status = status;
-            }
-            return item;
-          }),
-        })
+    if (!part.dataService) {
+      throw new Error('No data service for this part.');
+    } else {
+      return combineLatest(
+        state[part.name]
+          .filter(item => item.origin === origin)
+          .map(item => (part.dataService as DatabaseData<any>).update(item.id, {status}))
       )
-    );
+      .pipe(
+        tap(() =>
+          patchState({
+            [part.name]: state[part.name].map(item => {
+              if (item.origin === origin) {
+                item.status = status;
+              }
+              return item;
+            }),
+          })
+        )
+      );
+    }
   }
 
   @Action(AddItem)
   addItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: AddItem) {
     const state = getState();
     const {part, id, data} = action;
-    return  !part.dataService
-      ? false
-      : part.dataService.add(id, data).pipe(
+    if (!part.dataService) {
+      throw new Error('No data service for this part.');
+    } else {
+      return (part.dataService as DatabaseData<any>).add(id, data).pipe(
         take(1),
-        tap(() => 
+        tap(() =>
           patchState({
             [part.name]: ([data] as any[]).concat(state[part.name]),
           })
-        )
+        ),
       );
+    }
   }
 
   @Action(UpdateItem)
   updateItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateItem) {
     const state = getState();
     const {part, id, data} = action;
-    return  !part.dataService
-      ? false
-      : part.dataService.update(id, data).pipe(
+    if (!part.dataService) {
+      throw new Error('No data service for this part.');
+    } else {
+      return part.dataService.update(id, data).pipe(
         take(1),
         tap(() => {
           const items = state[part.name].map(item => {
@@ -116,6 +123,7 @@ export class DatabaseState {
           return patchState({ [part.name]: items});
         })
       );
+    }
   }
 
 }

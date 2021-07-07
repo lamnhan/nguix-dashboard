@@ -39,6 +39,7 @@ export class CategoryPartService {
 
   public readonly updateEffects: UpdateEffect[] = [
     { part: 'post', key: 'categories', props: ['id', 'title'] },
+    { part: 'page', key: 'categories', props: ['id', 'title'] }, // test
   ];
 
   constructor(public readonly dataService: CategoryDataService) {}

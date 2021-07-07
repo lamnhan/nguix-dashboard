@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { of } from 'rxjs';
+import { of, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { DashboardPart } from '../config/config.service';
+import { DashboardService } from '../dashboard/dashboard.service';
 
-import { ChangeStatus, AddItem, UpdateItem } from '../../states/database/database.state';
+import { GetPart, ChangeStatus, AddItem, UpdateItem } from '../../states/database/database.state';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private dashboardService: DashboardService,
+  ) {}
   
   previewItem(part: DashboardPart) {
     alert('// TODO: Preview ...');
@@ -32,7 +36,32 @@ export class DataService {
   }
 
   updateItem(part: DashboardPart, id: string, data: any) {
-    // TODO: update effects
+    const effectedUpdates = (part.updateEffects || [])
+      .filter(effect => !!effect.props.filter(prop => !!data[prop]).length)
+      .map(effect => {
+        const item = effect.props.reduce(
+          (result, prop) => {
+            if (data[prop]) {
+              result[prop] = data[prop];
+            }
+            return result;
+          },
+          {} as Record<string, any>,
+        );
+        const effectPart = this.dashboardService.getPart(effect.part);
+        return { effectPart, item, key: effect.key };
+      })
+      .filter(data => !!data.effectPart)
+      .map(data => {
+        const {effectPart, item, key} = data;
+        // return this.store.dispatch(new GetPart(effectPart as DashboardPart));
+        return data;
+      });
+      console.log({effectedUpdates});
+    // combineLatest(effectedUpdates).subscribe(console.log);
+    // return combineLatest(effectedUpdates).pipe(
+    //   switchMap(() => this.store.dispatch(new UpdateItem(part, id, data))),
+    // );
     return this.store.dispatch(new UpdateItem(part, id, data));
   }
 
