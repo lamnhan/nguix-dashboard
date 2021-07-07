@@ -289,6 +289,11 @@ export class EditPage implements OnInit, OnDestroy {
         // mark as dirty
         isDirty = true;
       }
+      // type
+      if (name === 'type' && this.part?.dataTypes && this.part?.dataTypes?.length > 0) {
+        control.setValue(this.part?.dataTypes[0].value);
+        isDirty = true;
+      }
       // prioritized data
       if (this.prioritizedData[name]) {
         control.setValue(this.prioritizedData[name]);
@@ -310,12 +315,14 @@ export class EditPage implements OnInit, OnDestroy {
     const item = {...schema};
     const { type } = schema;
     // 1. only
-    if (type === 'only') {
-      item.children = this.dashboardService.getParts()
-        .filter(item => ['front', 'category', 'tag'].indexOf(item.name) === -1) // excludes
-        .map(item => ({ text: item.menuItem.text as string, name: item.name, checked: false }));
+    if (type === 'only' && this.part?.updateEffects) {
+      item.children = this.part?.updateEffects
+        .map(item => ({ text: item.part, name: item.part, checked: false }));
     }
-    // 2. ...
+    // 2. type
+    if (type === 'type' && this.part?.dataTypes && this.part?.dataTypes.length <= 1) {
+      item.disabled = true;
+    }
     // result
     return item;
   }

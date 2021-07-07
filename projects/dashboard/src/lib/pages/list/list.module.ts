@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
+import { NguixDashboardTypeFilterPipeModule } from '../../pipes/type-filter/type-filter.module';
 import { NguixDashboardQueryFilterPipeModule } from '../../pipes/query-filter/query-filter.module';
 import { NguixDashboardStatusFilterPipeModule } from '../../pipes/status-filter/status-filter.module';
 import { NguixDashboardExtractStatusesPipeModule } from '../../pipes/extract-statuses/extract-statuses.module';
@@ -22,6 +23,7 @@ import { ListPage } from './list.component';
     FormsModule,
     NgxPaginationModule,
     RouterLinkDirectiveModule,
+    NguixDashboardTypeFilterPipeModule,
     NguixDashboardQueryFilterPipeModule,
     NguixDashboardStatusFilterPipeModule,
     NguixDashboardExtractStatusesPipeModule,

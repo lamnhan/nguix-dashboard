@@ -18,6 +18,7 @@ import { GetPart } from '../../states/database/database.state';
 export class ListPage implements OnInit {
   private part?: DashboardPart;
 
+  type = '';
   query = '';
   status = 'all';
   pageNo = 1;
@@ -33,7 +34,10 @@ export class ListPage implements OnInit {
     }),
     tap(() => {
       if (this.part) {
-        this.store.dispatch(new GetPart(this.part))
+        this.store.dispatch(new GetPart(this.part));
+        if (this.part.dataTypes && this.part.dataTypes.length > 1) {
+          this.type = this.part.dataTypes[0].value || '';
+        }
       }
     }),
   );
