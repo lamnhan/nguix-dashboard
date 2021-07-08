@@ -10,10 +10,10 @@
         <span>{{ type==='record' ? 'Record' : 'Array' }}</span>
       </strong>
       <a
-        *ngIf="mode!=='edit'"
+        *ngIf="mode!=='edit' && currentData"
         href="javascript:void(0)"
         (click)="mode=mode==='table'?'raw':'table'"
-      >{{ mode === 'table' ? 'Raw' : 'Table' }}</a>
+      >{{ mode === 'table' ? 'Raw' : 'List' }}</a>
     </div>
     <div class="right">
       <a *ngIf="mode!=='edit'" href="javascript:void(0)" (click)="mode='edit'">Edit</a>
@@ -28,7 +28,7 @@
       <table class="table-bordered">
         <thead>
           <tr>
-            <th></th>
+            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
             <th
               *ngFor="let schemaItem of schema"
               [class.required]="schemaItem.required"
@@ -55,18 +55,22 @@
 
             </td>
           </tr>
+        </tbody>
+        <tfoot>
           <tr>
             <td colspan="42">
-              <a href="javascript:void(0)" (click)="add()">Add</a>
+              <a href="javascript:void(0)" (click)="add()">(+) Add</a>
             </td>
           </tr>
-        </tbody>
+        </tfoot>
       </table>
 
     </div>
 
     <div class="actions">
-      <a class="button-outline-dark-sm" href="javascript:void(0)" (click)="mode='table'">Cancel</a>
+      <div class="left">
+        <a class="button-outline-dark-sm" href="javascript:void(0)" (click)="mode='table'">Cancel</a>
+      </div>
       <a class="button-primary-sm" href="javascript:void(0)" (click)="submit()">Save</a>
     </div>
 
@@ -75,14 +79,14 @@
   <ng-template #viewMode>
 
     <div class="view-none" *ngIf="!currentData; else hasData">
-      No data ...
+      No value, click Edit to set.
     </div>
 
     <ng-template #hasData>
 
-      <div class="view-table container">
+      <div class="view-table container" *ngIf="mode==='table'">
 
-        <table class="table-bordered" *ngIf="mode==='table'">
+        <table class="table-bordered">
           <thead>
             <tr>
               <th
@@ -101,7 +105,7 @@
 
       </div>
     
-      <div class="view-raw" *ngIf="mode==='raw'">
+      <div class="view-raw container" *ngIf="mode==='raw'">
         <pre><code>{{ dataRaw }}</code></pre>
       </div>
 

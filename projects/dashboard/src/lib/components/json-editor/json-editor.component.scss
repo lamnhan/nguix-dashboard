@@ -1,7 +1,7 @@
+@import '../../../scss/skin';
+
 .host {
-
-  .header {}
-
+  
   .container {
     width: 100%;
     overflow-x: scroll;
@@ -22,4 +22,66 @@
       padding: 0 .25rem;
     }
   }
+
+  .header {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-bottom: .5rem;
+
+    .left {
+      flex: 1;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      strong {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        text-transform: uppercase;
+        color: $medium;
+        margin-right: 1.5rem;
+        font-weight: 400;
+
+        i {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        span {
+          margin-left: .25rem;
+        }
+      }
+    }
+
+    .right {}
+  }
+
+  .edit {}
+
+  .actions {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: .5rem;
+
+    .left {
+      flex: 1;
+    }
+  }
+
+  .view-none {
+    border: 1px solid $medium;
+    color: $medium;
+    font-size: 13px;
+    padding: .5rem 1rem;
+  }
+  
+  .view-table {}
+  
+  .view-raw {
+    border: 1px solid $medium;
+    padding: 1rem;
+  }
+
 }
