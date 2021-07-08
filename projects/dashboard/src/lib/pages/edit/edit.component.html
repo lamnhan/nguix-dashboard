@@ -94,6 +94,15 @@
               <option value="draft">Draft</option>
             </select>
           </ng-container>
+
+          <ng-container *ngIf="schema.type==='json' && schema.data">
+            <nguix-dashboard-json-editor
+              [type]="schema.data.type"
+              [currentData]="schema.data.currentData"
+              [items]="schema.data.items"
+              [recordKey]="schema.data.recordKey"
+            ></nguix-dashboard-json-editor>
+          </ng-container>
   
         </div>
   

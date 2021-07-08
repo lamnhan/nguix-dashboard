@@ -41,6 +41,21 @@ export class PostPartService {
     Schemas.type,
     Schemas.description,
     { label: 'TLDR', name: 'tldr', type: 'textarea' },
+    {
+      label: 'TOC',
+      name: 'toc',
+      type: 'json',
+      data: {
+        type: 'array',
+        items: [
+          {name: 'text', type: 'input', required: true},
+          {name: 'level', type: 'number', required: true, defaultValue: 1},
+          {name: 'id', type: 'input'},
+          {name: 'href', type: 'input'},
+          {name: 'routerLink', type: 'input'},
+        ],
+      },
+    },
     Schemas.thumbnail,
     Schemas.image,
     Schemas.duration,

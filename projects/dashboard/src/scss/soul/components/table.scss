@@ -1,3 +1,31 @@
+.table-bordered {
+  width: 100%;
+  text-align: left;
+  background: $light;
+  color: $light-contrast;
+
+  tr {
+    margin: 0;
+    padding: 0;
+  }
+  
+  th {
+    font-weight: 400;
+
+    &.required {
+      font-weight: 700;
+    }
+  }
+
+  th, td {
+    padding: .5rem;
+  }
+
+  thead th, th, td {
+    border: 1px solid $medium;
+  }
+}
+
 .table-striped {
   width: 100%;
   text-align: left;
