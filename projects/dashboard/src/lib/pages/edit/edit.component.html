@@ -29,7 +29,7 @@
   
           <ng-container
             *ngIf="
-              schema.type==='input' ||
+              schema.type==='text' ||
               schema.type==='number'
             "
           >
@@ -61,7 +61,7 @@
               <input
                 type="checkbox"
                 (change)="checkboxChanges(
-                  schema.name,
+                  schema,
                   data.formGroup,
                   schema.children,
                   checkboxItem,
@@ -99,8 +99,13 @@
             <nguix-dashboard-json-editor
               [type]="schema.data.type"
               [currentData]="schema.data.currentData"
-              [items]="schema.data.items"
+              [schema]="schema.data.schema"
               [recordKey]="schema.data.recordKey"
+              (save)="jsonChanges(
+                schema,
+                data.formGroup,
+                $event
+              )"
             ></nguix-dashboard-json-editor>
           </ng-container>
   

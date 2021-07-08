@@ -127,7 +127,7 @@ export class EditPage implements OnInit, OnDestroy {
   }
 
   checkboxChanges(
-    controlName: string,
+    schema: FormSchemaItem,
     formGroup: FormGroup,
     children: any,
     item: Record<string, any>,
@@ -137,7 +137,20 @@ export class EditPage implements OnInit, OnDestroy {
     const value = children
       .filter((child: any) => child.checked)
       .map((child: any) => child.name);
-    const control = formGroup.get(controlName);
+    const control = formGroup.get(schema.name);
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
+  }
+
+  jsonChanges(
+    schema: FormSchemaItem,
+    formGroup: FormGroup,
+    value: any
+  ) {
+    (schema.data as any).currentData = value;
+    const control = formGroup.get(schema.name);
     if (control) {
       control.setValue(value);
       control.markAsDirty();
@@ -145,9 +158,7 @@ export class EditPage implements OnInit, OnDestroy {
   }
 
   submit(part: DashboardPart, formGroup: FormGroup) {
-    this.lockdown = true;
-    // mode
-    
+    this.lockdown = true;    
     // changed data
     const data = Object.keys(formGroup.controls).reduce(
       (result, name) => {
@@ -343,12 +354,15 @@ export class EditPage implements OnInit, OnDestroy {
   }
 
   private processSchemaData(schema: FormSchemaItem, value: any) {
-    const { type, children } = schema;
+    const { type, children, data } = schema;
     if (!value || !children) { return; }
     // 1. checkbox alike
     if (type === 'checkbox' || type === 'only') {
       children.forEach(child => (value as string[]).indexOf(child.name) ? false : child.checked = true);
     }
-    // 2. ...
+    // 2. json
+    if (type === 'json' && data) {
+      data.currentData = value;
+    }
   }
 }

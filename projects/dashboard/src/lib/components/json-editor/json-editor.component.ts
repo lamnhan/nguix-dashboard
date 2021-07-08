@@ -1,10 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
-interface Item {
+interface Schema {
   name: string;
   type: string;
   required?: boolean;
   defaultValue?: any;
+  width?: number;
+}
+
+interface MatrixItem extends Schema {
+  value?: any;
 }
 
 @Component({
@@ -12,31 +17,72 @@ interface Item {
   templateUrl: './json-editor.component.html',
   styleUrls: ['./json-editor.component.scss']
 })
-export class JsonEditorComponent implements OnInit {
-  @Input() type?: 'record' | 'array' = 'record';
+export class JsonEditorComponent implements OnInit, OnChanges {
+  @Input() type?: 'record' | 'array';
   @Input() currentData?: any[] | Record<string, any>;
 
-  @Input() items?: Item[] = [];
-  @Input() recordKey?: string = 'id';
+  @Input() schema?: Schema[] = [];
+  @Input() recordKey?: string;
 
   @Input() mode?: 'edit' | 'table' | 'raw' = 'table';
-  @Output() change = new EventEmitter<any>();
+  @Output() save = new EventEmitter<any>();
 
-  dataMatrix: any[] = [];
+  dataMatrix: MatrixItem[][] = [];
+  dataRaw = '';
 
   constructor() {}
 
   ngOnInit(): void {
-    this.buildDataMatrix();
-    console.log(this.dataMatrix);
+    this.buildData();
+  }
+  
+  ngOnChanges(): void {
+    this.buildData();
   }
 
-  save() {
-    const result = {};
-    return this.change.emit(result);
+  add() {
+    this.dataMatrix.push((this.schema || []).map(schema => this.getMatrixItem(schema)));
   }
 
-  private buildDataMatrix() {
+  remove(i: number) {
+    const yes = confirm('Remove item: ' + (i + 1));
+    if (yes) {
+      this.dataMatrix.splice(i, 1);
+    }
+  }
+
+  submit() {
+    const result = this.dataMatrix.map(items =>
+      items.reduce(
+        (result, item) => {
+          if (item.value !== undefined && item.value !== null) {
+            result[item.name] = item.value;
+          }
+          return result;
+        },
+        {} as any
+      )
+    );
+    // emit
+    this.save.emit(
+      this.type === 'array'
+      ? result
+      : result.reduce(
+        (result, item) => {
+          result[item[this.recordKey as string || 'id']] = item;
+          return result;
+        },
+        {} as any,
+      )
+    );
+    // exit
+    this.mode = 'table';
+  }
+
+  private buildData() {
+    // raw
+    this.dataRaw = !this.currentData ? '' : JSON.stringify(this.currentData, undefined, 2);
+    // matrix
     const currentData = this.currentData || (this.type === 'array' ? [] : {});
     this.dataMatrix = (
       currentData instanceof Array
@@ -44,29 +90,11 @@ export class JsonEditorComponent implements OnInit {
       : Object.keys(currentData)
           .map(key => (currentData as Record<string, any>)[key])
     )
-    .map(data =>
-      // this.items.reduce(
-      //   (result, item) => {
-      //     if (data[item.name]) {
-      //       result[item.name] = data[item.name];
-      //     } else {
-      //       if (item.type === 'number') {
-      //         result[item.name] = 0;
-      //       } else if (item.type === 'boolean') {
-      //         result[item.name] = false;
-      //       } else {
-      //         result[item.name] = '';
-      //       }
-      //     }
-      //     return result;
-      //   },
-      //   {} as Record<string, any>
-      // )
-      (this.items || []).map(item => {
-        const result = {name: item.name, value: data[item.name]} as {name: string, value: any};
-        return result;
-      })
-    );
+    .map(data => (this.schema || []).map(schema => this.getMatrixItem(schema, data)));
+  }
+
+  private getMatrixItem(schema: Schema, data: any = {}): MatrixItem {
+    return { ...schema, value: data[schema.name] || schema.defaultValue };
   }
 
 }

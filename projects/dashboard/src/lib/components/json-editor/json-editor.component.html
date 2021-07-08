@@ -1,61 +1,108 @@
 <div class="host">
 
-  <div class="headbar">
-    <i class="icon-medium-tint" [class]="type==='record'?'dashboard-record':'dashboard-array'"></i>
-    <ng-container *ngIf="mode!=='edit'">
+  <div class="header">
+    <div class="left">
+      <strong>
+        <i
+          class="icon-medium-tint"
+          [class]="type==='record'?'icon-dashboard-record':'icon-dashboard-array'"
+        ></i>
+        <span>{{ type==='record' ? 'Record' : 'Array' }}</span>
+      </strong>
       <a
+        *ngIf="mode!=='edit'"
         href="javascript:void(0)"
         (click)="mode=mode==='table'?'raw':'table'"
       >{{ mode === 'table' ? 'Raw' : 'Table' }}</a>
-      <a href="javascript:void(0)" (click)="mode='edit'">Edit</a>
-    </ng-container>
+    </div>
+    <div class="right">
+      <a *ngIf="mode!=='edit'" href="javascript:void(0)" (click)="mode='edit'">Edit</a>
+      <a *ngIf="mode==='edit'" href="javascript:void(0)" (click)="mode='table'">Exit</a>
+    </div>
   </div>
 
   <ng-container *ngIf="mode==='edit'; else viewMode">
 
-    <table class="table-bordered">
-      <thead>
-        <tr>
-          <th></th>
-          <th *ngFor="let item of items">{{ item.name }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of dataMatrix">
-          <td><button>Remove</button></td>
-          <td>...</td>
-        </tr>
-        <tr>
-          <td colspan="42"><button>Add</button></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="edit container">
+
+      <table class="table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+            <th
+              *ngFor="let schemaItem of schema"
+              [class.required]="schemaItem.required"
+              [style]="{'min-width': (schemaItem.width || 70) + 'px'}"
+            >{{ schemaItem.name }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let matrixItem of dataMatrix; let i = index">
+            <td><a href="javascript:void(0)" (click)="remove(i)">Remove</a></td>
+            <td *ngFor="let schemaItem of matrixItem">
+
+              <ng-container *ngIf="schemaItem.type === 'string'">
+                <input class="form-control" type="text" [(ngModel)]="schemaItem.value">
+              </ng-container>
+
+              <ng-container *ngIf="schemaItem.type === 'number'">
+                <input class="form-control" [type]="schemaItem.type" [(ngModel)]="schemaItem.value">
+              </ng-container>
+
+              <ng-container *ngIf="schemaItem.type === 'boolean'">
+                <input class="form-checkbox" type="checkbox" [(ngModel)]="schemaItem.value">
+              </ng-container>
+
+            </td>
+          </tr>
+          <tr>
+            <td colspan="42">
+              <a href="javascript:void(0)" (click)="add()">Add</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
 
     <div class="actions">
-      <button>Cancel</button>
-      <button>Save</button>
+      <a class="button-outline-dark-sm" href="javascript:void(0)" (click)="mode='table'">Cancel</a>
+      <a class="button-primary-sm" href="javascript:void(0)" (click)="submit()">Save</a>
     </div>
 
   </ng-container>
 
   <ng-template #viewMode>
 
-    <div *ngIf="!currentData; else hasData">
+    <div class="view-none" *ngIf="!currentData; else hasData">
       No data ...
     </div>
 
     <ng-template #hasData>
 
-      <table class="table-bordered" *ngIf="mode==='table'">
-        <thead>
-          <tr>
-            <th *ngFor="let item of items">{{ item.name }}</th>
-          </tr>
-        </thead>
-      </table>
+      <div class="view-table container">
+
+        <table class="table-bordered" *ngIf="mode==='table'">
+          <thead>
+            <tr>
+              <th
+                *ngFor="let schemaItem of schema"
+                [class.required]="schemaItem.required"
+                [style]="{'min-width': (schemaItem.width || 70) + 'px'}"
+              >{{ schemaItem.name }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let matrixItem of dataMatrix">
+              <td *ngFor="let schemaItem of matrixItem">{{ schemaItem.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
     
-      <div *ngIf="mode==='raw'">
-        <pre><code>Raw Code ...</code></pre>
+      <div class="view-raw" *ngIf="mode==='raw'">
+        <pre><code>{{ dataRaw }}</code></pre>
       </div>
 
     </ng-template>

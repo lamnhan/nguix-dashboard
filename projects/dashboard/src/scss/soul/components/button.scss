@@ -27,6 +27,36 @@
   }
 }
 
+@mixin _dark_base {
+  @include _primary_base();
+  background: $dark;
+  color: $dark-contrast;
+  
+  &:hover, &:focus, &:active, &.active {
+    background: $dark-shade;
+  }
+}
+
+@mixin _success_base {
+  @include _primary_base();
+  background: $success;
+  color: $success-contrast;
+  
+  &:hover, &:focus, &:active, &.active {
+    background: $success-shade;
+  }
+}
+
+@mixin _danger_base {
+  @include _primary_base();
+  background: $danger;
+  color: $danger-contrast;
+  
+  &:hover, &:focus, &:active, &.active {
+    background: $danger-shade;
+  }
+}
+
 @mixin _outline_primary_base {
   display: inline-block;
   border-radius: 3px;
@@ -58,10 +88,20 @@
   }
 }
 
+@mixin _outline_dark_base {
+  @include _outline_primary_base();
+  color: $dark;
+  border-color: $dark;
+  
+  &:hover, &:focus, &:active, &.active {
+    color: $dark-shade;
+    border-color: $dark-shade;
+  }
+}
+
 .button-primary {
   @include _primary_base();
-  
-  // sizes
+
   &-sm {
     @include _primary_base();
     padding: .25rem .5rem;
@@ -74,49 +114,44 @@
   }
 }
 
-  
-// colors
 .button-dark {
-  @include _primary_base();
-  background: $dark;
-  color: $dark-contrast;
-  
-  &:hover, &:focus, &:active, &.active {
-    background: $dark-shade;
-  }
+  @include _dark_base();
 }
 
 .button-success {
-  @include _primary_base();
-  background: $success;
-  color: $success-contrast;
-  
-  &:hover, &:focus, &:active, &.active {
-    background: $success-shade;
-  }
+  @include _success_base();
 }
 
 .button-danger {
-  @include _primary_base();
-  background: $danger;
-  color: $danger-contrast;
-  
-  &:hover, &:focus, &:active, &.active {
-    background: $danger-shade;
-  }
+  @include _danger_base();
 }
 
 .button-outline-primary {
   @include _outline_primary_base();
-  
-  // sizes
+
   &-sm {
     @include _outline_primary_base();
     padding: .25rem .5rem;
     font-size: 11px;
-  }  
+  }
+
   &-lg {
     @include _outline_primary_base();
+    padding: .5rem 1.5rem;
+  }
+}
+
+.button-outline-dark {
+  @include _outline_dark_base();
+
+  &-sm {
+    @include _outline_dark_base();
+    padding: .25rem .5rem;
+    font-size: 11px;
+  }
+
+  &-lg {
+    @include _outline_dark_base();
     padding: .5rem 1.5rem;
   }
 }

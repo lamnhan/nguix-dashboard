@@ -1,0 +1,25 @@
+.host {
+
+  .header {}
+
+  .container {
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+
+  table thead th {
+    font-weight: 400;
+    
+    &.required {
+      font-weight: 700;
+    }
+  }
+
+  table tbody td {
+    
+    input {
+      padding: 0 .25rem;
+    }
+  }
+}

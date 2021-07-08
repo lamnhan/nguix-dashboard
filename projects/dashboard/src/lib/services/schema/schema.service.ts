@@ -4,23 +4,23 @@ import { Validators } from '@angular/forms';
 import { FormSchemaItem } from '../config/config.service';
 
 export const Schemas = {
-  id: { label: 'ID', name: 'id', type: 'input', required: true, validators: [Validators.required] },
-  title: { label: 'Title', name: 'title', type: 'input', required: true, validators: [Validators.required] },
+  id: { label: 'ID', name: 'id', type: 'text', required: true, validators: [Validators.required] },
+  title: { label: 'Title', name: 'title', type: 'text', required: true, validators: [Validators.required] },
   description: { label: 'Description', name: 'description', type: 'textarea' },
-  thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'input' },
-  image: { label: 'Image', name: 'image', type: 'input'},
+  thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'text' },
+  image: { label: 'Image', name: 'image', type: 'text'},
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 1},
-  contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'input'},
+  contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'text'},
   content: { label: 'Content', name: 'content', type: 'textarea'},
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
   only: { label: 'Only', name: 'only', type: 'only' },
   locale: { label: 'Locale', name: 'locale', type: 'locale', required: true, validators: [Validators.required] },
-  origin: { label: 'Origin', name: 'origin', type: 'input', required: true, validators: [Validators.required] },
+  origin: { label: 'Origin', name: 'origin', type: 'text', required: true, validators: [Validators.required] },
   type: { label: 'Type', name: 'type', type: 'type', required: true, validators: [Validators.required] },
   status: {
     label: 'Status', name: 'status', type: 'status', defaultValue: 'draft', required: true, validators: [Validators.required]
   },
-  keywords: { label: 'Keywords', name: 'keywords', type: 'input' },
+  keywords: { label: 'Keywords', name: 'keywords', type: 'text' },
 };
 
 @Injectable({

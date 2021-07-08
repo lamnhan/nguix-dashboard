@@ -47,13 +47,25 @@ export class PostPartService {
       type: 'json',
       data: {
         type: 'array',
-        items: [
-          {name: 'text', type: 'input', required: true},
+        schema: [
+          {name: 'text', type: 'string', required: true, width: 150},
           {name: 'level', type: 'number', required: true, defaultValue: 1},
-          {name: 'id', type: 'input'},
-          {name: 'href', type: 'input'},
-          {name: 'routerLink', type: 'input'},
+          {name: 'id', type: 'string', width: 100},
+          {name: 'href', type: 'string', width: 150},
+          {name: 'routerLink', type: 'string', width: 150},
         ],
+      },
+    },
+    {
+      label: 'Test',
+      name: 'test',
+      type: 'json',
+      data: {
+        type: 'record',
+        schema: [
+          {name: 'id', type: 'string', required: true, width: 100},
+          {name: 'title', type: 'string', width: 150},
+        ]
       },
     },
     Schemas.thumbnail,
