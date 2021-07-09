@@ -11,7 +11,7 @@ import { Schemas } from '../../services/schema/schema.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
-import { GetPart, AddItem, UpdateItem } from '../../states/database/database.state';
+import { GetPart } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-edit-page',
@@ -145,6 +145,19 @@ export class EditPage implements OnInit, OnDestroy {
   }
 
   jsonChanges(
+    schema: FormSchemaItem,
+    formGroup: FormGroup,
+    value: any
+  ) {
+    (schema.data as any).currentData = value;
+    const control = formGroup.get(schema.name);
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
+  }
+
+  linkChanges(
     schema: FormSchemaItem,
     formGroup: FormGroup,
     value: any
@@ -355,14 +368,26 @@ export class EditPage implements OnInit, OnDestroy {
 
   private processSchemaData(schema: FormSchemaItem, value: any) {
     const { type, children, data } = schema;
-    if (!value || !children) { return; }
     // 1. checkbox alike
-    if (type === 'checkbox' || type === 'only') {
+    if ((type === 'checkbox' || type === 'only') && value &&  children) {
       children.forEach(child => (value as string[]).indexOf(child.name) ? false : child.checked = true);
     }
     // 2. json
     if (type === 'json' && data) {
       data.currentData = value;
+    }
+    // 3. link
+    if (type === 'link' && data && data.source) {
+      const part = this.dashboardService.getPart(data.source as string);
+      if (part) {
+        data.part = part;
+        data.items$ = this.store
+          .dispatch(new GetPart(part)) 
+          .pipe(
+            map(state => state.database[part.name]),
+          );
+        data.currentData = value;
+      }
     }
   }
 }

@@ -42,7 +42,7 @@ export class ListPage implements OnInit {
     tap(() => {
       if (this.part) {
         // get items
-        this.store.dispatch(new GetPart(this.part));
+        this.store.dispatch(new GetPart(this.part, true));
         // set type
         if (this.part.dataTypes && this.part.dataTypes.length > 1) {
           this.type = this.part.dataTypes[0].value || '';

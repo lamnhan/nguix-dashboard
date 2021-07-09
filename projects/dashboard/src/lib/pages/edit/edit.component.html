@@ -108,6 +108,20 @@
               )"
             ></nguix-dashboard-json-editor>
           </ng-container>
+
+          <ng-container *ngIf="schema.type==='link' && schema.data">
+            <nguix-dashboard-link-editor
+              [part]="schema.data.part"
+              [items$]="schema.data.items$"
+              [keys]="schema.data.keys"
+              [currentData]="schema.data.currentData"
+              (save)="linkChanges(
+                schema,
+                data.formGroup,
+                $event
+              )"
+            ></nguix-dashboard-link-editor>
+          </ng-container>
   
         </div>
   

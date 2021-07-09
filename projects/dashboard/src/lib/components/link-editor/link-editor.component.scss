@@ -1,0 +1,112 @@
+@import '../../../scss/skin';
+
+.host {
+
+  .header {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-bottom: .5rem;
+
+    .left {
+      flex: 1;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      strong {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        color: $medium;
+        margin-right: 1.5rem;
+        font-weight: 400;
+
+        i {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        span {
+          margin-left: .25rem;
+        }
+      }
+    }
+
+    .right {}
+  }
+
+  .edit {
+    border: 1px solid $medium;
+    
+    .filter {
+      padding: .5rem;
+
+      input {
+        padding: 0 .25rem;
+      }
+    }
+
+    .items {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 250px;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      padding: .5rem;
+
+      li {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+
+        input {
+          margin-right: .5rem;
+          width: 1rem;
+          height: 1rem;
+        }
+      }
+    }
+
+    .paginator {
+      padding: .5rem;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: .5rem;
+
+    .left {
+      flex: 1;
+    }
+  }
+
+  .view-none {
+    border: 1px solid $medium;
+    color: $medium;
+    font-size: 13px;
+    padding: .5rem 1rem;
+  }
+  
+  .view-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid $medium;
+    background: $light;
+    
+    li {
+      padding: .5rem;
+      border-bottom: 1px solid $light-shade;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+}

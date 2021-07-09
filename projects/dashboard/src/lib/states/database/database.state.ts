@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, combineLatest } from 'rxjs';
-import { tap, take, switchMap } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { DatabaseData } from '@lamnhan/ngx-useful';
 
@@ -12,7 +12,7 @@ export interface DatabaseStateModel {
 
 export class GetPart {
   static readonly type = '[Database] Get part data (collection items)';
-  constructor(public part: DashboardPart) {}
+  constructor(public part: DashboardPart, public refresh = false) {}
 }
 
 export class ChangeStatus {
@@ -42,21 +42,24 @@ export class DatabaseState {
   @Action(GetPart)
   getPart({ getState, patchState }: StateContext<DatabaseStateModel>, action: GetPart) {
     const state = getState();
-    const {part} = action;
-    return (
-      state[part.name]
-        // loaded
-        ? of(state[part.name])
-        // fresh
-        : (
-          !part.dataService
-            ? of([] as any[])
-            : part.dataService.getCollection(ref => ref.orderBy('createdAt', 'desc'), false)
-        )
-    )
-    .pipe(
-      tap(items => patchState({[part.name]: items}))
-    );
+    const {part, refresh} = action;
+    if (state[part.name]) {
+      const items = state[part.name];
+      if (refresh) {
+        patchState({[part.name]: items})
+      }
+      return of(items);
+    } else {
+      return (
+        !part.dataService
+          ? of([] as any[])
+          : part.dataService.getCollection(ref => ref.orderBy('createdAt', 'desc'), false)
+      )
+      .pipe(
+        take(1),
+        tap(items => patchState({[part.name]: items}))
+      );
+    }
   }
 
   @Action(ChangeStatus)

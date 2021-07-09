@@ -56,23 +56,13 @@ export class PostPartService {
         ],
       },
     },
-    {
-      label: 'Test',
-      name: 'test',
-      type: 'json',
-      data: {
-        type: 'record',
-        schema: [
-          {name: 'id', type: 'string', required: true, width: 100},
-          {name: 'title', type: 'string', width: 150},
-        ]
-      },
-    },
     Schemas.thumbnail,
     Schemas.image,
     Schemas.duration,
     Schemas.contentSrc,
     Schemas.content,
+    Schemas.categories,
+    Schemas.tags,
     Schemas.keywords,
   ];
 

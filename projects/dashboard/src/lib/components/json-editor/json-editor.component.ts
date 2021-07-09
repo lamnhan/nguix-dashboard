@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
-interface Schema {
+interface JsonSchema {
   name: string;
   type: string;
   required?: boolean;
@@ -8,7 +8,7 @@ interface Schema {
   width?: number;
 }
 
-interface MatrixItem extends Schema {
+interface MatrixItem extends JsonSchema {
   value?: any;
 }
 
@@ -21,7 +21,7 @@ export class JsonEditorComponent implements OnInit, OnChanges {
   @Input() type?: 'record' | 'array';
   @Input() currentData?: any[] | Record<string, any>;
 
-  @Input() schema?: Schema[] = [];
+  @Input() schema?: JsonSchema[] = [];
   @Input() recordKey?: string;
 
   @Input() mode?: 'edit' | 'table' | 'raw' = 'table';
@@ -93,7 +93,7 @@ export class JsonEditorComponent implements OnInit, OnChanges {
     .map(data => (this.schema || []).map(schema => this.getMatrixItem(schema, data)));
   }
 
-  private getMatrixItem(schema: Schema, data: any = {}): MatrixItem {
+  private getMatrixItem(schema: JsonSchema, data: any = {}): MatrixItem {
     return { ...schema, value: data[schema.name] || schema.defaultValue };
   }
 

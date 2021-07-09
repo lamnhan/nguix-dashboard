@@ -9,14 +9,16 @@
         ></i>
         <span>{{ type==='record' ? 'Record' : 'Array' }}</span>
       </strong>
-      <a
-        *ngIf="mode!=='edit' && currentData"
-        href="javascript:void(0)"
-        (click)="mode=mode==='table'?'raw':'table'"
-      >{{ mode === 'table' ? 'Raw' : 'List' }}</a>
     </div>
     <div class="right">
-      <a *ngIf="mode!=='edit'" href="javascript:void(0)" (click)="mode='edit'">Edit</a>
+      <ng-container *ngIf="mode!=='edit'">
+        <a
+          *ngIf="currentData"
+          href="javascript:void(0)"
+          (click)="mode=mode==='table'?'raw':'table'"
+        >{{ mode === 'table' ? 'Raw' : 'List' }}</a>
+        <a href="javascript:void(0)" (click)="mode='edit'">Edit</a>
+      </ng-container>
       <a *ngIf="mode==='edit'" href="javascript:void(0)" (click)="mode='table'">Exit</a>
     </div>
   </div>
