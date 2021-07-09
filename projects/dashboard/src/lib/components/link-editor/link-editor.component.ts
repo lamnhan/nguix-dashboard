@@ -13,13 +13,17 @@ export class LinkEditorComponent implements OnInit, OnChanges {
   @Input() items$!: Observable<any[]>;
   @Input() keys?: string[];
   @Input() currentData?: Record<string, any>;
+  @Input() locale!: string;
 
   @Output() save = new EventEmitter<any>();
-
-  query = '';
-  pageNo = 1;
+  
   isEdit = false;
   selectedData: Record<string, any> = {};
+
+  query = '';
+  isAnyLocale = false;
+  isAnyStatus = false;
+  pageNo = 1;
 
   constructor() {}
 

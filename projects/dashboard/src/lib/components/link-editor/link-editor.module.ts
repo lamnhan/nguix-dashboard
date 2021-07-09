@@ -5,6 +5,8 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterLinkDirectiveModule, O2aPipeModule } from '@lamnhan/ngx-useful';
 
+import { NguixDashboardLinkingFilterPipeModule } from '../../pipes/linking-filter/linking-filter.module';
+
 import { LinkEditorComponent } from './link-editor.component';
 
 @NgModule({
@@ -16,6 +18,7 @@ import { LinkEditorComponent } from './link-editor.component';
     NgxPaginationModule,
     RouterLinkDirectiveModule,
     O2aPipeModule,
+    NguixDashboardLinkingFilterPipeModule,
   ],
   exports: [LinkEditorComponent]
 })

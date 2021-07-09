@@ -24,6 +24,7 @@ export class EditPage implements OnInit, OnDestroy {
   
   lockdown = false;
   submitText = '-';
+  activeLocale = 'en-US';
 
   isNew = false;
   isCopy = false;
@@ -98,11 +99,19 @@ export class EditPage implements OnInit, OnDestroy {
             }
           });
         }
+        // active locale
+        this.activeLocale = this.settingService.defaultLocale;
+        const localeControl = data.formGroup?.get('locale');
+        if (localeControl) {
+          this.localeChangesSubscription = localeControl.valueChanges
+            .subscribe(locale => this.activeLocale = locale);
+        }
       }),
     );
 
   private idChangesSubscription?: Subscription;
   private statusChangesSubscription?: Subscription;
+  private localeChangesSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -123,6 +132,9 @@ export class EditPage implements OnInit, OnDestroy {
     }
     if (this.statusChangesSubscription) {
       this.statusChangesSubscription.unsubscribe();
+    }
+    if (this.localeChangesSubscription) {
+      this.localeChangesSubscription.unsubscribe();
     }
   }
 
