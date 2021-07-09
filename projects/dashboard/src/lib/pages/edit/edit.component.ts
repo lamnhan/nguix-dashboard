@@ -237,6 +237,15 @@ export class EditPage implements OnInit, OnDestroy {
     }
   }
 
+  delete(part: DashboardPart, origin: string) {
+    this.dataService.deletePermanently(part, origin)
+      .subscribe(result => {
+        if (result !== null) {
+          this.navService.navigate(['admin', 'new', part.name]);
+        }
+      });
+  }
+
   private getSubmitText(status: string) {
     if (this.isNew) {
       return status === 'publish'

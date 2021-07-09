@@ -157,10 +157,15 @@
                 (click)="dataService.archiveItem(part, databaseItem.origin)"
               >Archive</a>
               <a
-                class="trash button-danger"
+                class="trash button-outline-danger"
                 href="javascript:void(0)"
                 (click)="dataService.removeItem(part, databaseItem.origin)"
               >Trash</a>
+              <a
+                class="delete button-danger"
+                href="javascript:void(0)"
+                (click)="delete(part, databaseItem.origin)"
+              >Delete</a>
             </ng-container>
     
             <ng-container *ngIf="databaseItem.status==='archive'">  

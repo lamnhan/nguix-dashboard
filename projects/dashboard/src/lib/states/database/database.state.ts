@@ -30,6 +30,11 @@ export class UpdateItem {
   constructor(public part: DashboardPart, public id: string, public data: any) {}
 }
 
+export class DeleteItem {
+  static readonly type = '[Database] Delete item';
+  constructor(public part: DashboardPart, public origin: string) {}
+}
+
 @State<DatabaseStateModel>({
   name: 'database',
   defaults: {},
@@ -84,7 +89,7 @@ export class DatabaseState {
               return item;
             }),
           })
-        )
+        ),
       );
     }
   }
@@ -125,6 +130,28 @@ export class DatabaseState {
           });
           return patchState({ [part.name]: items});
         })
+      );
+    }
+  }
+
+  @Action(DeleteItem)
+  deleteItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: DeleteItem) {
+    const state = getState();
+    const {part, origin} = action;
+    if (!part.dataService) {
+      throw new Error('No data service for this part.');
+    } else {
+      return combineLatest(
+        state[part.name]
+          .filter(item => item.origin === origin)
+          .map(item => (part.dataService as DatabaseData<any>).delete(item.id))
+      )
+      .pipe(
+        tap(() =>
+          patchState({
+            [part.name]: state[part.name].filter(item => item.origin !== origin),
+          })
+        ),
       );
     }
   }

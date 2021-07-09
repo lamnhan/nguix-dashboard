@@ -99,6 +99,17 @@
   }
 }
 
+@mixin _outline_danger_base {
+  @include _outline_primary_base();
+  color: $danger;
+  border-color: $danger;
+  
+  &:hover, &:focus, &:active, &.active {
+    color: $danger-shade;
+    border-color: $danger-shade;
+  }
+}
+
 .button-primary {
   @include _primary_base();
 
@@ -152,6 +163,21 @@
 
   &-lg {
     @include _outline_dark_base();
+    padding: .5rem 1.5rem;
+  }
+}
+
+.button-outline-danger {
+  @include _outline_danger_base();
+
+  &-sm {
+    @include _outline_danger_base();
+    padding: .25rem .5rem;
+    font-size: 11px;
+  }
+
+  &-lg {
+    @include _outline_danger_base();
     padding: .5rem 1.5rem;
   }
 }

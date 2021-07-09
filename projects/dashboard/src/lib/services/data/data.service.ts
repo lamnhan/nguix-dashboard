@@ -6,7 +6,7 @@ import { switchMap, take, catchError, map, tap } from 'rxjs/operators';
 import { DashboardPart } from '../config/config.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 
-import { GetPart, ChangeStatus, AddItem, UpdateItem } from '../../states/database/database.state';
+import { GetPart, ChangeStatus, AddItem, UpdateItem, DeleteItem } from '../../states/database/database.state';
 
 @Injectable({
   providedIn: 'root'
@@ -113,35 +113,52 @@ export class DataService {
     // TODO: remove effects
     const yes = confirm('Archive item?');
     if (yes) {
-      this.changeStatusByOrigin(part, origin, 'archive');
+      return this.changeStatusByOrigin(part, origin, 'archive');
+    } else {
+      return of(null);
     }
   }
 
   unarchiveItem(part: DashboardPart, origin: string) {
     const yes = confirm('Unarchive item?');
     if (yes) {
-      this.changeStatusByOrigin(part, origin, 'draft');
+      return this.changeStatusByOrigin(part, origin, 'draft');
+    } else {
+      return of(null);
     }
   }
 
   removeItem(part: DashboardPart, origin: string) {
     // TODO: remove effects
     const yes = confirm('Trash item?');
-    // TODO: include delete permanently in the confirm alert
     if (yes) {
-      this.changeStatusByOrigin(part, origin, 'trash');
+      return this.changeStatusByOrigin(part, origin, 'trash');
+    } else {
+      return of(null);
     }
   }
 
   restoreItem(part: DashboardPart, origin: string) {
     const yes = confirm('Restore item?');
     if (yes) {
-      this.changeStatusByOrigin(part, origin, 'draft');
+      return this.changeStatusByOrigin(part, origin, 'draft');
+    } else {
+      return of(null);
+    }
+  }
+
+  deletePermanently(part: DashboardPart, origin: string) {
+    // TODO: remove effects
+    const yes = confirm('Delete permanently?');
+    if (yes) {
+      return this.store.dispatch(new DeleteItem(part, origin));
+    } else {
+      return of(null);
     }
   }
 
   private changeStatusByOrigin(part: DashboardPart, origin: string, status: string) {
-    this.store.dispatch(new ChangeStatus(part, origin, status));
+    return this.store.dispatch(new ChangeStatus(part, origin, status));
   }
 
 }
