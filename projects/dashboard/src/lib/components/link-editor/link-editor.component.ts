@@ -17,6 +17,7 @@ export class LinkEditorComponent implements OnInit, OnChanges {
   @Output() save = new EventEmitter<any>();
 
   query = '';
+  pageNo = 1;
   isEdit = false;
   selectedData: Record<string, any> = {};
 
