@@ -55,6 +55,7 @@ export class ListPage implements OnInit {
     .select(state => state.database)
     .pipe(
       map(database => {
+        console.log('Select in list.component.ts');
         const part = this.part as DashboardPart;
         const defaultLocale = this.settingService.defaultLocale;
         const recordLocales = this.settingService.locales.reduce(
@@ -123,8 +124,9 @@ export class ListPage implements OnInit {
       // search text
       const searchText = all
         .map(item => {
-          const { title, description, keywords, locale } = item;
+          const { id, title, description, keywords, locale } = item;
           const text =
+            (id + EOL + id.replace(/\-|\_/g, ' ') + EOL) +
             (!title ? '' : (title + EOL)) +
             (!description ? '' : (description + EOL)) +
             (!keywords ? '' : keywords);

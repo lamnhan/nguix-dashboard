@@ -23,8 +23,9 @@ export class LinkingFilterPipe implements PipeTransform {
           return true;
         } else {
           const EOL = ' | ';
-          const { title, description, keywords, locale: itemLocale } = item;
+          const { id, title, description, keywords, locale: itemLocale } = item;
           let text = 
+            (id + EOL + id.replace(/\-|\_/g, ' ') + EOL) +
             (!title ? '' : (title + EOL)) +
             (!description ? '' : (description + EOL)) +
             (!keywords ? '' : keywords);

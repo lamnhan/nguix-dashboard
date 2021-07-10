@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { of, combineLatest } from 'rxjs';
+import { of, combineLatest, Observable } from 'rxjs';
 import { switchMap, take, catchError, map, tap } from 'rxjs/operators';
 
-import { DashboardPart } from '../config/config.service';
+import { DashboardPart, DatabaseItem } from '../config/config.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 
 import { GetPart, ChangeStatus, AddItem, UpdateItem, DeleteItem } from '../../states/database/database.state';
@@ -62,11 +62,12 @@ export class DataService {
       // get database
       switchMap(result => {
         const {database} = result.pop();
+        // extract updates
         const allUpdates = effectedUpdates
           .map(data => {
             const {id, item: newData, effectPart, effectKey} = data;
             // all items by part
-            return (database[(effectPart as DashboardPart).name] as any[])
+            return (database[(effectPart as DashboardPart).name] as DatabaseItem[])
               // filter prop
               .filter(item => !!item[effectKey]?.[id])
               // set update
@@ -79,9 +80,15 @@ export class DataService {
                   }
                 };
                 // save observable
-                return this.store.dispatch(
-                  new UpdateItem(effectPart as DashboardPart, item.id, updates)
-                );
+                const finalItem = { ...item, ...updates };
+                return this.store
+                  .dispatch(
+                    new UpdateItem(effectPart as DashboardPart, item.id, updates)
+                  )
+                  .pipe(
+                    map(() => ({ error: false, item: finalItem })),
+                    catchError(() => of({ error: true, item: finalItem })),
+                  );
               });
           })
           // turn [[Observale,...],[Observale,...]] => [Observale,...]
@@ -90,22 +97,23 @@ export class DataService {
               result = result.concat(updates);
               return result;
             },
-            [] as any[],
+            [] as Array<Observable<{ error: boolean; item: DatabaseItem }>>,
           );
         // run all update (ignore error)
-        return !allUpdates.length
+        return !allUpdates || !allUpdates.length
           // no effect
-          ? of(null)
+          ? of([])
           // all effect
-          : combineLatest(allUpdates).pipe(catchError(() => of(null)));
+          : combineLatest(allUpdates);
       }),
     );
     // main item
-    return this.store.dispatch(new UpdateItem(part, id, data))
+    return this.store
+      .dispatch(new UpdateItem(part, id, data))
       // all effects
       .pipe(
         take(1),
-        switchMap(() => allEfffects)
+        switchMap(() => allEfffects),
       );
   }
 

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Subscription, combineLatest } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem, FormSchemaItem } from '../../services/config/config.service';
@@ -59,7 +59,9 @@ export class EditPage implements OnInit, OnDestroy {
   public readonly data$ = this.store
     .select(state => state.database)
     .pipe(
+      take(1),
       map(database => {
+        console.log('Select in edit.component.ts');
         const part = this.part as DashboardPart;
         const itemId = this.itemId as string;
         this.databaseItem = (database[part.name] || [])
@@ -224,8 +226,9 @@ export class EditPage implements OnInit, OnDestroy {
       } else if(mode === 'update' && this.databaseItem) {
         return this.dataService
           .updateItem(part, this.databaseItem.id, data)
-          .subscribe(() => {
+          .subscribe(result => {
             this.lockdown = false;
+            console.log(result);
           });
       } else {
         return alert('No default action for mode: ' + mode);
