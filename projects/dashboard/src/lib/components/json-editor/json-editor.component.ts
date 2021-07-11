@@ -32,9 +32,7 @@ export class JsonEditorComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit(): void {
-    this.buildData();
-  }
+  ngOnInit(): void {}
   
   ngOnChanges(): void {
     this.buildData();

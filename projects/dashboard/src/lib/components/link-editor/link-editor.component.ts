@@ -18,6 +18,7 @@ export class LinkEditorComponent implements OnInit, OnChanges {
   @Output() save = new EventEmitter<any>();
   
   isEdit = false;
+  hasData = false;
   selectedData: Record<string, any> = {};
 
   query = '';
@@ -27,9 +28,7 @@ export class LinkEditorComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit(): void {
-    this.buildData();
-  }
+  ngOnInit(): void {}
   
   ngOnChanges(): void {
     this.buildData();
@@ -61,7 +60,9 @@ export class LinkEditorComponent implements OnInit, OnChanges {
   }
 
   private buildData() {
-    this.selectedData = Object.keys(this.currentData || {})
+    const currentDataKeys = Object.keys(this.currentData || {});
+    this.hasData = !!currentDataKeys.length;
+    this.selectedData = currentDataKeys
       .map(key => ({...(this.currentData as any)[key]}))
       .reduce(
         (result, item) => {

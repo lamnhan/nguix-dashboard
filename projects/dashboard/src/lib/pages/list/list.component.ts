@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, take } from 'rxjs/operators';
 import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
 import { DatabaseItem, DashboardPart } from '../../services/config/config.service';
@@ -54,8 +54,8 @@ export class ListPage implements OnInit {
   public readonly data$ = this.store
     .select(state => state.database)
     .pipe(
+      take(3),
       map(database => {
-        console.log('Select in list.component.ts');
         const part = this.part as DashboardPart;
         const defaultLocale = this.settingService.defaultLocale;
         const recordLocales = this.settingService.locales.reduce(

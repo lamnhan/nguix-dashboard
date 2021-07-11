@@ -67,11 +67,11 @@
   
     <ng-template #viewMode>
   
-      <div class="view-none" *ngIf="!currentData; else hasData">
+      <div class="view-none" *ngIf="!hasData; else viewList">
         No items, click Edit to add.
       </div>
   
-      <ng-template #hasData>
+      <ng-template #viewList>
   
         <ul class="view-list">
           <li *ngFor="let item of currentData | o2a">

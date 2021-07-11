@@ -32,7 +32,11 @@ export class UpdateItem {
 
 export class UpdateBatch {
   static readonly type = '[Database] Update batch';
-  constructor(public part: DashboardPart, public batch: Array<{id: string; data: any}>) {}
+  constructor(
+    public part: DashboardPart,
+    public batch: Array<{id: string; data: any}>,
+    public result: any[] = [],
+  ) {}
 }
 
 export class DeleteItem {
@@ -77,25 +81,24 @@ export class DatabaseState {
     const {part, origin, status} = action;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
-    } else {
-      return combineLatest(
-        state[part.name]
-          .filter(item => item.origin === origin)
-          .map(item => (part.dataService as DatabaseData<any>).update(item.id, {status}))
-      )
-      .pipe(
-        tap(() =>
-          patchState({
-            [part.name]: state[part.name].map(item => {
-              if (item.origin === origin) {
-                item.status = status;
-              }
-              return item;
-            }),
-          })
-        ),
-      );
     }
+    return combineLatest(
+      state[part.name]
+        .filter(item => item.origin === origin)
+        .map(item => (part.dataService as DatabaseData<any>).update(item.id, {status}))
+    )
+    .pipe(
+      tap(() =>
+        patchState({
+          [part.name]: state[part.name].map(item => {
+            if (item.origin === origin) {
+              item.status = status;
+            }
+            return item;
+          }),
+        })
+      ),
+    );
   }
 
   @Action(AddItem)
@@ -104,15 +107,14 @@ export class DatabaseState {
     const {part, id, data} = action;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
-    } else {
-      return (part.dataService as DatabaseData<any>).add(id, data).pipe(
-        tap(() =>
-          patchState({
-            [part.name]: ([data] as any[]).concat(state[part.name]),
-          })
-        ),
-      );
     }
+    return (part.dataService as DatabaseData<any>).add(id, data).pipe(
+      tap(() =>
+        patchState({
+          [part.name]: ([data] as any[]).concat(state[part.name]),
+        })
+      ),
+    );
   }
 
   @Action(UpdateItem)
@@ -121,62 +123,69 @@ export class DatabaseState {
     const {part, id, data} = action;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
-    } else {
-      return part.dataService.update(id, data).pipe(
-        tap(() => {
-          const items = state[part.name].map(item => {
-            if (item.id === id) {
-              item = {...item, ...data};
-            }
-            return item;
-          });
-          return patchState({ [part.name]: items});
-        })
-      );
     }
+    return part.dataService.update(id, data).pipe(
+      tap(() => {
+        const items = state[part.name].map(item => {
+          if (item.id === id) {
+            return {...item, ...data};
+          } else {
+            return item;
+          }
+        });
+        return patchState({ [part.name]: items});
+      })
+    );
   }
 
   @Action(UpdateBatch)
   updateBatch({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateBatch) {
     const state = getState();
-    const {part, batch} = action;
+    const {part, batch, result} = action;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
-    } else {
-      return combineLatest(batch.map(item =>
-        (part.dataService as DatabaseData<any>)
-          .update(item.id, item.data)
-          .pipe(
-            map(() => item),
-            catchError(() => of(null)),
-          )
-      ))
-      .pipe(
-        tap(resultItems => {
-          // [] -> {}
-          const recordItems = state[part.name].reduce(
-            (result, item) => {
-              result[item.id] = item;
-              return result;
-            },
-            {} as Record<string, any>
-          );
-          // update items
-          resultItems
-            .filter(item => !!item)
-            .forEach(item => {
-              const {id, data} = item as {id: string; data: any};
-              if (recordItems[id]) {
-                recordItems[id] = { ...recordItems[id], ...data };
-              }
-            });
-          // patch database
-          return patchState({
-            [part.name]: Object.keys(recordItems).map(id => recordItems[id]),
-          });
-        }),
-      );
     }
+    // no items
+    if (!batch || !batch.length) {
+      return of([]);
+    }
+    // update remote
+    return combineLatest(
+      batch.map(item =>
+        (part.dataService as DatabaseData<any>).update(item.id, item.data).pipe(
+          map(() => ({ error: false, item })),
+          catchError(() => of({ error: true, item })),
+        )
+      )
+    )
+    // patch state
+    .pipe(
+      tap(latestResults => {
+        // [] -> {}
+        const recordItems = state[part.name].reduce(
+          (result, item) => {
+            result[item.id] = item;
+            return result;
+          },
+          {} as Record<string, any>
+        );
+        // update items
+        latestResults.forEach(latestResult => {
+          const {id, data} = latestResult.item;
+          if (!latestResult.error && recordItems[id]) {
+            recordItems[id] = { ...recordItems[id], ...data };
+          }
+          result.push({
+            error: latestResult.error,
+            item: recordItems[id]
+          });
+        });
+        // patch database
+        return patchState({
+          [part.name]: Object.keys(recordItems).map(id => recordItems[id]),
+        });
+      }),
+    );    
   }
 
   @Action(DeleteItem)
@@ -185,20 +194,19 @@ export class DatabaseState {
     const {part, origin} = action;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
-    } else {
-      return combineLatest(
-        state[part.name]
-          .filter(item => item.origin === origin)
-          .map(item => (part.dataService as DatabaseData<any>).delete(item.id))
-      )
-      .pipe(
-        tap(() =>
-          patchState({
-            [part.name]: state[part.name].filter(item => item.origin !== origin),
-          })
-        ),
-      );
     }
+    return combineLatest(
+      state[part.name]
+        .filter(item => item.origin === origin)
+        .map(item => (part.dataService as DatabaseData<any>).delete(item.id))
+    )
+    .pipe(
+      tap(() =>
+        patchState({
+          [part.name]: state[part.name].filter(item => item.origin !== origin),
+        })
+      ),
+    );
   }
 
 }

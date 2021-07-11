@@ -61,7 +61,6 @@ export class EditPage implements OnInit, OnDestroy {
     .pipe(
       take(1),
       map(database => {
-        console.log('Select in edit.component.ts');
         const part = this.part as DashboardPart;
         const itemId = this.itemId as string;
         this.databaseItem = (database[part.name] || [])

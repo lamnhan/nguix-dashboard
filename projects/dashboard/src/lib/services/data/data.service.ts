@@ -6,7 +6,7 @@ import { switchMap, take, catchError, map, tap } from 'rxjs/operators';
 import { DashboardPart, DatabaseItem } from '../config/config.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 
-import { GetPart, ChangeStatus, AddItem, UpdateItem, DeleteItem } from '../../states/database/database.state';
+import { GetPart, ChangeStatus, AddItem, UpdateItem, UpdateBatch, DeleteItem } from '../../states/database/database.state';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,7 @@ export class DataService {
   }
 
   updateItem(part: DashboardPart, id: string, data: any) {
+    const batchResult = {} as Record<string, any[]>;
     // filter effects
     const effectedUpdates = (part.updateEffects || [])
       .filter(effect => !!effect.props.filter(prop => !!data[prop]).length)
@@ -54,67 +55,56 @@ export class DataService {
       })
       .filter(data => !!data.effectPart);
     // get all data
-    const allEfffects = combineLatest(effectedUpdates.map(data =>
-      this.store.dispatch(new GetPart(data.effectPart as DashboardPart))
-    ))
+    const allEfffects = !effectedUpdates.length ? of([]) : combineLatest(
+      effectedUpdates.map(data =>
+        this.store.dispatch(new GetPart(data.effectPart as DashboardPart))
+      )
+    )
     .pipe(
       take(1),
       // get database
-      switchMap(result => {
-        const {database} = result.pop();
+      switchMap(states => {
+        const {database} = states.pop();
         // extract updates
         const allUpdates = effectedUpdates
           .map(data => {
             const {id, item: newData, effectPart, effectKey} = data;
             // all items by part
-            return (database[(effectPart as DashboardPart).name] as DatabaseItem[])
-              // filter prop
+            const batch = (database[(effectPart as DashboardPart).name] as DatabaseItem[])
+              // filter by property
               .filter(item => !!item[effectKey]?.[id])
               // set update
-              .map(item => {
-                // new prop value
-                const updates = {
-                  [effectKey]: {
-                    ...item[effectKey],
-                    [id]: newData,
-                  }
-                };
-                // save observable
-                const finalItem = { ...item, ...updates };
-                return this.store
-                  .dispatch(
-                    new UpdateItem(effectPart as DashboardPart, item.id, updates)
-                  )
-                  .pipe(
-                    map(() => ({ error: false, item: finalItem })),
-                    catchError(() => of({ error: true, item: finalItem })),
-                  );
-              });
-          })
-          // turn [[Observale,...],[Observale,...]] => [Observale,...]
-          .reduce(
-            (result, updates) => {
-              result = result.concat(updates);
-              return result;
-            },
-            [] as Array<Observable<{ error: boolean; item: DatabaseItem }>>,
-          );
+              .map(item =>
+                ({
+                  id: item.id,
+                  data: {
+                    [effectKey]: {
+                      ...item[effectKey],
+                      [id]: newData,
+                    }
+                  },
+                })
+              );
+            // update batch
+            batchResult[(effectPart as DashboardPart).name] = []; // init result
+            return this.store.dispatch(
+              new UpdateBatch(
+                effectPart as DashboardPart,
+                batch,
+                batchResult[(effectPart as DashboardPart).name]
+              )
+            );
+          });
         // run all update (ignore error)
-        return !allUpdates || !allUpdates.length
-          // no effect
-          ? of([])
-          // all effect
-          : combineLatest(allUpdates);
+        return combineLatest(allUpdates);
       }),
     );
-    // main item
-    return this.store
-      .dispatch(new UpdateItem(part, id, data))
-      // all effects
-      .pipe(
-        take(1),
-        switchMap(() => allEfffects),
-      );
+    // update item and effects
+    return this.store.dispatch(new UpdateItem(part, id, data)).pipe(
+      take(1),
+      switchMap(() => allEfffects),
+      map(() => ({ id, batchResult })),
+    );
   }
 
   archiveItem(part: DashboardPart, origin: string) {
