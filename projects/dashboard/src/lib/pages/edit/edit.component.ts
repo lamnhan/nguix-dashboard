@@ -230,7 +230,6 @@ export class EditPage implements OnInit, OnDestroy {
           data,
           result => {
             this.lockdown = false;
-            console.log(result);
           },
           error => {
             this.lockdown = false;

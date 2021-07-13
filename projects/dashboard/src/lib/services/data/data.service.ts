@@ -75,7 +75,8 @@ export class DataService {
     .pipe(
       take(1),
       switchMap(() => allEfffects),
-      map(() => ({ id, batchResult })),
+      map(() => ({ [id]: batchResult })),
+      tap(console.log),
     )
     .subscribe(onSuccess, onError);
   }
@@ -91,35 +92,10 @@ export class DataService {
       return;
     }
     const batchResultById = {} as Record<string, Record<string, any[]>>;
-    // filter effects
-    const effectedUpdates = this.getEffectedUpdates(part);
-    // update item and effects 
-    const allEfffects = this.store.dispatch(new GetPart(part)).pipe(
-      tap(console.log),
-      switchMap(state => {
-        console.log(state);
-        const {database} = state;
-        return combineLatest(
-          (database[part.name] as any[])
-            .filter(item => item.origin === origin)
-            .map(item => {
-              console.log({origin, item});
-              const {id} = item;
-              batchResultById[id] = {} as Record<string, any[]>;
-              return this.runBatchUpdate(
-                effectedUpdates,
-                batchResultById[id],
-                id,
-                null
-              );
-            })
-        );
-      }),
-    );
     this.store.dispatch(new ChangeStatus(part, origin, 'archive'))
     .pipe(
       take(1),
-      switchMap(() => allEfffects),
+      switchMap(() => this.runBatchRemove(part, origin, batchResultById)),
       map(() => batchResultById),
       tap(console.log),
     )
@@ -213,7 +189,6 @@ export class DataService {
       )
     )
     .pipe(
-      take(1),
       // get database
       switchMap(states => {
         const {database} = states.pop();
@@ -239,7 +214,6 @@ export class DataService {
               }
               return batchData;
             }
-            // new data
             // all items by part
             const batch = (database[(effectedPart as DashboardPart).name] as DatabaseItem[])
               // filter by property
@@ -258,6 +232,30 @@ export class DataService {
           });
         // run all update (ignore error)
         return combineLatest(allUpdates);
+      }),
+    );
+  }
+
+  private runBatchRemove(
+    part: DashboardPart,
+    origin: string,
+    batchResultById: Record<string, Record<string, any[]>>,
+  ) {
+    // filter effects
+    const effectedUpdates = this.getEffectedUpdates(part);
+    // update item and effects 
+    return this.store.dispatch(new GetPart(part))
+    .pipe(
+      switchMap(state => {
+        const {database} = state;
+        const byIdItems = (database[part.name] as any[] || [])
+          .filter(item => item.origin === origin)
+          .map(item => {
+            const {id} = item;
+            batchResultById[id] = {} as Record<string, any[]>;
+            return this.runBatchUpdate(effectedUpdates, batchResultById[id], id, null);
+          })
+        return !byIdItems.length ? of([]) : combineLatest(byIdItems);
       }),
     );
   }
