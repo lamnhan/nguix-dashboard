@@ -69,6 +69,7 @@ export interface UpdateEffect {
   part: string;
   key: string;
   props: string[];
+  idBuilder?: (id: string) => string;
 }
 
 @Injectable({

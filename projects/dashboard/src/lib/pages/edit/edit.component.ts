@@ -210,25 +210,33 @@ export class EditPage implements OnInit, OnDestroy {
     // default handler
     else if (part.dataService) {
       if (mode === 'new') {
-        return this.dataService
-          .addItem(part, data.id, data)
-          .subscribe(
-            () => {
-              this.lockdown = false;
-              this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
-            },
-            error => {
-              this.lockdown = false;
-              alert(error.message);
-            }
-          );
+        return this.dataService.addItem(
+          part,
+          data.id,
+          data,
+          () => {
+            this.lockdown = false;
+            this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
+          },
+          error => {
+            this.lockdown = false;
+            alert(error.message);
+          }
+        );
       } else if(mode === 'update' && this.databaseItem) {
-        return this.dataService
-          .updateItem(part, this.databaseItem.id, data)
-          .subscribe(result => {
+        return this.dataService.updateItem(
+          part,
+          this.databaseItem.id,
+          data,
+          result => {
             this.lockdown = false;
             console.log(result);
-          });
+          },
+          error => {
+            this.lockdown = false;
+            alert(error.message);
+          }
+        );
       } else {
         return alert('No default action for mode: ' + mode);
       }
@@ -240,12 +248,15 @@ export class EditPage implements OnInit, OnDestroy {
   }
 
   delete(part: DashboardPart, origin: string) {
-    this.dataService.deletePermanently(part, origin)
-      .subscribe(result => {
+    return this.dataService.deletePermanently(
+      part,
+      origin,
+      result => {
         if (result !== null) {
           this.navService.navigate(['admin', 'new', part.name]);
         }
-      });
+      }
+    );
   }
 
   private getSubmitText(status: string) {

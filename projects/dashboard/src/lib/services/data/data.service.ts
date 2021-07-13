@@ -3,7 +3,7 @@ import { Store } from '@ngxs/store';
 import { of, combineLatest, Observable } from 'rxjs';
 import { switchMap, take, catchError, map, tap } from 'rxjs/operators';
 
-import { DashboardPart, DatabaseItem } from '../config/config.service';
+import { DashboardPart, DatabaseItem, UpdateEffect } from '../config/config.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 
 import { GetPart, ChangeStatus, AddItem, UpdateItem, UpdateBatch, DeleteItem } from '../../states/database/database.state';
@@ -22,42 +22,194 @@ export class DataService {
     alert('// TODO: Preview ...');
   }
 
-  addItem(part: DashboardPart, id: string, data: any) {
-    return (!part.dataService ? of(false) : part.dataService.exists(id))
-      .pipe(
-        switchMap(exists => {
-          if (exists) {
-            throw new Error('Item exists with the id: ' + id);
-          } else {
-            return this.store.dispatch(new AddItem(part, id, data));
-          }
-        }),
-      );
+  addItem(
+    part: DashboardPart,
+    id: string,
+    data: any,
+    onSuccess?: (data: any) => void,
+    onError?: (error: any) => void,
+  ) {
+    (!part.dataService ? of(false) : part.dataService.exists(id))
+    .pipe(
+      take(1),
+      switchMap(exists => {
+        if (exists) {
+          throw new Error('Item exists with the id: ' + id);
+        }
+        return this.store.dispatch(new AddItem(part, id, data));
+      }),
+    )
+    .subscribe(onSuccess, onError);
   }
 
-  updateItem(part: DashboardPart, id: string, data: any) {
+  updateItem(
+    part: DashboardPart,
+    id: string,
+    data: any,
+    onSuccess?: (data: any) => void,
+    onError?: (error: any) => void,
+  ) {
     const batchResult = {} as Record<string, any[]>;
     // filter effects
-    const effectedUpdates = (part.updateEffects || [])
-      .filter(effect => !!effect.props.filter(prop => !!data[prop]).length)
-      .map(effect => {
-        const item = effect.props.reduce(
-          (result, prop) => {
-            if (data[prop]) {
-              result[prop] = data[prop];
-            }
-            return result;
-          },
-          { id } as Record<string, any>,
-        );
-        const effectPart = this.dashboardService.getPart(effect.part);
-        return { id, item, effectPart, effectKey: effect.key };
-      })
-      .filter(data => !!data.effectPart);
+    const effectedUpdates = this.getEffectedUpdates(
+      part,
+      effect => !!effect.props.filter(prop => !!data[prop]).length,
+    );
     // get all data
-    const allEfffects = !effectedUpdates.length ? of([]) : combineLatest(
-      effectedUpdates.map(data =>
-        this.store.dispatch(new GetPart(data.effectPart as DashboardPart))
+    const allEfffects = this.runBatchUpdate(
+      effectedUpdates,
+      batchResult,
+      id,
+      effect => effect.props.reduce(
+        (result, prop) => {
+          if (data[prop]) {
+            result[prop] = data[prop];
+          }
+          return result;
+        },
+        { id } as Record<string, any>,
+      ),
+    );
+    // update item and effects
+    this.store.dispatch(new UpdateItem(part, id, data))
+    .pipe(
+      take(1),
+      switchMap(() => allEfffects),
+      map(() => ({ id, batchResult })),
+    )
+    .subscribe(onSuccess, onError);
+  }
+
+  archiveItem(
+    part: DashboardPart,
+    origin: string,
+    onSuccess?: (data: any) => void,
+    onError?: (error: any) => void,
+  ) {
+    const yes = confirm('Archive item?');
+    if (!yes) {
+      return;
+    }
+    const batchResultById = {} as Record<string, Record<string, any[]>>;
+    // filter effects
+    const effectedUpdates = this.getEffectedUpdates(part);
+    // update item and effects 
+    const allEfffects = this.store.dispatch(new GetPart(part)).pipe(
+      tap(console.log),
+      switchMap(state => {
+        console.log(state);
+        const {database} = state;
+        return combineLatest(
+          (database[part.name] as any[])
+            .filter(item => item.origin === origin)
+            .map(item => {
+              console.log({origin, item});
+              const {id} = item;
+              batchResultById[id] = {} as Record<string, any[]>;
+              return this.runBatchUpdate(
+                effectedUpdates,
+                batchResultById[id],
+                id,
+                null
+              );
+            })
+        );
+      }),
+    );
+    this.store.dispatch(new ChangeStatus(part, origin, 'archive'))
+    .pipe(
+      take(1),
+      switchMap(() => allEfffects),
+      map(() => batchResultById),
+      tap(console.log),
+    )
+    .subscribe(onSuccess, onError);
+  }
+
+  unarchiveItem(
+    part: DashboardPart,
+    origin: string,
+    onSuccess?: (data: any) => void,
+    onError?: (error: any) => void,
+  ) {
+    const yes = confirm('Unarchive item?');
+    if (!yes) {
+      return;
+    }
+    this.store.dispatch(new ChangeStatus(part, origin, 'draft'))
+    .pipe(take(1))
+    .subscribe(onSuccess, onError);
+  }
+
+  removeItem(
+    part: DashboardPart,
+    origin: string,
+    onSuccess?: (data: any) => void,
+    onError?: (error: any) => void,
+  ) {
+    // TODO: remove effects
+    const yes = confirm('Trash item?');
+    if (!yes) {
+      return;
+    }
+    this.store.dispatch(new ChangeStatus(part, origin, 'trash'))
+    .pipe(take(1))
+    .subscribe(onSuccess, onError);
+  }
+
+  restoreItem(
+    part: DashboardPart,
+    origin: string,
+    onSuccess?: (data: any) => void,
+    onError?: (error: any) => void,
+  ) {
+    const yes = confirm('Restore item?');
+    if (!yes) {
+      return;
+    }
+    this.store.dispatch(new ChangeStatus(part, origin, 'draft'))
+    .pipe(take(1))
+    .subscribe(onSuccess, onError);
+  }
+
+  deletePermanently(
+    part: DashboardPart,
+    origin: string,
+    onSuccess?: (data: any) => void,
+    onError?: (error: any) => void,
+  ) {
+    // TODO: remove effects
+    const yes = confirm('Delete permanently?');
+    if (!yes) {
+      return;
+    }
+    this.store.dispatch(new DeleteItem(part, origin))
+    .pipe(take(1))
+    .subscribe(onSuccess, onError);
+  }
+
+  private getEffectedUpdates(
+    part: DashboardPart,
+    filter?: (effect: UpdateEffect) => boolean
+  ) {
+    return (part.updateEffects || [])
+      .filter(effect => !filter ? true : filter(effect))
+      .map(effect => {
+        const effectedPart = this.dashboardService.getPart(effect.part);
+        return { effect, effectedPart };
+      })
+      .filter(data => !!data.effectedPart) as Array<{effect: UpdateEffect, effectedPart: DashboardPart}>;
+  }
+
+  private runBatchUpdate(
+    effectedUpdates: Array<{effect: UpdateEffect, effectedPart: DashboardPart}>,
+    batchResult: Record<string, any[]>,
+    sourceId: string,
+    newDataBuilder: null | {(effect: UpdateEffect): Record<string, any>}
+  ) {
+    return !effectedUpdates.length ? of([]) : combineLatest(
+      effectedUpdates.map(effectedUpdate =>
+        this.store.dispatch(new GetPart(effectedUpdate.effectedPart as DashboardPart))
       )
     )
     .pipe(
@@ -67,31 +219,40 @@ export class DataService {
         const {database} = states.pop();
         // extract updates
         const allUpdates = effectedUpdates
-          .map(data => {
-            const {id, item: newData, effectPart, effectKey} = data;
+          .map(effectedUpdate => {
+            const { effect, effectedPart } = effectedUpdate;
+            const { key: effectedKey, idBuilder } = effect;
+            const recordKey = !idBuilder ? sourceId : idBuilder(sourceId);
+            const makeBatchData = (item: DatabaseItem) => {
+              const newData = newDataBuilder === null ? null : newDataBuilder(effect);
+              const batchData = {
+                id: item.id,
+                data: {
+                  [effectedKey]: {
+                    ...item[effectedKey],
+                    [recordKey]: newData,
+                  }
+                },
+              };
+              if (newData === null) {
+                delete batchData.data[effectedKey][recordKey];
+              }
+              return batchData;
+            }
+            // new data
             // all items by part
-            const batch = (database[(effectPart as DashboardPart).name] as DatabaseItem[])
+            const batch = (database[(effectedPart as DashboardPart).name] as DatabaseItem[])
               // filter by property
-              .filter(item => !!item[effectKey]?.[id])
+              .filter(item => !!item[effectedKey]?.[recordKey])
               // set update
-              .map(item =>
-                ({
-                  id: item.id,
-                  data: {
-                    [effectKey]: {
-                      ...item[effectKey],
-                      [id]: newData,
-                    }
-                  },
-                })
-              );
+              .map(item => makeBatchData(item));
             // update batch
-            batchResult[(effectPart as DashboardPart).name] = []; // init result
+            batchResult[(effectedPart as DashboardPart).name] = []; // init result
             return this.store.dispatch(
               new UpdateBatch(
-                effectPart as DashboardPart,
+                effectedPart as DashboardPart,
                 batch,
-                batchResult[(effectPart as DashboardPart).name]
+                batchResult[(effectedPart as DashboardPart).name]
               )
             );
           });
@@ -99,64 +260,5 @@ export class DataService {
         return combineLatest(allUpdates);
       }),
     );
-    // update item and effects
-    return this.store.dispatch(new UpdateItem(part, id, data)).pipe(
-      take(1),
-      switchMap(() => allEfffects),
-      map(() => ({ id, batchResult })),
-    );
   }
-
-  archiveItem(part: DashboardPart, origin: string) {
-    // TODO: remove effects
-    const yes = confirm('Archive item?');
-    if (yes) {
-      return this.changeStatusByOrigin(part, origin, 'archive');
-    } else {
-      return of(null);
-    }
-  }
-
-  unarchiveItem(part: DashboardPart, origin: string) {
-    const yes = confirm('Unarchive item?');
-    if (yes) {
-      return this.changeStatusByOrigin(part, origin, 'draft');
-    } else {
-      return of(null);
-    }
-  }
-
-  removeItem(part: DashboardPart, origin: string) {
-    // TODO: remove effects
-    const yes = confirm('Trash item?');
-    if (yes) {
-      return this.changeStatusByOrigin(part, origin, 'trash');
-    } else {
-      return of(null);
-    }
-  }
-
-  restoreItem(part: DashboardPart, origin: string) {
-    const yes = confirm('Restore item?');
-    if (yes) {
-      return this.changeStatusByOrigin(part, origin, 'draft');
-    } else {
-      return of(null);
-    }
-  }
-
-  deletePermanently(part: DashboardPart, origin: string) {
-    // TODO: remove effects
-    const yes = confirm('Delete permanently?');
-    if (yes) {
-      return this.store.dispatch(new DeleteItem(part, origin));
-    } else {
-      return of(null);
-    }
-  }
-
-  private changeStatusByOrigin(part: DashboardPart, origin: string, status: string) {
-    return this.store.dispatch(new ChangeStatus(part, origin, status));
-  }
-
 }
