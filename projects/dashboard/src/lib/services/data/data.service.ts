@@ -76,9 +76,16 @@ export class DataService {
       take(1),
       switchMap(() => allEfffects),
       map(() => ({ [id]: batchResult })),
-      tap(console.log),
     )
-    .subscribe(onSuccess, onError);
+    .subscribe(
+      result => {
+        if (onSuccess) {
+          onSuccess(result);
+        }
+        this.showBatchResult(result);
+      },
+      onError,
+    );
   }
 
   archiveItem(
@@ -97,9 +104,16 @@ export class DataService {
       take(1),
       switchMap(() => this.runBatchRemove(part, origin, batchResultById)),
       map(() => batchResultById),
-      tap(console.log),
     )
-    .subscribe(onSuccess, onError);
+    .subscribe(
+      result => {
+        if (onSuccess) {
+          onSuccess(result);
+        }
+        this.showBatchResult(result);
+      },
+      onError,
+    );
   }
 
   unarchiveItem(
@@ -123,14 +137,26 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    // TODO: remove effects
     const yes = confirm('Trash item?');
     if (!yes) {
       return;
     }
+    const batchResultById = {} as Record<string, Record<string, any[]>>;
     this.store.dispatch(new ChangeStatus(part, origin, 'trash'))
-    .pipe(take(1))
-    .subscribe(onSuccess, onError);
+    .pipe(
+      take(1),
+      switchMap(() => this.runBatchRemove(part, origin, batchResultById)),
+      map(() => batchResultById),
+    )
+    .subscribe(
+      result => {
+        if (onSuccess) {
+          onSuccess(result);
+        }
+        this.showBatchResult(result);
+      },
+      onError,
+    );
   }
 
   restoreItem(
@@ -154,14 +180,26 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    // TODO: remove effects
     const yes = confirm('Delete permanently?');
     if (!yes) {
       return;
     }
+    const batchResultById = {} as Record<string, Record<string, any[]>>;
     this.store.dispatch(new DeleteItem(part, origin))
-    .pipe(take(1))
-    .subscribe(onSuccess, onError);
+    .pipe(
+      take(1),
+      switchMap(() => this.runBatchRemove(part, origin, batchResultById)),
+      map(() => batchResultById),
+    )
+    .subscribe(
+      result => {
+        if (onSuccess) {
+          onSuccess(result);
+        }
+        this.showBatchResult(result);
+      },
+      onError,
+    );
   }
 
   private getEffectedUpdates(
@@ -258,5 +296,30 @@ export class DataService {
         return !byIdItems.length ? of([]) : combineLatest(byIdItems);
       }),
     );
+  }
+
+  private showBatchResult(batchResultById: Record<string, Record<string, any[]>>) {
+    const messageArr: string[] = [];
+    Object.keys(batchResultById).forEach(id => {
+      messageArr.push(`* Action succeed for: "${id}"`);
+      const allParts = Object.keys(batchResultById[id]);
+      if (allParts.length && allParts[0].length) {
+        allParts.forEach(partName => {
+          const all = batchResultById[id][partName];
+          const errors = all.filter(result => result.error).map(result => result.item.id);
+          if (!errors.length) {
+            messageArr.push('  - ' + partName.toUpperCase() + ` (${all.length} effects)`);
+          } else {
+            messageArr.push(
+              '  - ' +
+              partName.toUpperCase() +
+              ` (${all.length - errors.length} succeed). But ${errors.length} errors:`,
+              ...errors.map(msg => '    + ' + msg),
+            );
+          }
+        });
+      }
+    });
+    alert(messageArr.join('\n'));
   }
 }
