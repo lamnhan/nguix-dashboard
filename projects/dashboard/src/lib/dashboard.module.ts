@@ -10,7 +10,10 @@ import { ConfigService, DASHBOARD_CONFIG, dashboardConfig } from './services/con
 import { SchemaService } from './services/schema/schema.service';
 import { DataService } from './services/data/data.service';
 import { DashboardService } from './services/dashboard/dashboard.service';
+
 import { FrontPartService } from './parts/front/front.service';
+import { MediaPartService } from './parts/media/media.service';
+import { UserPartService } from './parts/user/user.service';
 import { CategoryPartService } from './parts/category/category.service';
 import { TagPartService } from './parts/tag/tag.service';
 import { PagePartService } from './parts/page/page.service';
@@ -38,6 +41,8 @@ import { DatabaseState } from './states/database/database.state';
           'page',
           'category',
           'tag',
+          'media',
+          'user'
         ]
       }),
     },
@@ -47,6 +52,8 @@ import { DatabaseState } from './states/database/database.state';
     DashboardService,
     // parts
     FrontPartService,
+    MediaPartService,
+    UserPartService,
     CategoryPartService,
     TagPartService,
     PagePartService,

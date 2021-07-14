@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { ConfigService, DashboardPart, DatabaseItem } from '../config/config.service';
 
 import { FrontPartService } from '../../parts/front/front.service';
+import { MediaPartService } from '../../parts/media/media.service';
+import { UserPartService } from '../../parts/user/user.service';
 import { CategoryPartService } from '../../parts/category/category.service';
 import { TagPartService } from '../../parts/tag/tag.service';
 import { PagePartService } from '../../parts/page/page.service';
@@ -30,6 +32,8 @@ export class DashboardService {
     private configService: ConfigService,
     // parts
     public readonly frontPart: FrontPartService,
+    public readonly mediaPart: MediaPartService,
+    public readonly userPart: UserPartService,
     public readonly categoryPart: CategoryPartService,
     public readonly tagPart: TagPartService,
     public readonly pagePart: PagePartService,
@@ -52,6 +56,10 @@ export class DashboardService {
     switch (part) {
       case 'front':
         return this.frontPart;
+      case 'media':
+        return this.mediaPart;
+      case 'user':
+        return this.userPart;
       case 'category':
         return this.categoryPart;
       case 'tag':
