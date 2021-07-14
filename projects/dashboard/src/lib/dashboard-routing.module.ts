@@ -8,6 +8,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then(m => m.NguixDashboardHomePageModule),
   },
   {
+    path: 'admin/about', canLoad: [AdminGuard], canActivate: [AdminGuard],
+    loadChildren: () => import('./pages/about/about.module').then(m => m.NguixDashboardAboutPageModule),
+  },
+  {
     path: 'admin/list/:part', canLoad: [AdminGuard], canActivate: [AdminGuard],
     loadChildren: () => import('./pages/list/list.module').then(m => m.NguixDashboardListPageModule),
   },
@@ -23,7 +27,7 @@ const routes: Routes = [
     path: 'admin/copy/:part/:id', canLoad: [AdminGuard], canActivate: [AdminGuard],
     loadChildren: () => import('./pages/edit/edit.module').then(m => m.NguixDashboardEditPageModule),
     data: {copy: true},
-  }
+  },
 ];
 
 @NgModule({

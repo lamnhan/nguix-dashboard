@@ -20,6 +20,8 @@ export * from './lib/components/header/header.module';
 
 export * from './lib/pages/home/home.component';
 export * from './lib/pages/home/home.module';
+export * from './lib/pages/about/about.component';
+export * from './lib/pages/about/about.module';
 export * from './lib/pages/list/list.component';
 export * from './lib/pages/list/list.module';
 export * from './lib/pages/edit/edit.component';
