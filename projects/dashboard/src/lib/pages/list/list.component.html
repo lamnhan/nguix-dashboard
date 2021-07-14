@@ -63,7 +63,7 @@
           <tr>
             <th class="title">Title</th>
             <th class="author">Author</th>
-            <!-- <th class="comment"><i class="icon-dark icon-dashboard-comment"></i></th> -->
+            <th class="comment"><i class="icon-dark icon-dashboard-comment"></i></th>
             <th class="date">Date</th>
           </tr>
         </thead>  
@@ -142,9 +142,18 @@
                   </ul>  
   
                   <ul class="mobile-detail" [class.show]="item.id===detail">
-                    <li><span>Author</span><a href="#">Lam Nhan</a></li>
-                    <!-- <li><span>Comment</span><em>-</em></li> -->
-                    <li><span>Date</span><em>Published — 2018/10/02 at 1:04 pm</em></li>
+                    <li class="author" *ngIf="item.authors | o1i; let author">
+                      <span>Author</span>
+                      <a href="#">{{ author.title }}</a>
+                    </li>
+                    <li class="comment" *ngIf="item.commentCount">
+                      <span>Comment</span>
+                      <em>{{ item.commentCount }}</em>
+                    </li>
+                    <li class="date">
+                      <span>Date</span>
+                      <em>{{ item.updatedAt === item.createdAt ? 'Published' : 'Modified' }} — {{ item.updatedAt }}</em>
+                    </li>
                   </ul>
 
                 </li>
@@ -166,24 +175,29 @@
 
             <td class="author">  
               <ul>
-                <li *ngFor="let item of items">
-                  <a href="#">Lam Nhan</a>
+                <li *ngFor="let item of items">              
+                  <ng-container *ngIf="item.authors | o1i; let author">
+                    <span>Author</span>
+                    <a href="#">{{ author.title }}</a>
+                  </ng-container>
                 </li>
               </ul>  
             </td>
 
-            <!-- <td class="comment">              
+            <td class="comment">              
               <ul>
                 <li *ngFor="let item of items">
-                  —
+                  <span>Comment</span>
+                  <em>{{ item.commentCount || '—' }}</em>
                 </li>
               </ul>  
-            </td> -->
+            </td>
 
             <td class="date">
               <ul>
                 <li *ngFor="let item of items">
-                  <strong>Published</strong><span>—</span><em>2018/10/02 at 1:04 pm</em>
+                  <span>Date</span>
+                  <em>{{ item.updatedAt === item.createdAt ? 'Published' : 'Modified' }} — {{ item.updatedAt }}</em>
                 </li>
               </ul>  
             </td>

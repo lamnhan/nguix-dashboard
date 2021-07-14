@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
+import { RouterLinkDirectiveModule, O1iPipeModule } from '@lamnhan/ngx-useful';
 
 import { NguixDashboardTypeFilterPipeModule } from '../../pipes/type-filter/type-filter.module';
 import { NguixDashboardQueryFilterPipeModule } from '../../pipes/query-filter/query-filter.module';
@@ -23,6 +23,7 @@ import { ListPage } from './list.component';
     FormsModule,
     NgxPaginationModule,
     RouterLinkDirectiveModule,
+    O1iPipeModule,
     NguixDashboardTypeFilterPipeModule,
     NguixDashboardQueryFilterPipeModule,
     NguixDashboardStatusFilterPipeModule,
