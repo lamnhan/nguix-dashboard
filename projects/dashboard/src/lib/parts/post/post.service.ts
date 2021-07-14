@@ -76,6 +76,8 @@ export class PostPartService {
         ],
       },
     },
+    { label: 'Audio', name: 'audio', type: 'text' },
+    { label: 'Video', name: 'video', type: 'text' },
     Schemas.parents,
     Schemas.categories,
     Schemas.tags,
