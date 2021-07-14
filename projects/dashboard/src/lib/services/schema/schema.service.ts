@@ -21,6 +21,8 @@ export const Schemas = {
     label: 'Status', name: 'status', type: 'status', defaultValue: 'draft', required: true, validators: [Validators.required]
   },
   keywords: { label: 'Keywords', name: 'keywords', type: 'text' },
+  authors: { label: 'Authors', name: 'authors', type: 'link', data: { source: 'author' }},
+  parents: { label: 'Parents', name: 'parents', type: 'link', data: { source: 'bundle' }},
   categories: { label: 'Categories', name: 'categories', type: 'link', data: { source: 'category' }},
   tags: { label: 'Tags', name: 'tags', type: 'link', data: { source: 'tag' }},
 };
