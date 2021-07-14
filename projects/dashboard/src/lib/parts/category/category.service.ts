@@ -38,7 +38,12 @@ export class CategoryPartService {
   ];
 
   public readonly updateEffects: UpdateEffect[] = [
-    { part: 'post', key: 'categories', props: ['id', 'title'] },
+    {
+      part: 'post',
+      collection: 'posts',
+      key: 'categories',
+      props: ['id', 'title'],
+    },
   ];
 
   constructor(public readonly dataService: CategoryDataService) {}

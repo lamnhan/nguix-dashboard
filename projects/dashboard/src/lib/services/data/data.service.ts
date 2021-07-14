@@ -301,7 +301,7 @@ export class DataService {
   private showBatchResult(batchResultById: Record<string, Record<string, any[]>>) {
     const messageArr: string[] = [];
     Object.keys(batchResultById).forEach(id => {
-      messageArr.push(`* Action succeed for: "${id}"`);
+      messageArr.push(`Action succeed for: "${id}"`);
       const allParts = Object.keys(batchResultById[id]);
       if (allParts.length && allParts[0].length) {
         allParts.forEach(partName => {

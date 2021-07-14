@@ -67,6 +67,7 @@ export interface DataType {
 
 export interface UpdateEffect {
   part: string;
+  collection: string;
   key: string;
   props: string[];
   idBuilder?: (id: string) => string;

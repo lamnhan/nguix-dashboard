@@ -6,7 +6,7 @@ import { Subscription, combineLatest } from 'rxjs';
 import { tap, map, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 
-import { DashboardPart, DatabaseItem, FormSchemaItem } from '../../services/config/config.service';
+import { DashboardPart, DatabaseItem, FormSchemaItem, CheckboxAlikeChild } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
@@ -389,7 +389,38 @@ export class EditPage implements OnInit, OnDestroy {
     // 1. only
     if (type === 'only' && this.part?.updateEffects) {
       item.children = this.part?.updateEffects
-        .map(item => ({ text: item.part, name: item.part, checked: false }));
+        .map(item => {
+          const part = this.dashboardService.getPart(item.part);
+          if (!part) {
+            return null;
+          }
+          const collection = item.collection;
+          const children: CheckboxAlikeChild[] = [];
+          // main
+          children.push({
+            text: collection,
+            name: collection,
+            checked: false,
+          });
+          // data types
+          children.concat(
+            (part.dataTypes || []).map(type => ({
+              text: `${collection}:${type.value}`,
+              name: `${collection}:${type.value}`,
+              checked: false,
+            })),
+          );
+          // result
+          return children;
+        })
+        .filter(item => !!item)
+        .reduce(
+          (result, item) => {
+            result = (result as any[]).concat(item as CheckboxAlikeChild[]);
+            return result;
+          },
+          [] as any[],
+        ) as CheckboxAlikeChild[];
     }
     // 2. type
     if (type === 'type' && this.part?.dataTypes && this.part?.dataTypes.length <= 1) {

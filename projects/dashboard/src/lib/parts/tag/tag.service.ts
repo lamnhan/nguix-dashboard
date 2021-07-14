@@ -34,7 +34,12 @@ export class TagPartService {
   ];
 
   public readonly updateEffects: UpdateEffect[] = [
-    { part: 'post', key: 'tags', props: ['id', 'title'] },
+    {
+      part: 'post',
+      collection: 'posts',
+      key: 'tags',
+      props: ['id', 'title'],
+    },
   ];
 
   constructor(public readonly dataService: TagDataService) {}
