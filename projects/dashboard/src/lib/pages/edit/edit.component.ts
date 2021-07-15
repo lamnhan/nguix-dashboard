@@ -161,15 +161,13 @@ export class EditPage implements OnInit, OnDestroy {
   htmlChanges(
     schema: FormSchemaItem,
     formGroup: FormGroup,
-    value: any
+    value: string
   ) {
-    console.log(value);
-    // (schema.data as any).currentData = value;
-    // const control = formGroup.get(schema.name);
-    // if (control) {
-    //   control.setValue(value);
-    //   control.markAsDirty();
-    // }
+    const control = formGroup.get(schema.name);
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
   }
 
   jsonChanges(

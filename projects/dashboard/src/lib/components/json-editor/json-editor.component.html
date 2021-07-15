@@ -30,7 +30,7 @@
       <table class="table-bordered">
         <thead>
           <tr>
-            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
             <th
               *ngFor="let schemaItem of schema"
               [class.required]="schemaItem.required"
@@ -40,7 +40,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let matrixItem of dataMatrix; let i = index">
-            <td><a href="javascript:void(0)" (click)="remove(i)">Remove</a></td>
+            <td><a href="javascript:void(0)" (click)="remove(i)">[—]</a></td>
             <td *ngFor="let schemaItem of matrixItem">
 
               <ng-container *ngIf="schemaItem.type === 'string'">
@@ -61,7 +61,7 @@
         <tfoot>
           <tr>
             <td colspan="42">
-              <a href="javascript:void(0)" (click)="add()">(+) Add</a>
+              <a href="javascript:void(0)" (click)="add()">[+]</a>
             </td>
           </tr>
         </tfoot>

@@ -39,6 +39,10 @@
           &.required .form-label {
             font-weight: 700;
           }
+
+          textarea {
+            height: 100px;
+          }
         }
 
         .actions {

@@ -7,10 +7,13 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class HtmlEditorComponent implements OnInit {
   @Input() htmlContent?: string = '';
-  @Output() save = new EventEmitter<any>();
+  @Output() save = new EventEmitter<string>();
 
   constructor() {}
 
   ngOnInit(): void {}
 
+  ready(e: any) {
+    e.on('Change', () => this.save.emit(this.htmlContent));
+  }
 }
