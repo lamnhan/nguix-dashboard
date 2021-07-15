@@ -6,7 +6,7 @@ import { Subscription, combineLatest } from 'rxjs';
 import { tap, map, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 
-import { DashboardPart, DatabaseItem, FormSchemaItem, CheckboxAlikeChild } from '../../services/config/config.service';
+import { DashboardPart, DatabaseItem, FormSchemaItem, CheckboxAlikeChild, ConfigService } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
@@ -23,7 +23,7 @@ export class EditPage implements OnInit, OnDestroy {
   private itemId?: string;
   
   lockdown = false;
-  submitText = '-';
+  submitText = 'Submit';
   activeLocale = 'en-US';
 
   isNew = false;
@@ -121,6 +121,7 @@ export class EditPage implements OnInit, OnDestroy {
     private navService: NavService,
     public settingService: SettingService,
     private userService: UserService,
+    private configService: ConfigService,
     private dashboardService: DashboardService,
     public dataService: DataService
   ) {}
@@ -155,6 +156,20 @@ export class EditPage implements OnInit, OnDestroy {
       control.setValue(value);
       control.markAsDirty();
     }
+  }
+
+  htmlChanges(
+    schema: FormSchemaItem,
+    formGroup: FormGroup,
+    value: any
+  ) {
+    console.log(value);
+    // (schema.data as any).currentData = value;
+    // const control = formGroup.get(schema.name);
+    // if (control) {
+    //   control.setValue(value);
+    //   control.markAsDirty();
+    // }
   }
 
   jsonChanges(
@@ -264,13 +279,13 @@ export class EditPage implements OnInit, OnDestroy {
         ? 'Publish now'
         : status === 'draft'
         ? 'Save draft'
-        : '-';
+        : 'New';
     } else {
       return status === 'publish'
         ? 'Update now'
         : status === 'draft'
         ? 'Save draft'
-        : '-';
+        : 'Update';
     }
   }
 
@@ -385,7 +400,7 @@ export class EditPage implements OnInit, OnDestroy {
 
   private processSchema(schema: FormSchemaItem) {
     const item = {...schema};
-    const { type } = schema;
+    const { type, name } = schema;
     // 1. only
     if (type === 'only' && this.part?.updateEffects) {
       item.children = this.part?.updateEffects
@@ -426,32 +441,40 @@ export class EditPage implements OnInit, OnDestroy {
     if (type === 'type' && this.part?.dataTypes && this.part?.dataTypes.length <= 1) {
       item.disabled = true;
     }
+    // 3. content
+    if (name === 'content' && !this.configService.getConfig().directContent) {
+      item.hidden = true;
+    }
     // result
     return item;
   }
 
   private processSchemaData(schema: FormSchemaItem, value: any) {
-    const { type, children, data } = schema;
+    const { type, children } = schema;
     // 1. checkbox alike
     if ((type === 'checkbox' || type === 'only') && value &&  children) {
       children.forEach(child => (value as string[]).indexOf(child.name) ? false : child.checked = true);
     }
     // 2. json
-    if (type === 'json' && data) {
-      data.currentData = value;
+    if (type === 'json' && schema.data) {
+      schema.data.currentData = value;
     }
     // 3. link
-    if (type === 'link' && data && data.source) {
-      const part = this.dashboardService.getPart(data.source as string);
+    if (type === 'link' && schema.data && schema.data.source) {
+      const part = this.dashboardService.getPart(schema.data.source as string);
       if (part) {
-        data.part = part;
-        data.items$ = this.store
+        schema.data.part = part;
+        schema.data.items$ = this.store
           .dispatch(new GetPart(part)) 
           .pipe(
             map(state => state.database[part.name]),
           );
-        data.currentData = value;
+        schema.data.currentData = value;
       }
+    }
+    // 4. html
+    if (type === 'html') {
+      schema.data = { htmlContent: value };
     }
   }
 }

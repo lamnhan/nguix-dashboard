@@ -14,6 +14,7 @@ export function dashboardConfig(config: DashboardConfig) {
 export interface DashboardConfig {
   parts: Array<string | DashboardPart>;
   plugins?: DashboardPlugin[];
+  directContent?: boolean;
 }
 
 export type DashboardPlugin = (dashboardService: DashboardService) => any;
@@ -43,6 +44,7 @@ export interface FormSchemaItem {
   type: SchemaType;
   required?: boolean;
   disabled?: boolean;
+  hidden?: boolean;
   defaultValue?: any;
   placeholder?: string;
   description?: string;

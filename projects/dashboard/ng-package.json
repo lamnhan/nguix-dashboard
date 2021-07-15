@@ -9,11 +9,13 @@
       "@ngneat/transloco": "transloco",
       "ngx-pagination": "pagination",
       "@ngxs/store" : "ngxs",
-      "ngx-toastr": "toaster"
+      "ngx-toastr": "toaster",
+      "ngx-tinymce": "tinymce"
     }
   },
   "allowedNonPeerDependencies": [
     "ngx-pagination",
-    "ngx-toastr"
+    "ngx-toastr",
+    "ngx-tinymce"
   ]
 }

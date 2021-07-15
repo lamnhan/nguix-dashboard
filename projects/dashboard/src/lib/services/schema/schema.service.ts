@@ -11,7 +11,7 @@ export const Schemas = {
   image: { label: 'Image', name: 'image', type: 'text'},
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 1},
   contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'text'},
-  content: { label: 'Content', name: 'content', type: 'textarea'},
+  content: { label: 'Content', name: 'content', type: 'html'},
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
   only: { label: 'Only', name: 'only', type: 'only' },
   locale: { label: 'Locale', name: 'locale', type: 'locale', required: true, validators: [Validators.required] },

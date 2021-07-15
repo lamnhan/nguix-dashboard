@@ -22,9 +22,9 @@
         (ngSubmit)="submit(part, data.formGroup)"
         #theForm="ngForm"
       >
+        <ng-container *ngFor="let schema of data.formSchema">
+        <div class="item" [class.required]="!!schema.required" *ngIf="!schema.hidden">
   
-        <div class="item" [class.required]="!!schema.required" *ngFor="let schema of data.formSchema">
-
           <label class="form-label" [for]="schema.name">{{ schema.label }}</label>
   
           <ng-container
@@ -87,14 +87,25 @@
               <option *ngFor="let type of part.dataTypes" [value]="type.value">{{ type.text }}</option>
             </select>
           </ng-container>
-
+  
           <ng-container *ngIf="schema.type==='status'">
             <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
               <option value="publish">Publish</option>
               <option value="draft">Draft</option>
             </select>
           </ng-container>
-
+  
+          <ng-container *ngIf="schema.type==='html' && schema.data">
+            <nguix-dashboard-html-editor
+              [htmlContent]="schema.data.htmlContent"
+              (save)="htmlChanges(
+                schema,
+                data.formGroup,
+                $event
+              )"
+            ></nguix-dashboard-html-editor>
+          </ng-container>
+  
           <ng-container *ngIf="schema.type==='json' && schema.data">
             <nguix-dashboard-json-editor
               [type]="schema.data.type"
@@ -108,7 +119,7 @@
               )"
             ></nguix-dashboard-json-editor>
           </ng-container>
-
+  
           <ng-container *ngIf="schema.type==='link' && schema.data">
             <nguix-dashboard-link-editor
               [part]="schema.data.part"
@@ -125,6 +136,7 @@
           </ng-container>
   
         </div>
+        </ng-container>
   
         <div class="actions">
 
