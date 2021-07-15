@@ -40,7 +40,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let matrixItem of dataMatrix; let i = index">
-            <td><a href="javascript:void(0)" (click)="remove(i)">[—]</a></td>
+            <td><a href="javascript:void(0)" (click)="remove(i)">[-]</a></td>
             <td *ngFor="let schemaItem of matrixItem">
 
               <ng-container *ngIf="schemaItem.type === 'string'">

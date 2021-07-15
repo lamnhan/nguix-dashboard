@@ -95,9 +95,9 @@
             </select>
           </ng-container>
   
-          <ng-container *ngIf="schema.type==='html' && schema.data">
+          <ng-container *ngIf="schema.type==='html' && schema.meta">
             <nguix-dashboard-html-editor
-              [htmlContent]="schema.data.htmlContent"
+              [htmlContent]="schema.meta.htmlContent"
               (save)="htmlChanges(
                 schema,
                 data.formGroup,
@@ -106,12 +106,12 @@
             ></nguix-dashboard-html-editor>
           </ng-container>
   
-          <ng-container *ngIf="schema.type==='json' && schema.data">
+          <ng-container *ngIf="schema.type==='json' && schema.meta">
             <nguix-dashboard-json-editor
-              [type]="schema.data.type"
-              [currentData]="schema.data.currentData"
-              [schema]="schema.data.schema"
-              [recordKey]="schema.data.recordKey"
+              [type]="schema.meta.type"
+              [currentData]="schema.meta.currentData"
+              [schema]="schema.meta.schema"
+              [recordKey]="schema.meta.recordKey"
               (save)="jsonChanges(
                 schema,
                 data.formGroup,
@@ -120,13 +120,14 @@
             ></nguix-dashboard-json-editor>
           </ng-container>
   
-          <ng-container *ngIf="schema.type==='link' && schema.data">
+          <ng-container *ngIf="schema.type==='link' && schema.meta">
             <nguix-dashboard-link-editor
-              [part]="schema.data.part"
-              [items$]="schema.data.items$"
-              [keys]="schema.data.keys"
-              [currentData]="schema.data.currentData"
-              [locale]="activeLocale"
+              [part]="schema.meta.part"
+              [items$]="schema.meta.items$"
+              [keys]="schema.meta.keys"
+              [currentData]="schema.meta.currentData"
+              [contentLocale]="activeLocale"
+              [contentType]="schema.meta.activeType"
               (save)="linkChanges(
                 schema,
                 data.formGroup,

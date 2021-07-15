@@ -34,7 +34,7 @@ export class CategoryPartService {
     Schemas.thumbnail,
     Schemas.image,
     Schemas.count,
-    Schemas.only,
+    { label: 'Only', name: 'only', type: 'only' },
   ];
 
   public readonly updateEffects: UpdateEffect[] = [

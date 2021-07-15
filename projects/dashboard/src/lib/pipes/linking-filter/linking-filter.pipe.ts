@@ -10,13 +10,16 @@ export class LinkingFilterPipe implements PipeTransform {
 
   transform(
     items: any[],
-    locale: string,
+    contentType?: string,
+    contentLocale?: string,
     query?: string,
+    isAnyType = false,
     isAnyLocale = false,
     isAnyStatus = false,
   ): any[] {
     return items
-      .filter(item => isAnyLocale ? true : item.locale === locale)
+      .filter(item => isAnyType || !contentType ? true : item.type === contentType)
+      .filter(item => isAnyLocale || !contentLocale ? true : item.locale === contentLocale)
       .filter(item => isAnyStatus ? true : item.status === 'publish')
       .filter(item => {
         if(!query) {

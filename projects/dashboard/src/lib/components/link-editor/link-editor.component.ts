@@ -13,7 +13,8 @@ export class LinkEditorComponent implements OnInit, OnChanges {
   @Input() items$!: Observable<any[]>;
   @Input() keys?: string[];
   @Input() currentData?: Record<string, any>;
-  @Input() locale!: string;
+  @Input() contentType?: string;
+  @Input() contentLocale?: string;
 
   @Output() save = new EventEmitter<any>();
   
@@ -22,6 +23,7 @@ export class LinkEditorComponent implements OnInit, OnChanges {
   selectedData: Record<string, any> = {};
 
   query = '';
+  isAnyType = false;
   isAnyLocale = false;
   isAnyStatus = false;
   pageNo = 1;

@@ -45,7 +45,7 @@ export class PostPartService {
       label: 'TOC',
       name: 'toc',
       type: 'json',
-      data: {
+      meta: {
         type: 'array',
         schema: [
           {name: 'text', type: 'string', required: true, width: 150},
@@ -66,7 +66,7 @@ export class PostPartService {
       label: 'Slides',
       name: 'slides',
       type: 'json',
-      data: {
+      meta: {
         type: 'record',
         schema: [
           {name: 'id', type: 'string', required: true, width: 100},
@@ -78,7 +78,16 @@ export class PostPartService {
     },
     { label: 'Audio', name: 'audio', type: 'text' },
     { label: 'Video', name: 'video', type: 'text' },
-    Schemas.parents,
+    {
+      label: 'Parents',
+      name: 'parents',
+      type: 'link',
+      meta: {
+        source: 'bundle',
+        keys: ['id', 'title', 'thumbnail'],
+        activeType: 'post-series',
+      },
+    },
     Schemas.categories,
     Schemas.tags,
     Schemas.keywords,

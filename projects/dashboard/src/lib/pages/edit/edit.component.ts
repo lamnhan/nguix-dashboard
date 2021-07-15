@@ -101,7 +101,7 @@ export class EditPage implements OnInit, OnDestroy {
           });
         }
         // active locale
-        this.activeLocale = this.settingService.defaultLocale;
+        this.activeLocale = this.databaseItem?.locale || this.settingService.defaultLocale;
         const localeControl = data.formGroup?.get('locale');
         if (localeControl) {
           this.localeChangesSubscription = localeControl.valueChanges
@@ -175,7 +175,7 @@ export class EditPage implements OnInit, OnDestroy {
     formGroup: FormGroup,
     value: any
   ) {
-    (schema.data as any).currentData = value;
+    (schema.meta as any).currentData = value;
     const control = formGroup.get(schema.name);
     if (control) {
       control.setValue(value);
@@ -188,7 +188,7 @@ export class EditPage implements OnInit, OnDestroy {
     formGroup: FormGroup,
     value: any
   ) {
-    (schema.data as any).currentData = value;
+    (schema.meta as any).currentData = value;
     const control = formGroup.get(schema.name);
     if (control) {
       control.setValue(value);
@@ -454,25 +454,25 @@ export class EditPage implements OnInit, OnDestroy {
       children.forEach(child => (value as string[]).indexOf(child.name) ? false : child.checked = true);
     }
     // 2. json
-    if (type === 'json' && schema.data) {
-      schema.data.currentData = value;
+    if (type === 'json' && schema.meta) {
+      schema.meta.currentData = value;
     }
     // 3. link
-    if (type === 'link' && schema.data && schema.data.source) {
-      const part = this.dashboardService.getPart(schema.data.source as string);
+    if (type === 'link' && schema.meta && schema.meta.source) {
+      const part = this.dashboardService.getPart(schema.meta.source as string);
       if (part) {
-        schema.data.part = part;
-        schema.data.items$ = this.store
+        schema.meta.part = part;
+        schema.meta.items$ = this.store
           .dispatch(new GetPart(part)) 
           .pipe(
             map(state => state.database[part.name]),
           );
-        schema.data.currentData = value;
+        schema.meta.currentData = value;
       }
     }
     // 4. html
     if (type === 'html') {
-      schema.data = { htmlContent: value };
+      schema.meta = { htmlContent: value };
     }
   }
 }

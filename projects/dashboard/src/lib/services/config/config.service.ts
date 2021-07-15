@@ -50,7 +50,7 @@ export interface FormSchemaItem {
   description?: string;
   validators?: any[];
   children?: CheckboxAlikeChild[];
-  data?: Record<string, any>;
+  meta?: Record<string, any>;
 }
 
 export type SchemaType = string;

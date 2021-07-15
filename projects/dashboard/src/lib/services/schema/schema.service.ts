@@ -13,7 +13,6 @@ export const Schemas = {
   contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'text'},
   content: { label: 'Content', name: 'content', type: 'html'},
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
-  only: { label: 'Only', name: 'only', type: 'only' },
   locale: { label: 'Locale', name: 'locale', type: 'locale', required: true, validators: [Validators.required] },
   origin: { label: 'Origin', name: 'origin', type: 'text', required: true, validators: [Validators.required] },
   type: { label: 'Type', name: 'type', type: 'type', required: true, validators: [Validators.required] },
@@ -21,10 +20,9 @@ export const Schemas = {
     label: 'Status', name: 'status', type: 'status', defaultValue: 'draft', required: true, validators: [Validators.required]
   },
   keywords: { label: 'Keywords', name: 'keywords', type: 'text' },
-  authors: { label: 'Authors', name: 'authors', type: 'link', data: { source: 'author' }},
-  parents: { label: 'Parents', name: 'parents', type: 'link', data: { source: 'bundle' }},
-  categories: { label: 'Categories', name: 'categories', type: 'link', data: { source: 'category' }},
-  tags: { label: 'Tags', name: 'tags', type: 'link', data: { source: 'tag' }},
+  authors: { label: 'Authors', name: 'authors', type: 'link', meta: { source: 'author' }},
+  categories: { label: 'Categories', name: 'categories', type: 'link', meta: { source: 'category' }},
+  tags: { label: 'Tags', name: 'tags', type: 'link', meta: { source: 'tag' }},
 };
 
 @Injectable({
