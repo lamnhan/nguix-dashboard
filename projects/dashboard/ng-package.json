@@ -8,14 +8,18 @@
       "@lamnhan/ngx-schemata": "ng.lamnhan.schemata",
       "@ngneat/transloco": "transloco",
       "ngx-pagination": "pagination",
-      "@ngxs/store" : "ngxs",
-      "ngx-toastr": "toaster",
-      "ngx-tinymce": "tinymce"
+      "@ngxs/store" : "ngxsStore",
+      "ngx-toastr": "toastr",
+      "ngx-tinymce": "tinymce",
+      "ngx-modal-dialog": "modalDialog",
+      "ngx-tui-image-editor": "tuiImageEditor"
     }
   },
   "allowedNonPeerDependencies": [
     "ngx-pagination",
     "ngx-toastr",
-    "ngx-tinymce"
+    "ngx-tinymce",
+    "ngx-modal-dialog",
+    "ngx-tui-image-editor"
   ]
 }

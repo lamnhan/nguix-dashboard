@@ -4,6 +4,7 @@
 
 export * from './lib/dashboard.module';
 
+export * from './lib/services/storage/storage.service';
 export * from './lib/services/config/config.service';
 export * from './lib/services/schema/schema.service';
 export * from './lib/services/data/data.service';
