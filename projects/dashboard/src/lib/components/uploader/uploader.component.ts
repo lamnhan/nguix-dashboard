@@ -1,22 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { AngularFireStorageReference } from '@angular/fire/storage';
 
-import { StorageService } from '../../services/storage/storage.service';
+import { StorageService, UploadResult } from '../../services/storage/storage.service';
 
-interface FileInfo {
+
+interface Uploading {
   name: string;
   size: number;
-}
-
-interface Uploading extends FileInfo {
   uploadPercent: Observable<undefined | number>;
-}
-
-interface Result extends FileInfo {
-  ref: AngularFireStorageReference;
-  downloadUrl: Observable<string>;
 }
 
 @Component({
@@ -27,7 +19,7 @@ interface Result extends FileInfo {
 export class UploaderComponent implements OnInit {
   @Input() show = false;
   @Output() close = new EventEmitter<void>();
-  @Output() done = new EventEmitter<Result>();
+  @Output() done = new EventEmitter<UploadResult>();
 
   tab: 'upload' | 'image' = 'upload';
   closeOnCompleted = false;
@@ -36,7 +28,7 @@ export class UploaderComponent implements OnInit {
   };
 
   uploading?: Uploading;
-  result?: Result;
+  result?: UploadResult;
 
   constructor(private storageService: StorageService) {}
 
@@ -45,21 +37,26 @@ export class UploaderComponent implements OnInit {
   uploadFile(e: any) {
     const file = e.target.files[0];
     const {name, size} = file;
-    const {ref, task} = this.storageService.uploadFile(name, file);
+    const {ref, path, task} = this.storageService.uploadFile(name, file);
+    // uploading
     this.uploading = {
       name,
       size,
       uploadPercent: task.percentageChanges(),
     };
+    // completed
     task.snapshotChanges().pipe(
       finalize(() => {
         this.result = {
+          path,
           ref,
-          name,
-          size,
           downloadUrl: ref.getDownloadURL(),
         };
+        // done & close
         this.done.emit(this.result);
+        if (this.closeOnCompleted) {
+          this.close.emit();
+        }
       })
     ).subscribe();
   }

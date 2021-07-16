@@ -1,0 +1,16 @@
+.host {
+
+  .head {
+
+    .title {
+      display: flex;
+      flex-wrap: nowrap;
+
+      h1 {
+        margin-right: 1rem;
+        text-transform: capitalize;
+      }
+    }
+  }
+
+}

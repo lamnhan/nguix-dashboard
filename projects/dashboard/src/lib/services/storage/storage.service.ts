@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
 
 // TODO: move this to @lamnhan/ngx-useful
 
@@ -14,6 +15,12 @@ export interface StorageOptions {
 export interface UploadCustom {
   folder?: string;
   customMetadata?: Record<string, any>;
+}
+
+export interface UploadResult {
+  path: string;
+  ref: AngularFireStorageReference;
+  downloadUrl: Observable<string>;
 }
 
 @Injectable({
@@ -41,21 +48,27 @@ export class StorageService {
     return this as StorageService;
   }
 
-  list() {}
-
-  get(path: string) {
+  ref(path: string) {
     return this.service.ref(path);
+  }
+
+  list(folder?: string) {
+    return this.ref(this.getRootFolder(folder)).listAll();
   }
 
   uploadFile(path: string, file: File, custom: UploadCustom = {}) {
     const {folder, customMetadata = {} } = custom;
     const filePath =
-      (folder || this.options.uploadFolder || this.defaultFolder) + '/' +
+      (this.getRootFolder(folder)) + '/' +
       (!this.options.dateGrouping ? '' : (this.getDateGroupingPath() + '/')) +
       path;
-    const ref = this.get(filePath);
+    const ref = this.ref(filePath);
     const task = ref.put(file, { customMetadata });
-    return { ref, task };
+    return { path: filePath, ref, task };
+  }
+
+  private getRootFolder(folder?: string) {
+    return folder || this.options.uploadFolder || this.defaultFolder;
   }
 
   private getDateGroupingPath() {

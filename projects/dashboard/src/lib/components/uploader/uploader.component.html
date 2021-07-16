@@ -1,24 +1,24 @@
-<div class="host" [class.show]="show">
+<div class="host dashboard" [class.show]="show">
 
   <div class="head">
     <div class="left">
-      <ul>
+      <ul class="tabs">
         <li>
-          <a href="javascript:void(0)" (click)="tab='upload'">
-            <i class="icon icon-home"></i>
+          <a href="javascript:void(0)" [class.active]="tab==='upload'" (click)="tab='upload'">
+            <!-- <i class="icon-dark icon-dashboard-home"></i> -->
             <span>Upload</span>
           </a>
         </li>
         <li>
-          <a href="javascript:void(0)" (click)="tab='image'">
-            <i class="icon icon-home"></i>
+          <a href="javascript:void(0)" [class.active]="tab==='image'" (click)="tab='image'">
+            <!-- <i class="icon-dark icon-dashboard-home"></i> -->
             <span>Image</span>
           </a>
         </li>
       </ul>
     </div>
     <div class="right">
-      <button (click)="close.emit()">X</button>
+      <a href="javascript:void(0)" (click)="close.emit()">X</a>
     </div>
   </div>
 
@@ -27,8 +27,16 @@
     <div class="upload" *ngIf="tab==='upload'">
       <ng-container *ngIf="uploading; else uploadInput">
         <div class="name">Name: {{uploading.name}}</div>
-        <div class="name">Size: {{uploading.size}}</div>
-        <div class="status">Status: {{ uploading.uploadPercent | async }}</div>
+        <div class="size">Size: {{uploading.size}}</div>
+        <ng-container *ngIf="result; else statusShow">
+          <div class="path">Path: <a href="#">{{ result.path }}</a></div>
+          <div class="url">URL: <a [href]="result.downloadUrl | async" target="_blank">Open link</a></div>
+        </ng-container>
+        <ng-template #statusShow>
+          <div class="status">
+            <progress [value]="uploading.uploadPercent | async" max="100"></progress>
+          </div>
+        </ng-template>
       </ng-container>
       <ng-template #uploadInput>
         <input type="file" (change)="uploadFile($event)">
@@ -43,16 +51,14 @@
 
   <div class="foot">
     <div class="left">
-      <button (click)="close.emit()">Cancel</button>
-      <div>
-        <label>
-          <input type="checkbox" [(ngModel)]="closeOnCompleted">
-          <span>Close on completed</span>
-        </label>
-      </div>
+      <!-- <a class="button-outline-dark" href="javascript:void(0)" (click)="close.emit()">Cancel</a> -->
+      <label class="option">
+        <input type="checkbox" [(ngModel)]="closeOnCompleted">
+        <span>Close on completed</span>
+      </label>
     </div>
     <div class="right">
-      <button>Ok</button>
+      <button class="button-success" (click)="close.emit()">OK</button>
     </div>
   </div>
 

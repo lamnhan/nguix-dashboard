@@ -1,7 +1,21 @@
 <div class="host dashboard page">
-  <h1>Media</h1>
 
-  <button (click)="showUploader=true">Open</button>
+  <div class="head">
+
+    <div class="title">
+      <h1>Media</h1>
+      <button
+        class="button-outline-primary"
+        (click)="showUploader=true"
+      >Add New</button>
+    </div>
+
+  </div>
+
 </div>
 
-<nguix-dashboard-uploader [show]="showUploader" (close)="showUploader=false"></nguix-dashboard-uploader>
+<nguix-dashboard-uploader
+  [show]="showUploader"
+  (close)="showUploader=false"
+  (done)="uploadComplete($event)"
+></nguix-dashboard-uploader>

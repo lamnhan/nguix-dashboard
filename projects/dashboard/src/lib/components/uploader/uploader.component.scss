@@ -2,11 +2,10 @@
 
 .host {
   background: $light;
-  border: 1px solid $medium;
+  border-top: 1px solid $medium;
   border-radius: 3px;
   color: $light-contrast;
-  width: calc(100% - 2rem);
-  margin: 1rem;
+  width: 100%;
   position: fixed;
   bottom: -500rem;
   left: 0;
@@ -31,6 +30,37 @@
 
   .head {
     padding: 1rem;
+    border-bottom: 1px solid $light-shade;
+
+    .left {
+
+     ul.tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          margin-right: 1rem;
+
+          a {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            padding: .5rem 1rem;
+            color: $medium;
+            text-decoration: none;
+            
+            &:hover, &:focus, &:active, &.active {
+              color: $light-contrast;
+              background: $light-shade;
+            }
+          }
+        }
+      }
+    }
   }
   
   .body {
@@ -38,6 +68,17 @@
   }
   
   .foot {
-    padding: 1rem;
+    padding: .5rem 1rem;
+    border-top: 1px solid $light-shade;
+
+    .left {
+
+      .option {
+
+        input {
+          margin-right: .5rem;
+        }
+      }
+    }
   }
 }
