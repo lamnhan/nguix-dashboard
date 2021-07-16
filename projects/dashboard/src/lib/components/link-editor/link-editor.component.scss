@@ -1,6 +1,7 @@
 @import '../../../scss/skin';
 
 .host {
+  background: none;
 
   .header {
     display: flex;
@@ -38,6 +39,7 @@
 
   .edit {
     border: 1px solid $medium;
+    background: $light;
     
     .filter {
       padding: .5rem;

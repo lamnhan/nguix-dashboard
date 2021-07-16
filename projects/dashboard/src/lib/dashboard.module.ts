@@ -20,6 +20,8 @@ import { PagePartService } from './parts/page/page.service';
 import { PostPartService } from './parts/post/post.service';
 
 import { DatabaseState } from './states/database/database.state';
+import { MediaState } from './states/media/media.state';
+import { UserState } from './states/user/user.state';
 
 @NgModule({
   declarations: [],
@@ -27,7 +29,7 @@ import { DatabaseState } from './states/database/database.state';
     BrowserAnimationsModule,
     DashboardRoutingModule,
     NguixDashboardHeaderComponentModule,
-    NgxsModule.forRoot([DatabaseState], {developmentMode: false}),
+    NgxsModule.forRoot([DatabaseState, MediaState, UserState], {developmentMode: false}),
     ToastrModule.forRoot(),
   ],
   providers: [
