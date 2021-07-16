@@ -1,5 +1,7 @@
 <div class="host dashboard page">
   <h1>Media</h1>
 
-  <button (click)="open()">Open</button>
+  <button (click)="showUploader=true">Open</button>
 </div>
+
+<nguix-dashboard-uploader [show]="showUploader" (close)="showUploader=false"></nguix-dashboard-uploader>

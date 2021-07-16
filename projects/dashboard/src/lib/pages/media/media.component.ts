@@ -1,7 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { ModalDialogService } from 'ngx-modal-dialog';
-
-import { UploaderComponent } from '../../components/uploader/uploader.component';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'nguix-dashboard-media-page',
@@ -9,17 +6,11 @@ import { UploaderComponent } from '../../components/uploader/uploader.component'
   styleUrls: ['./media.component.scss']
 })
 export class MediaPage implements OnInit {
+  showUploader = false;
 
-  constructor(private modalService: ModalDialogService, private viewRef: ViewContainerRef) { }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  open() {
-    this.modalService.openDialog(this.viewRef, {
-      title: 'Upload',
-      childComponent: UploaderComponent
-    });
   }
 
 }

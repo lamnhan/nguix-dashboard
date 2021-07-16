@@ -50,13 +50,12 @@
     "@unistylus/bootstrap": "0.0.2",
     "@unistylus/core": "0.0.1",
     "firebase": "8.6.1",
-    "ngx-modal-dialog": "^4.0.0",
     "ngx-pagination": "^5.1.1",
     "ngx-tinymce": "^12.0.0",
     "ngx-toastr": "^14.0.0",
-    "ngx-tui-image-editor": "^7.0.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
+    "tui-image-editor": "^3.14.3",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

@@ -1,1 +1,59 @@
-<p>uploader works!</p>
+<div class="host" [class.show]="show">
+
+  <div class="head">
+    <div class="left">
+      <ul>
+        <li>
+          <a href="javascript:void(0)" (click)="tab='upload'">
+            <i class="icon icon-home"></i>
+            <span>Upload</span>
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0)" (click)="tab='image'">
+            <i class="icon icon-home"></i>
+            <span>Image</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="right">
+      <button (click)="close.emit()">X</button>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <div class="upload" *ngIf="tab==='upload'">
+      <ng-container *ngIf="uploading; else uploadInput">
+        <div class="name">Name: {{uploading.name}}</div>
+        <div class="name">Size: {{uploading.size}}</div>
+        <div class="status">Status: {{ uploading.uploadPercent | async }}</div>
+      </ng-container>
+      <ng-template #uploadInput>
+        <input type="file" (change)="uploadFile($event)">
+      </ng-template>
+    </div>
+
+    <div class="image" *ngIf="tab==='image'">
+      <div id="tui-image-editor"></div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="left">
+      <button (click)="close.emit()">Cancel</button>
+      <div>
+        <label>
+          <input type="checkbox" [(ngModel)]="closeOnCompleted">
+          <span>Close on completed</span>
+        </label>
+      </div>
+    </div>
+    <div class="right">
+      <button>Ok</button>
+    </div>
+  </div>
+
+</div>

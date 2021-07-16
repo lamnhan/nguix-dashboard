@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModalDialogModule } from 'ngx-modal-dialog';
 
 import { NguixDashboardUploaderComponentModule } from '../../components/uploader/uploader.module';
 
@@ -14,7 +13,6 @@ import { MediaPage } from './media.component';
   ],
   imports: [
     CommonModule,
-    ModalDialogModule.forRoot(),
     NguixDashboardUploaderComponentModule,
     MediaRoutingModule,
   ]
