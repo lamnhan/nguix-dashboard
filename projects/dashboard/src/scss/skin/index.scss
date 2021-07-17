@@ -37,9 +37,12 @@ $dark-tint: rgb(44, 51, 56);
 $dark-contrast: rgb(255, 255, 255);
 
 $recolors: (
+  // primary
+  primary: invert(15%) sepia(98%) saturate(3540%) hue-rotate(194deg) brightness(86%) contrast(85%),
   // secondary
   secondary: invert(62%) sepia(72%) saturate(433%) hue-rotate(181deg) brightness(95%) contrast(90%),
   // medium
+  medium: invert(62%) sepia(6%) saturate(256%) hue-rotate(179deg) brightness(90%) contrast(84%),
   medium-tint: invert(76%) sepia(7%) saturate(136%) hue-rotate(169deg) brightness(91%) contrast(85%),
   // dark
   dark: invert(11%) sepia(6%) saturate(1549%) hue-rotate(161deg) brightness(98%) contrast(93%),

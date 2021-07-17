@@ -14,6 +14,11 @@ export class GetMedia {
   constructor(public refresh = false) {}
 }
 
+export class AddFile {
+  static readonly type = '[Media] Add new fil';
+  constructor(public file: MediaItem) {}
+}
+
 @State<MediaStateModel>({
   name: 'media',
   defaults: {
@@ -50,6 +55,13 @@ export class MediaState {
         }),
       );
     }
+  }
+
+  @Action(AddFile)
+  addFile({ getState, patchState }: StateContext<MediaStateModel>, action: AddFile) {
+    const state = getState();
+    const { file } = action;
+    patchState({ files: [file, ...state.files] });
   }
 
 }

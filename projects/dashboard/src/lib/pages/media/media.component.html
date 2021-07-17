@@ -48,14 +48,33 @@
       </div>
 
       <ul class="listing">
+        <li class="thead">
+          <div class="name">Name</div>
+          <div class="size">Size</div>
+          <div class="type">Type</div>
+          <div class="date">Date</div>
+        </li>
         <li
+          class="tbody"
           *ngFor="
             let listingItem of filteredItems
             | mediaTypeFilter : type
             | paginate : {itemsPerPage: 30, currentPage: pageNo}
             | mediaListingCounter : counting
           "
-        >{{ listingItem.name }}</li>
+        >
+          <div class="name">
+            <a href="#">
+              <i class="icon-medium" [class]="'icon-dashboard-type-' + listingItem.type"></i>
+              <strong>{{ listingItem.name }}</strong>
+            </a>
+          </div>
+          <ng-container *ngIf="listingItem.metadata$ | async; let metadata">
+            <div class="size">{{ metadata.size }}</div>
+            <div class="type">{{ metadata.contentType }}</div>
+            <div class="date">{{ metadata.updated }}</div>
+          </ng-container>
+        </li>
       </ul>
 
       <div class="pagination">

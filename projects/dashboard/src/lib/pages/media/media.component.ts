@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { MediaItem } from '../../services/storage/storage.service';
 
-import { GetMedia } from '../../states/media/media.state';
+import { GetMedia, AddFile } from '../../states/media/media.state';
 
 @Component({
   selector: 'nguix-dashboard-media-page',
@@ -51,7 +51,7 @@ export class MediaPage implements OnInit {
   ngOnInit(): void {}
 
   uploadComplete(result: MediaItem) {
-    console.log(result);
+    this.store.dispatch(new AddFile(result));
   }
 
   private buildListingItems(items: MediaItem[]) {
