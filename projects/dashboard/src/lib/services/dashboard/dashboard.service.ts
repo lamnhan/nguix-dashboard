@@ -16,6 +16,8 @@ export interface DashboardListingStatus {
   count: number;
 }
 
+export interface DashboardListingMediaType extends DashboardListingStatus {}
+
 export interface DashboardListingItem {
   origin: DatabaseItem;
   all: DatabaseItem[];

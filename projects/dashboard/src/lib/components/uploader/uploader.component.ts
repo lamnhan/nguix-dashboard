@@ -2,13 +2,13 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { StorageService, UploadResult } from '../../services/storage/storage.service';
+import { StorageService, MediaItem } from '../../services/storage/storage.service';
 
 
 interface Uploading {
   name: string;
   size: number;
-  uploadPercent: Observable<undefined | number>;
+  uploadPercent$: Observable<undefined | number>;
 }
 
 @Component({
@@ -19,7 +19,7 @@ interface Uploading {
 export class UploaderComponent implements OnInit {
   @Input() show = false;
   @Output() close = new EventEmitter<void>();
-  @Output() done = new EventEmitter<UploadResult>();
+  @Output() done = new EventEmitter<MediaItem>();
 
   tab: 'upload' | 'image' = 'upload';
   closeOnCompleted = false;
@@ -28,7 +28,7 @@ export class UploaderComponent implements OnInit {
   };
 
   uploading?: Uploading;
-  result?: UploadResult;
+  result?: MediaItem;
 
   constructor(private storageService: StorageService) {}
 
@@ -37,21 +37,17 @@ export class UploaderComponent implements OnInit {
   uploadFile(e: any) {
     const file = e.target.files[0];
     const {name, size} = file;
-    const {ref, path, task} = this.storageService.uploadFile(name, file);
+    const {fullPath, task} = this.storageService.uploadFile(name, file);
     // uploading
     this.uploading = {
       name,
       size,
-      uploadPercent: task.percentageChanges(),
+      uploadPercent$: task.percentageChanges(),
     };
     // completed
     task.snapshotChanges().pipe(
       finalize(() => {
-        this.result = {
-          path,
-          ref,
-          downloadUrl: ref.getDownloadURL(),
-        };
+        this.result = this.storageService.buildMediaItem(name, fullPath);
         // done & close
         this.done.emit(this.result);
         if (this.closeOnCompleted) {

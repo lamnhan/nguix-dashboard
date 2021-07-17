@@ -1,7 +1,9 @@
 <div class="host dashboard page" *ngIf="page$ | async as page; else loading">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container *ngIf="data.listingItems; let filteredItems">
+  <ng-container
+    *ngIf="data.listingItems | mediaQueryFilter : query; let filteredItems"
+  >
 
     <div class="head">
 
@@ -13,10 +15,60 @@
         >Add New</button>
       </div>
 
+      <ul class="types" *ngIf="filteredItems | mediaExtractTypes as listingTypes">
+        <ng-container *ngFor="let listingType of listingTypes">
+          <li *ngIf="listingType.count">
+            <strong *ngIf="listingType.value === type; else inactive">{{ listingType.title }}</strong>
+            <ng-template #inactive>
+              <a href="#" (click)="type=listingType.value; false">{{ listingType.title }}</a>
+            </ng-template>
+            <em>({{ listingType.count }})</em>
+          </li>
+        </ng-container>
+      </ul>
+
     </div>
 
     <div class="body">
-      Body ...
+      
+      <ng-template #listingBar>
+        <div class="filter">
+          <input
+            class="form-control"
+            type="search"
+            placeholder="Filter items ..."
+            [(ngModel)]="query"
+          > 
+        </div>
+        <div class="counter">{{ counting.total }} items</div>
+      </ng-template>
+
+      <div class="headbar">
+        <ng-container *ngTemplateOutlet="listingBar"></ng-container>
+      </div>
+
+      <ul class="listing">
+        <li
+          *ngFor="
+            let listingItem of filteredItems
+            | mediaTypeFilter : type
+            | paginate : {itemsPerPage: 30, currentPage: pageNo}
+            | mediaListingCounter : counting
+          "
+        >{{ listingItem.name }}</li>
+      </ul>
+
+      <div class="pagination">
+        <pagination-controls
+          (pageChange)="pageNo=$event"
+          [directionLinks]="false"
+        ></pagination-controls>
+      </div>
+      
+      <div class="footbar">
+        <ng-container *ngTemplateOutlet="listingBar"></ng-container>
+      </div>
+
     </div>
 
   </ng-container>

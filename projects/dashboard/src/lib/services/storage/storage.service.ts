@@ -17,10 +17,13 @@ export interface UploadCustom {
   customMetadata?: Record<string, any>;
 }
 
-export interface UploadResult {
-  path: string;
+export interface MediaItem {
   ref: AngularFireStorageReference;
-  downloadUrl: Observable<string>;
+  name: string;
+  type: 'image' | 'audio' | 'video' | 'document' | 'archive' | 'unknown';
+  fullPath: string;
+  downloadUrl$: Observable<string>;
+  metadata$: Observable<any>;
 }
 
 @Injectable({
@@ -29,9 +32,8 @@ export interface UploadResult {
 export class StorageService {
   private options: StorageOptions = {};
   private service!: VendorStorageService;
-  
-  defaultFolder = 'app-content/uploads';
   driver = 'firebase';
+  defaultFolder = 'app-content/uploads';
 
   constructor() {}
 
@@ -48,8 +50,8 @@ export class StorageService {
     return this as StorageService;
   }
 
-  ref(path: string) {
-    return this.service.ref(path);
+  ref(fullPath: string) {
+    return this.service.ref(fullPath);
   }
 
   list(folder?: string) {
@@ -58,13 +60,24 @@ export class StorageService {
 
   uploadFile(path: string, file: File, custom: UploadCustom = {}) {
     const {folder, customMetadata = {} } = custom;
-    const filePath =
+    const fullPath =
       (this.getRootFolder(folder)) + '/' +
       (!this.options.dateGrouping ? '' : (this.getDateGroupingPath() + '/')) +
       path;
-    const ref = this.ref(filePath);
-    const task = ref.put(file, { customMetadata });
-    return { path: filePath, ref, task };
+    const task = this.ref(fullPath).put(file, { customMetadata });
+    return { fullPath, task };
+  }
+
+  buildMediaItem(name: string, fullPath: string): MediaItem {
+    const ref = this.ref(fullPath);
+    return {
+      ref,
+      name,
+      type: this.getFileType(name),
+      fullPath,
+      downloadUrl$: ref.getDownloadURL(),
+      metadata$: ref.getMetadata(),
+    };
   }
 
   private getRootFolder(folder?: string) {
@@ -76,5 +89,20 @@ export class StorageService {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     return year + '/' + (month >= 10 ? month : `0${month}`);
+  }
+
+  private getFileType(name: string) {
+    const ext = name.split('.').pop() as string;
+    const imageTypes = ['png', 'jpg', 'jpeg', 'gif'];
+    const audioTypes = ['mp3', 'wav', 'ogg', 'wma', 'm4a'];
+    const videoTypes = ['mp4', 'avi', 'mov', 'wmv', 'mpg', 'mpeg', '3gp', 'mkv'];
+    const documentTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'txt', 'html', 'csv', 'xml', 'json'];
+    const archiveTypes = ['zip', 'rar', 'tar', 'gz', '7z', 'bz2'];
+    return (imageTypes.indexOf(ext) > -1) ? 'image' :
+    (audioTypes.indexOf(ext) > -1) ? 'audio' :
+    (videoTypes.indexOf(ext) > -1) ? 'video' :
+      (documentTypes.indexOf(ext) > -1) ? 'document' :
+      (archiveTypes.indexOf(ext) > -1) ? 'archive' :
+      'unknown';
   }
 }

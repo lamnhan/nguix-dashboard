@@ -2,17 +2,11 @@ import { Injectable } from '@angular/core';
 import { of, combineLatest } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
-import { AngularFireStorageReference } from '@angular/fire/storage';
 
-import { StorageService } from '../../services/storage/storage.service';
+import { StorageService, MediaItem } from '../../services/storage/storage.service';
 
 export interface MediaStateModel {
   files: MediaItem[];
-}
-
-export interface MediaItem {
-  path: string;
-  ref: AngularFireStorageReference;
 }
 
 export class GetMedia {
@@ -43,13 +37,11 @@ export class MediaState {
       return of(files);
     } else {
       return this.storageService.list().pipe(
-        map(listResult => {
-          const { items } = listResult;
-          return items.map(item => ({
-            path: item.fullPath,
-            ref: this.storageService.ref(item.fullPath),
-          }));
-        }),
+        map(listResult =>
+          listResult
+            .items
+            .map(item => this.storageService.buildMediaItem(item.name, item.fullPath))
+        ),
         catchError(() => {
           return of([] as MediaItem[]);
         }),

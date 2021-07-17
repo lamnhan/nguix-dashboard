@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
 
-import { UploadResult } from '../../services/storage/storage.service';
+import { MediaItem } from '../../services/storage/storage.service';
 
-import { GetMedia, MediaItem } from '../../states/media/media.state';
+import { GetMedia } from '../../states/media/media.state';
 
 @Component({
   selector: 'nguix-dashboard-media-page',
@@ -36,7 +36,12 @@ export class MediaPage implements OnInit {
     );
 
   showUploader = false;
-  query = '';
+  query = '';  
+  type = 'all';
+  pageNo = 1;
+  counting = {
+    total: 0,
+  };
 
   constructor(
     private store: Store,
@@ -45,11 +50,11 @@ export class MediaPage implements OnInit {
 
   ngOnInit(): void {}
 
-  uploadComplete(result: UploadResult) {
+  uploadComplete(result: MediaItem) {
     console.log(result);
   }
 
-  private buildListingItems(files: MediaItem) {
-    return files;
+  private buildListingItems(items: MediaItem[]) {
+    return items;
   }
 }

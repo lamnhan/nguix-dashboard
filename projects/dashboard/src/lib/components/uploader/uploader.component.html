@@ -26,15 +26,15 @@
 
     <div class="upload" *ngIf="tab==='upload'">
       <ng-container *ngIf="uploading; else uploadInput">
-        <div class="name">Name: {{uploading.name}}</div>
-        <div class="size">Size: {{uploading.size}}</div>
+        <div class="name">Name: {{ uploading.name }}</div>
+        <div class="size">Size: {{ uploading.size }}</div>
         <ng-container *ngIf="result; else statusShow">
-          <div class="path">Path: <a href="#">{{ result.path }}</a></div>
-          <div class="url">URL: <a [href]="result.downloadUrl | async" target="_blank">Open link</a></div>
+          <div class="path">Path: <a href="#">{{ result.fullPath }}</a></div>
+          <div class="url">URL: <a [href]="result.downloadUrl$ | async" target="_blank">Open link</a></div>
         </ng-container>
         <ng-template #statusShow>
           <div class="status">
-            <progress [value]="uploading.uploadPercent | async" max="100"></progress>
+            <progress [value]="uploading.uploadPercent$ | async" max="100"></progress>
           </div>
         </ng-template>
       </ng-container>
