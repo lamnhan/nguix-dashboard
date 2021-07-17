@@ -1,18 +1,37 @@
-<div class="host dashboard page">
+<div class="host dashboard page" *ngIf="page$ | async as page; else loading">
+  <div class="main" *ngIf="page.ok; else notFound">
+  <ng-container *ngIf="data$ | async; let data">
+  <ng-container *ngIf="data.listingItems; let filteredItems">
 
-  <div class="head">
+    <div class="head">
 
-    <div class="title">
-      <h1>Media</h1>
-      <button
-        class="button-outline-primary"
-        (click)="showUploader=true"
-      >Add New</button>
+      <div class="title">
+        <h1>Media</h1>
+        <button
+          class="button-outline-primary"
+          (click)="showUploader=true"
+        >Add New</button>
+      </div>
+
     </div>
 
+    <div class="body">
+      Body ...
+    </div>
+
+  </ng-container>
+  </ng-container>
   </div>
 
+  <ng-template #notFound>
+    <div class="not-found">Not found ...</div>
+  </ng-template>
+
 </div>
+
+<ng-template #loading>
+  <div class="loading">Loading ...</div>
+</ng-template>
 
 <nguix-dashboard-uploader
   [show]="showUploader"
