@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { MediaItem } from '../../services/storage/storage.service';
 
-import { GetMedia, AddFile } from '../../states/media/media.state';
+import { GetMedia } from '../../states/media/media.state';
 
 @Component({
   selector: 'nguix-dashboard-media-page',
@@ -23,17 +23,14 @@ export class MediaPage implements OnInit {
     }),
   );
 
-  public readonly data$ = this.store
-    .select(state => state.media)
-    .pipe(
-      map(media => {
-        const listingItems = this.buildListingItems(media.files || []);
-        console.log(listingItems);
-        return {
-          listingItems,
-        };
-      }),
-    );
+  public readonly data$ = this.store.select(state => state.media).pipe(
+    map(media => {
+      const listingItems = media.files || [];
+      return {
+        listingItems,
+      };
+    }),
+  );
 
   showUploader = false;
   query = '';  
@@ -43,18 +40,12 @@ export class MediaPage implements OnInit {
     total: 0,
   };
 
+  detailItem?: MediaItem;
+
   constructor(
     private store: Store,
     private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {}
-
-  uploadComplete(result: MediaItem) {
-    this.store.dispatch(new AddFile(result));
-  }
-
-  private buildListingItems(items: MediaItem[]) {
-    return items;
-  }
 }

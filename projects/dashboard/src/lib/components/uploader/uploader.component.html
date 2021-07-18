@@ -18,7 +18,7 @@
       </ul>
     </div>
     <div class="right">
-      <a href="javascript:void(0)" (click)="close.emit()">X</a>
+      <a href="javascript:void(0)" (click)="closeAndReset()">X</a>
     </div>
   </div>
 
@@ -51,14 +51,14 @@
 
   <div class="foot">
     <div class="left">
-      <!-- <a class="button-outline-dark" href="javascript:void(0)" (click)="close.emit()">Cancel</a> -->
+      <!-- <a class="button-outline-dark" href="javascript:void(0)" (click)="closeAndReset()">Cancel</a> -->
       <label class="option">
         <input type="checkbox" [(ngModel)]="closeOnCompleted">
         <span>Close on completed</span>
       </label>
     </div>
     <div class="right">
-      <button class="button-success" (click)="close.emit()">OK</button>
+      <button class="button-success" (click)="closeAndReset()">OK</button>
     </div>
   </div>
 

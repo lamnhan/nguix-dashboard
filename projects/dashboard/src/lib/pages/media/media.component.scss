@@ -66,57 +66,65 @@
       .headbar {
         margin-bottom: 1rem;
       }
+
+      .major {
+
+        .listing {
   
-      .listing {
-
-        .thead {
-          padding: 0 0 .5rem;
-          color: $dark;
-        }
-
-        .tbody {
-          padding: 1rem 0;
-          color: $medium;
-        }
-
-        .thead, .tbody {
-          display: flex;
-          flex-wrap: nowrap;
-          align-items: center; 
-          border-bottom: 1px solid $medium;
-
-          .name {
-            flex: 1;
-
-            a {
-              display: flex;
-              flex-wrap: nowrap;
-              align-items: center;
-
-              i {
-                margin-right: .5rem;
-                width: 1.5rem;
-                height: 1.5rem;
-              }
-
-              strong {
-                font-weight: 400;
+          .thead {
+            padding: 0 0 .5rem;
+            color: $dark;
+          }
+  
+          .tbody {
+            padding: 1rem 0;
+            color: $medium;
+          }
+  
+          .thead, .tbody {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center; 
+            border-bottom: 1px solid $medium;
+  
+            .name {
+              flex: 1;
+  
+              a {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+  
+                i {
+                  margin-right: .5rem;
+                  width: 1.5rem;
+                  height: 1.5rem;
+                }
+  
+                strong {
+                  font-weight: 400;
+                }
               }
             }
-          }
-
-          .size {}
-
-          .type {
-            text-align: right;
-            display: none;
-          }
-
-          .date {
-            display: none;
+  
+            .size {}
+  
+            .type {
+              text-align: right;
+              display: none;
+            }
+  
+            .date {
+              display: none;
+            }
           }
         }
+
+        .detail {
+          
+        }
       }
+  
   
       .pagination {
         margin-top: 1rem;

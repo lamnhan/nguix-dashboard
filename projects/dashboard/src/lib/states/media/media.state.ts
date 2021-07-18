@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { of, combineLatest } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, catchError, take } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 
 import { StorageService, MediaItem } from '../../services/storage/storage.service';
 
 export interface MediaStateModel {
+  remoteLoaded: boolean;
   files: MediaItem[];
 }
 
@@ -14,14 +15,15 @@ export class GetMedia {
   constructor(public refresh = false) {}
 }
 
-export class AddFile {
-  static readonly type = '[Media] Add new fil';
-  constructor(public file: MediaItem) {}
+export class AddUpload {
+  static readonly type = '[Media] Add new upload';
+  constructor(public item: MediaItem) {}
 }
 
 @State<MediaStateModel>({
   name: 'media',
   defaults: {
+    remoteLoaded: false,
     files: [],
   },
 })
@@ -33,35 +35,50 @@ export class MediaState {
   @Action(GetMedia)
   getMedia({ getState, patchState }: StateContext<MediaStateModel>, action: GetMedia) {
     const state = getState();
-    const { refresh } = action;
-    if (state.files.length) {
-      const { files } = state;
-      if (refresh) {
-        patchState({files});
+    if (state.files.length && state.remoteLoaded) {
+      if (action.refresh) {
+        patchState({ files: state.files });
       }
-      return of(files);
     } else {
-      return this.storageService.list().pipe(
-        map(listResult =>
-          listResult
-            .items
-            .map(item => this.storageService.buildMediaItem(item.name, item.fullPath))
-        ),
-        catchError(() => {
-          return of([] as MediaItem[]);
-        }),
-        tap(files => {
-          patchState({files});
-        }),
-      );
+      let allFiles = state.files;
+      // list deep 
+      const listDeep = (fullPath?: string) =>
+        this.storageService.list(fullPath)
+        .pipe(
+          take(1),
+          map(listResult => {
+            const { items, prefixes } = listResult;
+            // further processing
+            prefixes.forEach(prefix => listDeep(prefix.fullPath));
+            // return items
+            return items.map(item =>
+              this.storageService.buildMediaItem(item.name, item.fullPath)
+            );
+          }),
+          catchError(() => {
+            return of([] as MediaItem[]);
+          }),
+          map(files => {
+            // ignore if error or listing result has no items
+            if (!files.length) {
+              return null;
+            }
+            // set the temporary file list
+            allFiles = [...files, ...allFiles];
+            // returns the full list
+            return allFiles;
+          }),
+        )
+        .subscribe(all => !all ? undefined : patchState({ remoteLoaded: true, files: all}));
+      // start from default folder
+      listDeep();
     }
   }
 
-  @Action(AddFile)
-  addFile({ getState, patchState }: StateContext<MediaStateModel>, action: AddFile) {
+  @Action(AddUpload)
+  addUpload({ getState, patchState }: StateContext<MediaStateModel>, action: AddUpload) {
     const state = getState();
-    const { file } = action;
-    patchState({ files: [file, ...state.files] });
+    patchState({ files: [action.item, ...state.files] });
   }
 
 }

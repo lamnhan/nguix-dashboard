@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 // TODO: move this to @lamnhan/ngx-useful
 
@@ -23,7 +24,9 @@ export interface MediaItem {
   type: 'image' | 'audio' | 'video' | 'document' | 'archive' | 'unknown';
   fullPath: string;
   downloadUrl$: Observable<string>;
+  cachedDownloadUrl?: string;
   metadata$: Observable<any>;
+  cachedMetadata?: any;
 }
 
 @Injectable({
@@ -56,6 +59,10 @@ export class StorageService {
 
   list(folder?: string) {
     return this.ref(this.getRootFolder(folder)).listAll();
+  }
+
+  delete(fullPath: string) {
+    return this.ref(fullPath).delete();
   }
 
   uploadFile(path: string, file: File, custom: UploadCustom = {}) {

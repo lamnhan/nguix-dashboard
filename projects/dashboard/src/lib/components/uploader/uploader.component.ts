@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { StorageService, MediaItem } from '../../services/storage/storage.service';
 
+import { AddUpload } from '../../states/media/media.state';
 
 interface Uploading {
   name: string;
@@ -18,19 +20,23 @@ interface Uploading {
 })
 export class UploaderComponent implements OnInit {
   @Input() show = false;
+  @Input() closeOnCompleted = false;
   @Output() close = new EventEmitter<void>();
   @Output() done = new EventEmitter<MediaItem>();
 
   tab: 'upload' | 'image' = 'upload';
-  closeOnCompleted = false;
-  options: any = {
+
+  imageEditorOptions: any = {
     usageStatistics: false,
   };
 
   uploading?: Uploading;
   result?: MediaItem;
 
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private store: Store,
+    private storageService: StorageService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -48,13 +54,22 @@ export class UploaderComponent implements OnInit {
     task.snapshotChanges().pipe(
       finalize(() => {
         this.result = this.storageService.buildMediaItem(name, fullPath);
-        // done & close
+        // emit event
         this.done.emit(this.result);
+        // update state
+        this.store.dispatch(new AddUpload(this.result));
+        // close modal
         if (this.closeOnCompleted) {
-          this.close.emit();
+          this.closeAndReset();
         }
       })
     ).subscribe();
+  }
+
+  closeAndReset() {
+    this.uploading = undefined;
+    this.result = undefined;
+    this.close.emit();
   }
 
 }

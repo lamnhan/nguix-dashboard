@@ -67,6 +67,7 @@ export class AppComponent {
       .setIntegrations({ cacheService: this.cacheService })
       .init(this.firebaseFirestore);
     this.storageService
+      .setOptions({ dateGrouping: true })
       .init(this.firebaseStorage);
     this.appService.setOptions({ splashScreen: true }).init();
     this.authService.setOptions({driver: 'firestore'}).init(this.firebaseAuth);

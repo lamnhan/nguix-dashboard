@@ -21,8 +21,8 @@ export class ListPage implements OnInit {
   type = '';
   query = '';
   status = 'all';
-  pageNo = 1;
   detail = '';
+  pageNo = 1;
   counting = {
     total: 0,
   };
