@@ -24,9 +24,7 @@ export interface MediaItem {
   type: 'image' | 'audio' | 'video' | 'document' | 'archive' | 'unknown';
   fullPath: string;
   downloadUrl$: Observable<string>;
-  cachedDownloadUrl?: string;
   metadata$: Observable<any>;
-  cachedMetadata?: any;
 }
 
 @Injectable({
@@ -106,8 +104,8 @@ export class StorageService {
     const documentTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'txt', 'html', 'csv', 'xml', 'json'];
     const archiveTypes = ['zip', 'rar', 'tar', 'gz', '7z', 'bz2'];
     return (imageTypes.indexOf(ext) > -1) ? 'image' :
-    (audioTypes.indexOf(ext) > -1) ? 'audio' :
-    (videoTypes.indexOf(ext) > -1) ? 'video' :
+      (audioTypes.indexOf(ext) > -1) ? 'audio' :
+      (videoTypes.indexOf(ext) > -1) ? 'video' :
       (documentTypes.indexOf(ext) > -1) ? 'document' :
       (archiveTypes.indexOf(ext) > -1) ? 'archive' :
       'unknown';

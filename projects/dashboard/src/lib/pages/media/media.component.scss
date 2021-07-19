@@ -68,24 +68,31 @@
       }
 
       .major {
+        border: 1px solid $medium;
+        background: $light;
 
         .listing {
   
           .thead {
-            padding: 0 0 .5rem;
+            padding: .5rem;
             color: $dark;
+            border-bottom: 1px solid $medium;
           }
-  
+          
           .tbody {
-            padding: 1rem 0;
+            padding: 1rem .5rem;
             color: $medium;
+            border-bottom: 1px solid $light-shade;
+
+            &:last-child {
+              border-bottom: none;
+            }
           }
   
           .thead, .tbody {
             display: flex;
             flex-wrap: nowrap;
             align-items: center; 
-            border-bottom: 1px solid $medium;
   
             .name {
               flex: 1;
@@ -121,14 +128,94 @@
         }
 
         .detail {
-          
+          background: $light;
+          border-top: 1px solid $medium;
+          border-radius: 3px;
+          color: $light-contrast;
+          width: 100%;
+          max-height: 500px;
+          position: fixed;
+          bottom: -500px;
+          left: 0;
+          transition: all .3s ease;
+
+          &.show {
+            bottom: 0;
+          }
+
+          strong {
+            font-weight: 400;
+          }
+
+          .top {
+            padding: .5rem 1rem;
+            border-bottom: 1px solid $light-shade;
+
+            &, .title {
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: center;
+            }
+
+            .title {
+              flex: 1;
+
+              i {
+                width: 1.5rem;
+                height: 1.5rem;
+                margin-right: .5rem;
+              }
+
+              strong {
+                font-weight: 500;
+                font-size: 18px;
+              }
+            }
+          }
+
+          .content {
+            overflow-y: scroll;
+            max-height: 459px;
+
+            .view {
+  
+              img, audio, video {
+                width: 100%;
+                height: auto;
+              }
+
+              audio {
+                height: 50px;
+                background: #f1f3f4;
+              }
+            }
+  
+            .name, .path, .size, .type, .created, .updated {
+              padding: 0 1rem;
+              margin-top: 1rem;
+  
+              span, strong {
+                display: block;
+              }
+  
+              span {
+                font-size: 14px;
+                color: $medium;
+              }
+            }
+  
+            .actions {
+              padding: 0 1rem;
+              margin: 1rem 0;
+            }
+          }
         }
-      }
-  
-  
-      .pagination {
-        margin-top: 1rem;
-      }
+
+        .pagination {
+          padding: .5rem;
+          border-top: 1px solid $medium;
+        }
+      }  
     }
 
   }

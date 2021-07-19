@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { map, catchError, take } from 'rxjs/operators';
+import { tap, map, catchError, take } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 
 import { StorageService, MediaItem } from '../../services/storage/storage.service';
@@ -17,6 +17,11 @@ export class GetMedia {
 
 export class AddUpload {
   static readonly type = '[Media] Add new upload';
+  constructor(public item: MediaItem) {}
+}
+
+export class DeleteUpload {
+  static readonly type = '[Media] Delete an upload';
   constructor(public item: MediaItem) {}
 }
 
@@ -79,6 +84,19 @@ export class MediaState {
   addUpload({ getState, patchState }: StateContext<MediaStateModel>, action: AddUpload) {
     const state = getState();
     patchState({ files: [action.item, ...state.files] });
+  }
+
+  @Action(DeleteUpload)
+  deleteUpload({ getState, patchState }: StateContext<MediaStateModel>, action: DeleteUpload) {
+    const state = getState();
+    const { item: {name, fullPath} } = action;
+    return this.storageService.delete(fullPath).pipe(
+      tap(() =>
+        patchState({
+          files: state.files.filter(file => file.name !== name),
+        })
+      ),
+    );
   }
 
 }

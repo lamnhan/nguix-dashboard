@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { MediaItem } from '../../services/storage/storage.service';
 
-import { GetMedia } from '../../states/media/media.state';
+import { GetMedia, DeleteUpload } from '../../states/media/media.state';
 
 @Component({
   selector: 'nguix-dashboard-media-page',
@@ -48,4 +48,12 @@ export class MediaPage implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  delete(item: MediaItem) {
+    const yes = confirm('Are you sure you want to delete this file?');
+    if (yes) {
+      this.detailItem = undefined;
+      this.store.dispatch(new DeleteUpload(item));
+    }
+  }
 }

@@ -11,13 +11,15 @@
       "@ngxs/store" : "ngxsStore",
       "ngx-toastr": "toastr",
       "ngx-tinymce": "tinymce",
-      "tui-image-editor": "tuiImageEditor"
+      "tui-image-editor": "tuiImageEditor",
+      "ngx-filesize": "ng.filesize"
     }
   },
   "allowedNonPeerDependencies": [
     "ngx-pagination",
     "ngx-toastr",
     "ngx-tinymce",
-    "tui-image-editor"
+    "tui-image-editor",
+    "ngx-filesize"
   ]
 }

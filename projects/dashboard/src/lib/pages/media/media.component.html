@@ -61,7 +61,7 @@
             *ngFor="
               let listingItem of filteredItems
               | mediaTypeFilter : type
-              | paginate : {itemsPerPage: 30, currentPage: pageNo}
+              | paginate : {itemsPerPage: 3, currentPage: pageNo}
               | mediaListingCounter : counting
             "
           >
@@ -73,54 +73,64 @@
             </div>
             <ng-container
               *ngIf="
-                listingItem.cachedMetadata
-                  ? listingItem.cachedMetadata
-                  : (listingItem.metadata$ | async);
+                listingItem.metadata$ | async;
                 let metadata
               "
             >
-              <div class="size">{{ metadata.size }}</div>
+              <div class="size">{{ metadata.size | filesize }}</div>
               <div class="type">{{ metadata.contentType }}</div>
-              <div class="date">{{ metadata.updated }}</div>
+              <div class="date">{{ metadata.updated | date }}</div>
             </ng-container>
           </li>
         </ul>
 
-        <div class="detail" *ngIf="detailItem">
-          <ng-container *ngIf="detailItem.metadata$ | async; let detailMetadata">
+        <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
+          <ng-container
+            *ngIf="
+              detailItem.metadata$ | async;
+              let detailMetadata
+            "
+          >
           <ng-container *ngIf="detailItem.downloadUrl$ | async; let downloadUrl">
-            <div class="bar">
-              <div>
+            <div class="top">
+              <div class="title">
                 <i class="icon-medium" [class]="'icon-dashboard-type-' + detailItem.type"></i>
                 <strong>{{ detailItem.name }}</strong>
               </div>
               <a href="#" (click)="detailItem=undefined;false">X</a>
             </div>
-            <div class="view">
-              <img *ngIf="detailItem.type==='image'" [src]="downloadUrl" [alt]="detailItem.name">
-              <audio *ngIf="detailItem.type==='audio'" controls [src]="downloadUrl"></audio>
-              <video *ngIf="detailItem.type==='video'" controls [src]="downloadUrl"></video>
-              <img *ngIf="detailItem.type==='document'" src="https://img.icons8.com/color/96/000000/document--v1.png" [alt]="detailItem.name">
-              <img *ngIf="detailItem.type==='archive'" src="https://img.icons8.com/fluent/96/000000/archive-folder.png" [alt]="detailItem.name">
-              <img *ngIf="detailItem.type==='unknown'" src="https://img.icons8.com/fluent/96/000000/question-shield.png" [alt]="detailItem.name">
+            <div class="content">
+              <div class="view">
+                <img *ngIf="detailItem.type==='image'" [src]="downloadUrl" [alt]="detailItem.name">
+                <audio *ngIf="detailItem.type==='audio'" controls [src]="downloadUrl"></audio>
+                <video *ngIf="detailItem.type==='video'" controls [src]="downloadUrl"></video>
+              </div>
+              <div class="name">
+                <span>Name</span>
+                <strong>
+                  <a [href]="downloadUrl" target="_blank">{{ detailItem.name }}</a>
+                </strong>
+              </div>
+              <div class="path"><span>Path</span><strong>{{ detailItem.fullPath }}</strong></div>
+              <div class="size"><span>Size</span><strong>{{ detailMetadata.size | number }} bytes</strong></div>
+              <div class="type"><span>Type</span><strong>{{ detailMetadata.contentType }}</strong></div>
+              <div class="created"><span>Created</span><strong>{{ detailMetadata.timeCreated | date }}</strong></div>
+              <div class="updated"><span>Updated</span><strong>{{ detailMetadata.updated | date }}</strong></div>
+              <div class="actions">
+                <button class="button-danger-sm" (click)="delete(detailItem)">Delete</button>
+              </div>
             </div>
-            <div class="name"><span>Name</span><strong>{{ detailItem.name }}</strong></div>
-            <div class="size"><span>Size</span><strong>{{ detailMetadata.size }}</strong></div>
-            <div class="type"><span>Type</span><strong>{{ detailMetadata.contentType }}</strong></div>
-            <div class="date"><span>Date</span><strong>{{ detailMetadata.updated }}</strong></div>
-            <div class="Path"><span>Path</span><strong>{{ detailItem.fullPath }}</strong></div>
-            <div class="URL"><span>URL</span><strong>{{ downloadUrl }}</strong></div>
           </ng-container>
           </ng-container>
         </div>
 
-      </div>
+        <div class="pagination">
+          <pagination-controls
+            (pageChange)="pageNo=$event"
+            [directionLinks]="false"
+          ></pagination-controls>
+        </div>
 
-      <div class="pagination">
-        <pagination-controls
-          (pageChange)="pageNo=$event"
-          [directionLinks]="false"
-        ></pagination-controls>
       </div>
       
       <div class="footbar">

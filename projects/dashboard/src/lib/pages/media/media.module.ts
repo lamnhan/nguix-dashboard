@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxFilesizeModule } from 'ngx-filesize';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
 import { NguixDashboardUploaderComponentModule } from '../../components/uploader/uploader.module';
@@ -23,6 +24,7 @@ import { MediaPage } from './media.component';
     CommonModule,
     FormsModule,
     NgxPaginationModule,
+    NgxFilesizeModule,
     RouterLinkDirectiveModule,
     NguixDashboardMediaTypeFilterPipeModule,
     NguixDashboardMediaQueryFilterPipeModule,
