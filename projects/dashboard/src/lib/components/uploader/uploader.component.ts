@@ -42,8 +42,8 @@ export class UploaderComponent implements OnInit {
 
   uploadFile(e: any) {
     const file = e.target.files[0];
-    const {name, size} = file;
-    const {fullPath, task} = this.storageService.uploadFile(name, file);
+    const {name: path, size} = file;
+    const {name, fullPath, task} = this.storageService.uploadFile(path, file);
     // uploading
     this.uploading = {
       name,

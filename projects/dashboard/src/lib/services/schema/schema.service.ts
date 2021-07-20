@@ -38,7 +38,7 @@ export const Schemas = {
   keywords: { label: 'Keywords', name: 'keywords', type: 'text' },
   authors: {
     label: 'Authors', name: 'authors', type: 'link',
-    meta: { source: 'author' } as LinkingSchemaMeta,
+    meta: { source: 'profile' } as LinkingSchemaMeta,
   },
   categories: {
     label: 'Categories', name: 'categories', type: 'link',

@@ -11,6 +11,7 @@ export interface StorageOptions {
   driver?: string;
   uploadFolder?: string;
   dateGrouping?: boolean;
+  randomSuffix?: boolean;
 }
 
 export interface UploadCustom {
@@ -65,12 +66,23 @@ export class StorageService {
 
   uploadFile(path: string, file: File, custom: UploadCustom = {}) {
     const {folder, customMetadata = {} } = custom;
+    // add random suffix to avoid overwriting
+    if (this.options.randomSuffix) {
+      const randomSuffix = Math.random().toString(36).substring(7);
+      const ext = path.indexOf('.') === -1 ? null : path.split('.').pop() as string;
+      path = !ext
+        ? `${path}-${randomSuffix}`
+        : path.replace(`.${ext}`, `-${randomSuffix}.${ext}`);
+    }
+    // upload file to firebase storage
     const fullPath =
       (this.getRootFolder(folder)) + '/' +
       (!this.options.dateGrouping ? '' : (this.getDateGroupingPath() + '/')) +
       path;
+    const fileName = fullPath.split('/').pop() as string;
     const task = this.ref(fullPath).put(file, { customMetadata });
-    return { fullPath, task };
+    // return value
+    return { name: fileName, fullPath, task };
   }
 
   buildMediaItem(name: string, fullPath: string): MediaItem {

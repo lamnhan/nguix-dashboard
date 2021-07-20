@@ -67,6 +67,22 @@
             margin-right: .5rem;
             margin-bottom: .5rem;
           }
+
+          .primary, .secondary {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+
+            .left {
+              flex: 1;
+            }
+          }
+
+          .secondary {
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid $medium;
+          }
         }
       }
     }

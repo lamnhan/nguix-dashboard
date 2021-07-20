@@ -158,63 +158,78 @@
   
         <div class="actions">
 
-          <ng-container
-            *ngIf="isNew || databaseItem?.status==='draft' || databaseItem?.status==='publish'">
-            <button
-              class="submit button-primary"
-              type="submit"
-              [disabled]="!theForm.form.valid || lockdown"
-            >{{ submitText }}</button>
-            <a
-              class="preview button-outline-primary"
-              [class.disabled]="!theForm.form.valid || lockdown"
-              href="javascript:void(0)"
-              (click)="
-                !theForm.form.valid || lockdown
-                  ? false
-                  : dataService.previewItem(part)
-              "
-            >Preview</a>
-          </ng-container>
+          <div
+            class="primary"
+            *ngIf="isNew || databaseItem?.status==='draft' || databaseItem?.status==='publish'"
+          >
+            <div class="left">
+              <button
+                class="submit button-primary"
+                type="submit"
+                [disabled]="!theForm.form.valid || lockdown"
+              >{{ submitText }}</button>
+            </div>
+            <div class="right">
+              <a
+                class="preview button-outline-primary"
+                [class.disabled]="!theForm.form.valid || lockdown"
+                href="javascript:void(0)"
+                (click)="
+                  !theForm.form.valid || lockdown
+                    ? false
+                    : dataService.previewItem(part)
+                "
+              >Preview</a>
+            </div>
+          </div>
 
-          <ng-container *ngIf="databaseItem && !isCopy">
+          <div class="secondary" *ngIf="databaseItem && !isCopy">
 
             <ng-container
-              *ngIf="databaseItem.status==='draft' || databaseItem.status==='publish'">
-              <a
-                class="archive button-dark"                
-                href="javascript:void(0)"
-                (click)="dataService.archiveItem(part, databaseItem.origin)"
-              >Archive</a>
-              <a
-                class="trash button-outline-danger"
-                href="javascript:void(0)"
-                (click)="dataService.removeItem(part, databaseItem.origin)"
-              >Trash</a>
-              <a
-                class="delete button-danger"
-                href="javascript:void(0)"
-                (click)="delete(part, databaseItem.origin)"
-              >Delete</a>
+              *ngIf="databaseItem.status==='draft' || databaseItem.status==='publish'"
+            >
+              <div class="left">
+                <a
+                  class="archive button-dark"                
+                  href="javascript:void(0)"
+                  (click)="dataService.archiveItem(part, databaseItem.origin)"
+                >Archive</a>
+              </div>
+              <div class="right">                
+                <a
+                  class="delete button-outline-danger"
+                  href="javascript:void(0)"
+                  (click)="delete(part, databaseItem.origin)"
+                >Delete</a>
+                <a
+                  class="trash button-danger"
+                  href="javascript:void(0)"
+                  (click)="dataService.removeItem(part, databaseItem.origin)"
+                >Trash</a>
+              </div>
             </ng-container>
     
-            <ng-container *ngIf="databaseItem.status==='archive'">  
-              <a
-                class="unarchive button-success"
-                href="javascript:void(0)"
-                (click)="dataService.unarchiveItem(part, databaseItem.origin)"
-              >Unarchive</a>
+            <ng-container *ngIf="databaseItem.status==='archive'">
+              <div class="left">
+                <a
+                  class="unarchive button-success"
+                  href="javascript:void(0)"
+                  (click)="dataService.unarchiveItem(part, databaseItem.origin)"
+                >Unarchive</a>
+              </div>
             </ng-container>
   
             <ng-container *ngIf="databaseItem.status==='trash'">
-              <a
-                class="trash button-success"
-                href="javascript:void(0)"
-                (click)="dataService.restoreItem(part, databaseItem.origin)"
-              >Restore</a>  
+              <div class="left">
+                <a
+                  class="trash button-success"
+                  href="javascript:void(0)"
+                  (click)="dataService.restoreItem(part, databaseItem.origin)"
+                >Restore</a>  
+              </div>
             </ng-container>
   
-          </ng-container>
+          </div>
   
         </div>
   

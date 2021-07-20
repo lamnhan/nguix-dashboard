@@ -299,18 +299,23 @@ export class DataService {
   }
 
   private showBatchResult(batchResultById: Record<string, Record<string, any[]>>) {
-    const messageArr: string[] = [];
+    const mainMessageArr: string[] = [];
+    const noErrorMessageArr: string[] = [];
+    const errorMessageArr: string[] = [];
+    // process result
+    let isError = false;
     Object.keys(batchResultById).forEach(id => {
-      messageArr.push(`Action succeed for: "${id}"`);
+      mainMessageArr.push(`Action succeed for: "${id}"`);
       const allParts = Object.keys(batchResultById[id]);
       if (allParts.length && allParts[0].length) {
         allParts.forEach(partName => {
           const all = batchResultById[id][partName];
           const errors = all.filter(result => result.error).map(result => result.item.id);
+          isError = !!errors.length;
           if (!errors.length) {
-            messageArr.push('  - ' + partName.toUpperCase() + ` (${all.length} effects)`);
+            noErrorMessageArr.push('  - ' + partName.toUpperCase() + ` (${all.length} effects)`);
           } else {
-            messageArr.push(
+            errorMessageArr.push(
               '  - ' +
               partName.toUpperCase() +
               ` (${all.length - errors.length} succeed). But ${errors.length} errors:`,
@@ -320,6 +325,9 @@ export class DataService {
         });
       }
     });
-    alert(messageArr.join('\n'));
+    // show error
+    if (isError) {
+      alert([...mainMessageArr, ...errorMessageArr].join('\n'));
+    }
   }
 }
