@@ -18,6 +18,8 @@ export interface DashboardListingStatus {
 
 export interface DashboardListingMediaType extends DashboardListingStatus {}
 
+export interface DashboardListingUserRole extends DashboardListingStatus {}
+
 export interface DashboardListingItem {
   origin: DatabaseItem;
   all: DatabaseItem[];

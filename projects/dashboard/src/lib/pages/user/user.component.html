@@ -1,3 +1,110 @@
-<div class="host dashboard page">
-  <h1>Users</h1>
+<div class="host dashboard page" *ngIf="page$ | async as page; else loading">
+  <div class="main" *ngIf="page.ok; else notFound">
+  <ng-container *ngIf="data$ | async; let data">
+  <ng-container
+    *ngIf="data.listingItems | userQueryFilter : query; let filteredItems"
+  >
+
+    <div class="head">
+
+      <div class="title">
+        <h1>Users</h1>
+        <button
+          class="button-outline-primary"
+          (click)="showRegister=true"
+        >Add New</button>
+      </div>
+
+      <ul class="roles" *ngIf="filteredItems | userExtractRoles as listingRoles">
+        <ng-container *ngFor="let listingRole of listingRoles">
+          <li *ngIf="listingRole.count">
+            <strong *ngIf="listingRole.value === role; else inactive">{{ listingRole.title }}</strong>
+            <ng-template #inactive>
+              <a href="#" (click)="role=listingRole.value; false">{{ listingRole.title }}</a>
+            </ng-template>
+            <em>({{ listingRole.count }})</em>
+          </li>
+        </ng-container>
+      </ul>
+
+    </div>
+
+    <div class="body">
+      
+      <ng-template #listingBar>
+        <div class="filter">
+          <input
+            class="form-control"
+            type="search"
+            placeholder="Filter items ..."
+            [(ngModel)]="query"
+          > 
+        </div>
+        <div class="counter">{{ counting.total }} items</div>
+      </ng-template>
+
+      <div class="headbar">
+        <ng-container *ngTemplateOutlet="listingBar"></ng-container>
+      </div>
+
+      <div class="major">
+
+        <ul class="listing">
+          <li class="thead">
+            <div class="name">Name</div>
+            <div class="email">Email</div>
+            <div class="uid">UID</div>
+          </li>
+          <li
+            class="tbody"
+            *ngFor="
+              let listingItem of filteredItems
+              | userRoleFilter : role
+              | paginate : {itemsPerPage: 30, currentPage: pageNo}
+              | userListingCounter : counting
+            "
+          >
+            <div class="name">
+              <a href="#" (click)="detailItem=listingItem;false">
+                <strong>{{ listingItem.username }}</strong>
+              </a>
+            </div>
+            <div class="email">{{ listingItem.email }}</div>
+            <div class="uid">{{ listingItem.uid }}</div>
+          </li>
+        </ul>
+
+        <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
+          Detail ...
+        </div>
+
+        <div class="pagination">
+          <pagination-controls
+            (pageChange)="pageNo=$event"
+            [directionLinks]="false"
+          ></pagination-controls>
+        </div>
+
+      </div>
+      
+      <div class="footbar">
+        <ng-container *ngTemplateOutlet="listingBar"></ng-container>
+      </div>
+
+    </div>
+
+  </ng-container>
+  </ng-container>
+  </div>
+
+  <ng-template #notFound>
+    <div class="not-found">Not found ...</div>
+  </ng-template>
+
 </div>
+
+<ng-template #loading>
+  <div class="loading">Loading ...</div>
+</ng-template>
+
+<nguix-dashboard-register [show]="showRegister" (close)="showRegister=false"></nguix-dashboard-register>

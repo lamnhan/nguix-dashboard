@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import { of, combineLatest } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
+import { User } from '@lamnhan/schemata';
+import { UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
 
 export interface UserStateModel {
-  users: any[]
+  users: User[]
 }
 
 export class GetUsers {
-  static readonly type = '[User] Get all items';
-  constructor() {}
+  static readonly type = '[User] Get all user';
+  constructor(public refresh = false) {}
 }
 
 @State<UserStateModel>({
@@ -21,11 +23,23 @@ export class GetUsers {
 @Injectable()
 export class UserState {
 
-  constructor() {}
+  constructor(
+    private userDataService: UserDataService,
+    private profileDataService: ProfileDataService,
+  ) {}
 
   @Action(GetUsers)
   getUsers({ getState, patchState }: StateContext<UserStateModel>, action: GetUsers) {
     const state = getState();
+    if (state.users.length) {
+      if (action.refresh) {
+        patchState({ users: state.users });
+      }
+    } else {
+      this.userDataService.getCollection(undefined, false).pipe(
+        tap(users => patchState({ users })),
+      );
+    }
   }
 
 }
