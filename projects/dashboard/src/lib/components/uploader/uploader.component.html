@@ -32,7 +32,7 @@
     <div class="upload" *ngIf="tab==='upload'">
       <ng-container *ngIf="uploading; else uploadInput">
         <div class="name">Name: {{ uploading.name }}</div>
-        <div class="size">Size: {{ uploading.size }}</div>
+        <div class="size">Size: {{ uploading.size | filesize }}</div>
         <ng-container *ngIf="result; else statusShow">
           <div class="path">Path: <a href="#">{{ result.fullPath }}</a></div>
           <div class="url">URL: <a [href]="result.downloadUrl$ | async" target="_blank">Open link</a></div>
