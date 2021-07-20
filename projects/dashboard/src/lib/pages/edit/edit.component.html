@@ -94,6 +94,23 @@
               <option value="draft">Draft</option>
             </select>
           </ng-container>
+
+          <ng-container *ngIf="schema.type==='upload'">
+            <div class="uploadable">
+              <input
+                class="form-control"
+                type="text"
+                [id]="schema.name"
+                [formControlName]="schema.name"
+                [placeholder]="schema.placeholder || ''"
+              >
+              <a
+                href="#"
+                class="button-outline-primary"
+                (click)="openUploader(schema, data.formGroup); false"
+              >Upload</a>
+            </div>
+          </ng-container>
   
           <ng-container *ngIf="schema.type==='html' && schema.meta">
             <nguix-dashboard-html-editor
@@ -216,3 +233,10 @@
 <ng-template #loading>
   <div class="loading">Loading ...</div>
 </ng-template>
+
+<nguix-dashboard-uploader
+  [show]="showUploader"
+  [closeOnCompleted]="true"
+  (close)="showUploader=false"
+  (done)="uploadChanges($event)"
+></nguix-dashboard-uploader>

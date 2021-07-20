@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { PostDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, DataType } from '../../services/config/config.service';
+import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta, DataType } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -54,7 +54,7 @@ export class PostPartService {
           {name: 'href', type: 'string', width: 150},
           {name: 'routerLink', type: 'string', width: 150},
         ],
-      },
+      } as JsonSchemaMeta,
     },
     Schemas.thumbnail,
     Schemas.image,
@@ -74,10 +74,10 @@ export class PostPartService {
           {name: 'title', type: 'string', width: 150},
           {name: 'description', type: 'string', width: 150},
         ],
-      },
+      } as JsonSchemaMeta,
     },
-    { label: 'Audio', name: 'audio', type: 'text' },
-    { label: 'Video', name: 'video', type: 'text' },
+    { label: 'Audio', name: 'audio', type: 'upload' },
+    { label: 'Video', name: 'video', type: 'upload' },
     {
       label: 'Parents',
       name: 'parents',
@@ -85,8 +85,8 @@ export class PostPartService {
       meta: {
         source: 'bundle',
         keys: ['id', 'title', 'thumbnail'],
-        activeType: 'post-series',
-      },
+        contentType: 'post-series',
+      } as LinkingSchemaMeta,
     },
     Schemas.categories,
     Schemas.tags,

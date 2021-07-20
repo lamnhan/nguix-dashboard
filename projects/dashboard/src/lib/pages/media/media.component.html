@@ -61,7 +61,7 @@
             *ngFor="
               let listingItem of filteredItems
               | mediaTypeFilter : type
-              | paginate : {itemsPerPage: 3, currentPage: pageNo}
+              | paginate : {itemsPerPage: 30, currentPage: pageNo}
               | mediaListingCounter : counting
             "
           >

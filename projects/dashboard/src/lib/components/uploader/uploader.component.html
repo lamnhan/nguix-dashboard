@@ -15,6 +15,11 @@
             <span>Image</span>
           </a>
         </li>
+        <!-- <li>
+          <a href="javascript:void(0)" [class.active]="tab==='library'" (click)="tab='library'">
+            <span>Library</span>
+          </a>
+        </li> -->
       </ul>
     </div>
     <div class="right">
@@ -46,6 +51,8 @@
     <div class="image" *ngIf="tab==='image'">
       <div id="tui-image-editor"></div>
     </div>
+
+    <!-- <div class="library" *ngIf="tab==='library'"></div> -->
 
   </div>
 

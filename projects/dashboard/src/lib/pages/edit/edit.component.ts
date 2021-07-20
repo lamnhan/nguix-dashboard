@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { Subscription, combineLatest } from 'rxjs';
+import { Subscription, combineLatest, of } from 'rxjs';
 import { tap, map, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
+import { MediaItem } from '../../services/storage/storage.service';
 
 import { DashboardPart, DatabaseItem, FormSchemaItem, CheckboxAlikeChild, ConfigService } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
@@ -30,6 +31,9 @@ export class EditPage implements OnInit, OnDestroy {
   isCopy = false;
   databaseItem?: DatabaseItem;
   prioritizedData: Record<string, any> = {};
+
+  showUploader = false;
+  uploadCallerData?: { schema: FormSchemaItem; formGroup: FormGroup };
 
   public readonly page$ = combineLatest([
     this.route.params,
@@ -155,6 +159,38 @@ export class EditPage implements OnInit, OnDestroy {
     if (control) {
       control.setValue(value);
       control.markAsDirty();
+    }
+  }
+
+  openUploader(
+    schema: FormSchemaItem,
+    formGroup: FormGroup,
+  ) {
+    // check if there is a value
+    const isCurrentValue = formGroup.get(schema.name)?.value;
+    const yes = !isCurrentValue ? true : confirm('Override current value?');
+    // no value or override
+    if (yes) {
+      this.uploadCallerData = {schema, formGroup};
+      this.showUploader = true;
+    }
+  }
+
+  uploadChanges(media: MediaItem) {
+    if (this.uploadCallerData) {
+      const {schema, formGroup} = this.uploadCallerData;
+      const { useUploadUrl } = this.configService.getConfig();
+      const value$ = !useUploadUrl ? of(media.fullPath) : media.downloadUrl$;
+      const control = formGroup.get(schema.name);
+      if (control) {
+        value$.subscribe(value => {
+          // set value
+          control.setValue(value);
+          control.markAsDirty();
+          // reset data
+          this.uploadCallerData = undefined;
+        });
+      }
     }
   }
 
@@ -440,7 +476,8 @@ export class EditPage implements OnInit, OnDestroy {
       item.disabled = true;
     }
     // 3. content
-    if (name === 'content' && !this.configService.getConfig().directContent) {
+    const { allowDirectContent } = this.configService.getConfig();
+    if (name === 'content' && !allowDirectContent) {
       item.hidden = true;
     }
     // result

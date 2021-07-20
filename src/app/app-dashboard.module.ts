@@ -28,7 +28,7 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
             dashboardService.pagePart.dataTypes.push({text: 'Test', value: 'test'});
           },
         ],
-        directContent: true,
+        allowDirectContent: true,
       }),
     }
   ]

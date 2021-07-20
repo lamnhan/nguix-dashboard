@@ -43,6 +43,20 @@
           textarea {
             height: 100px;
           }
+
+          .uploadable {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+
+            input {
+              flex: 1;
+            }
+
+            a {
+              margin-left: .5rem;
+            }
+          }
         }
 
         .actions {

@@ -14,7 +14,8 @@ export function dashboardConfig(config: DashboardConfig) {
 export interface DashboardConfig {
   parts: Array<string | DashboardPart>;
   plugins?: DashboardPlugin[];
-  directContent?: boolean;
+  allowDirectContent?: boolean;
+  useUploadUrl?: boolean;
 }
 
 export type DashboardPlugin = (dashboardService: DashboardService) => any;
@@ -73,6 +74,35 @@ export interface UpdateEffect {
   key: string;
   props: string[];
   idBuilder?: (id: string) => string;
+}
+
+export interface HtmlSchemaMeta {
+  // auto-generated from current value
+  htmlContent?: string;
+}
+
+export interface JsonSchemaMeta {
+  type: 'record' | 'array';
+  schema: Array<{
+    name: string;
+    type: string;
+    required?: boolean;
+    defaultValue?: any;
+    width?: number;
+  }>;
+  recordKey?: string;
+  // auto-generated from current value
+  currentData?: Record<string, any> | any[];
+}
+
+export interface LinkingSchemaMeta {
+  source: string;
+  // auto-generated from source
+  part?: DashboardPart;
+  items$?: Observable<DatabaseItem[]>;
+  keys?: string[];
+  currentData?: Record<string, any>;
+  contentType?: string;
 }
 
 @Injectable({
