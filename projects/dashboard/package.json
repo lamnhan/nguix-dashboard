@@ -22,9 +22,9 @@
     "@angular/common": "^12.0.3",
     "@angular/core": "^12.0.3",
     "@angular/platform-browser": "~12.0.3",
-    "@lamnhan/ngx-useful": "0.0.18",
-    "@lamnhan/schemata": "0.0.12",
-    "@lamnhan/ngx-schemata": "0.0.4",
+    "@lamnhan/ngx-useful": "0.0.20",
+    "@lamnhan/schemata": "0.0.14",
+    "@lamnhan/ngx-schemata": "0.0.6",
     "@ngxs/store": "^3.7.2"
   },
   "dependencies": {
