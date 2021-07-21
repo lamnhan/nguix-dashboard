@@ -6,7 +6,7 @@ import { User } from '@lamnhan/schemata';
 import { UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
 
 export interface UserStateModel {
-  users: User[]
+  users: User[];
 }
 
 export class GetUsers {
@@ -35,9 +35,10 @@ export class UserState {
       if (action.refresh) {
         patchState({ users: state.users });
       }
+      return of(state.users);
     } else {
-      this.userDataService.getCollection(undefined, false).pipe(
-        tap(users => patchState({ users })),
+      return this.userDataService.getCollection(undefined, false).pipe(
+        tap(users => patchState({ users }))
       );
     }
   }

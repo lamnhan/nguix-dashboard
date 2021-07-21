@@ -9,10 +9,10 @@
 
       <div class="title">
         <h1>Users</h1>
-        <button
+        <!-- <button
           class="button-outline-primary"
           (click)="showRegister=true"
-        >Add New</button>
+        >Add New</button> -->
       </div>
 
       <ul class="roles" *ngIf="filteredItems | userExtractRoles as listingRoles">
@@ -54,6 +54,7 @@
             <div class="name">Name</div>
             <div class="email">Email</div>
             <div class="uid">UID</div>
+            <div class="date">Date</div>
           </li>
           <li
             class="tbody"
@@ -71,6 +72,7 @@
             </div>
             <div class="email">{{ listingItem.email }}</div>
             <div class="uid">{{ listingItem.uid }}</div>
+            <div class="date">{{ listingItem.createdAt }}</div>
           </li>
         </ul>
 
@@ -107,4 +109,4 @@
   <div class="loading">Loading ...</div>
 </ng-template>
 
-<nguix-dashboard-register [show]="showRegister" (close)="showRegister=false"></nguix-dashboard-register>
+<!-- <nguix-dashboard-register [show]="showRegister" (close)="showRegister=false"></nguix-dashboard-register> -->

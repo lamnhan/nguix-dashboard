@@ -20,7 +20,7 @@ import {
   AuthService,
   UserService,
 } from '@lamnhan/ngx-useful';
-import { PageDataService, UserDataService } from '@lamnhan/ngx-schemata';
+import { PageDataService, UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppTranslationModule } from './app-translation.module';
@@ -64,6 +64,7 @@ import { FooterComponentModule } from './components/footer/footer.module';
     // schemata data services
     PageDataService,
     UserDataService,
+    ProfileDataService,
   ],
   bootstrap: [AppComponent]
 })

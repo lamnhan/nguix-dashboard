@@ -19,7 +19,7 @@ import {
   UserService,
 } from '@lamnhan/ngx-useful';
 import { StorageService } from '@lamnhan/nguix-dashboard';
-import { UserDataService } from '@lamnhan/ngx-schemata';
+import { UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
 
 @Component({
   selector: 'app-root',
@@ -48,6 +48,7 @@ export class AppComponent {
     private storageService: StorageService,
     // data services
     private userDataService: UserDataService,
+    private profileDataService: ProfileDataService,
   ) {
     this.initialize();
   }
@@ -71,7 +72,7 @@ export class AppComponent {
       .init(this.firebaseStorage);
     this.appService.setOptions({ splashScreen: true }).init();
     this.authService.setOptions({driver: 'firestore'}).init(this.firebaseAuth);
-    this.userService.init(this.userDataService);
+    this.userService.init(this.userDataService, this.profileDataService);
     this.settingService
       .setOptions({
         browserColor: true,

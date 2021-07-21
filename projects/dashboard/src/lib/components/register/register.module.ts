@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TranslocoModule } from '@ngneat/transloco';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
@@ -10,7 +10,7 @@ import { RegisterComponent } from './register.component';
   declarations: [RegisterComponent],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     TranslocoModule,
     RouterLinkDirectiveModule,
   ],
