@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
-import { User } from '@lamnhan/schemata';
+import { Profile } from '@lamnhan/schemata';
 
-import { GetUsers } from '../../states/user/user.state';
+import { GetProfiles } from '../../states/user/user.state';
 
 @Component({
   selector: 'nguix-dashboard-user-page',
@@ -18,20 +18,19 @@ export class UserPage implements OnInit {
       return { ok: true };
     }),
     tap(() => {
-      this.store.dispatch(new GetUsers(true));
+      this.store.dispatch(new GetProfiles(true));
     }),
   );
 
   public readonly data$ = this.store.select(state => state.user).pipe(
     map(user => {
-      const listingItems = user.users || [];
+      const listingItems = user.profiles || [];
       return {
         listingItems,
       };
     }),
   );
 
-  showRegister = false;
   query = '';
   role = 'all';
   pageNo = 1;
@@ -39,7 +38,7 @@ export class UserPage implements OnInit {
     total: 0,
   };
 
-  detailItem?: User;
+  detailItem?: Profile;
 
   constructor(
     private store: Store,

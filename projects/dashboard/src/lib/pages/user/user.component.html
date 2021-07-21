@@ -9,10 +9,6 @@
 
       <div class="title">
         <h1>Users</h1>
-        <!-- <button
-          class="button-outline-primary"
-          (click)="showRegister=true"
-        >Add New</button> -->
       </div>
 
       <ul class="roles" *ngIf="filteredItems | userExtractRoles as listingRoles">
@@ -51,9 +47,7 @@
 
         <ul class="listing">
           <li class="thead">
-            <div class="name">Name</div>
-            <div class="email">Email</div>
-            <div class="uid">UID</div>
+            <div class="username">Username</div>
             <div class="date">Date</div>
           </li>
           <li
@@ -65,19 +59,45 @@
               | userListingCounter : counting
             "
           >
-            <div class="name">
+            <div class="username">
               <a href="#" (click)="detailItem=listingItem;false">
-                <strong>{{ listingItem.username }}</strong>
+                <strong>{{ listingItem.id }}</strong>
               </a>
             </div>
-            <div class="email">{{ listingItem.email }}</div>
-            <div class="uid">{{ listingItem.uid }}</div>
-            <div class="date">{{ listingItem.createdAt }}</div>
+            <div class="date">{{ listingItem.createdAt | date }}</div>
           </li>
         </ul>
 
         <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
-          Detail ...
+          <div class="top">
+            <div class="title">
+              <strong>{{ detailItem.id }}</strong>
+            </div>
+            <a href="#" (click)="detailItem=undefined;false">X</a>
+          </div>
+          <div class="content">
+            <div class="image">
+              <img [src]="detailItem.thumbnail">
+            </div>
+            <div class="username">
+              <span>Username</span>
+              <strong>
+                <a href="#" target="_blank">{{ detailItem.id }}</a>
+              </strong>
+            </div>
+            <div class="status">
+              <span>Status</span>
+              <strong>{{ detailItem.status === 'publish' ? 'Public' : 'Private' }}</strong>
+            </div>
+            <div class="created">
+              <span>Created</span>
+              <strong>{{ detailItem.createdAt | date }}</strong>
+            </div>
+            <div class="updated">
+              <span>Updated</span>
+              <strong>{{ detailItem.updatedAt | date }}</strong>
+            </div>
+          </div>
         </div>
 
         <div class="pagination">
@@ -108,5 +128,3 @@
 <ng-template #loading>
   <div class="loading">Loading ...</div>
 </ng-template>
-
-<!-- <nguix-dashboard-register [show]="showRegister" (close)="showRegister=false"></nguix-dashboard-register> -->

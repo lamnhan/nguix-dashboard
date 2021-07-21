@@ -12,16 +12,11 @@ export class UserPartService {
     text: 'Users',
     routerLink: ['admin', this.name],
     icon: `icon-dashboard-${this.name}`,
-    activeAlso: [`admin/${this.name}/new`],
     subItems: [
       {
         text: 'All Users',
         routerLink: ['admin', this.name]
       },
-      {
-        text: 'Add New',
-        routerLink: ['admin', this.name, 'new']
-      }
     ],
   };
 

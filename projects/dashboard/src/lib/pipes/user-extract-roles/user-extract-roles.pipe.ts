@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { User } from '@lamnhan/schemata';
+import { Profile } from '@lamnhan/schemata';
 
 import { DashboardListingUserRole } from '../../services/dashboard/dashboard.service';
 
@@ -7,7 +7,7 @@ import { DashboardListingUserRole } from '../../services/dashboard/dashboard.ser
   name: 'userExtractRoles'
 })
 export class UserExtractRolesPipe implements PipeTransform {
-  transform(items: User[]): DashboardListingUserRole[] {
+  transform(items: Profile[]): DashboardListingUserRole[] {
     const all: DashboardListingUserRole = {
       title: 'All',
       value: 'all',
@@ -45,18 +45,18 @@ export class UserExtractRolesPipe implements PipeTransform {
     };
     // counting
     items.forEach(item => {
-      const { role = 'subscriber' } = item.claims || {};
-      if (role === 'sadmin') {
+      const badges = item.badges || [];
+      if (badges.indexOf('sadmin') !== -1) {
         sadmin.count++;
-      } else if (role === 'admin') {
+      } else if (badges.indexOf('admin') !== -1) {
         admin.count++;
-      } else if (role === 'editor') {
+      } else if (badges.indexOf('editor') !== -1) {
         editor.count++;
-      } else if (role === 'author') {
+      } else if (badges.indexOf('author') !== -1) {
         author.count++;
-      } else if (role === 'contributor') {
+      } else if (badges.indexOf('contributor') !== -1) {
         contributor.count++;
-      } else if (role === 'subscriber') {
+      } else {
         subscriber.count++;
       }
       all.count++;

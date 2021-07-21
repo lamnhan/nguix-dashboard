@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { User } from '@lamnhan/schemata';
+import { Profile } from '@lamnhan/schemata';
 
 @Pipe({
   name: 'userQueryFilter'
 })
 export class UserQueryFilterPipe implements PipeTransform {
-  transform(items: User[], query?: string): User[] {
+  transform(items: Profile[], query?: string): Profile[] {
     return !query
       ? items
-      : items.filter(item => (item.email || '').indexOf(query) !== -1);
+      : items.filter(item => item.id.indexOf(query) !== -1);
   }
 }
