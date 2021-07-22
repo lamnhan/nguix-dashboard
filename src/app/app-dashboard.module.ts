@@ -15,7 +15,8 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
           'category',
           'tag',
           'media',
-          'user'
+          'user',
+          'option'
         ],
         plugins: [
           dashboardService => {

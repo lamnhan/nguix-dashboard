@@ -16,6 +16,7 @@ export * from './lib/parts/category/category.service';
 export * from './lib/parts/tag/tag.service';
 export * from './lib/parts/page/page.service';
 export * from './lib/parts/post/post.service';
+export * from './lib/parts/option/option.service';
 
 export * from './lib/components/header/header.component';
 export * from './lib/components/header/header.module';

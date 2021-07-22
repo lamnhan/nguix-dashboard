@@ -9,6 +9,7 @@ import { CategoryPartService } from '../../parts/category/category.service';
 import { TagPartService } from '../../parts/tag/tag.service';
 import { PagePartService } from '../../parts/page/page.service';
 import { PostPartService } from '../../parts/post/post.service';
+import { OptionPartService } from '../../parts/option/option.service';
 
 export interface DashboardListingStatus {
   title: string;
@@ -43,6 +44,7 @@ export class DashboardService {
     public readonly tagPart: TagPartService,
     public readonly pagePart: PagePartService,
     public readonly postPart: PostPartService,
+    public readonly optionPart: OptionPartService,
   ) {
     // run plugins
     (this.configService.getConfig().plugins || [])
@@ -67,6 +69,7 @@ export class DashboardService {
       tag: this.tagPart,
       page: this.pagePart,
       post: this.postPart,
+      option: this.optionPart,
       ...this.customParts,
     };
     return allParts[part];

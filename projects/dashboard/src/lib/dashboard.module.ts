@@ -18,6 +18,7 @@ import { CategoryPartService } from './parts/category/category.service';
 import { TagPartService } from './parts/tag/tag.service';
 import { PagePartService } from './parts/page/page.service';
 import { PostPartService } from './parts/post/post.service';
+import { OptionPartService } from './parts/option/option.service';
 
 import { DatabaseState } from './states/database/database.state';
 import { MediaState } from './states/media/media.state';
@@ -66,6 +67,7 @@ import { UserState } from './states/user/user.state';
     TagPartService,
     PagePartService,
     PostPartService,
+    OptionPartService,
   ],
   exports: [
     NguixDashboardHeaderComponentModule

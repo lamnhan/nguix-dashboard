@@ -18,6 +18,7 @@ export const Schemas = {
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 1 },
   contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'text' },
   content: { label: 'Content', name: 'content', type: 'html' },
+  value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
   locale: {
     label: 'Locale', name: 'locale', type: 'locale', required: true,

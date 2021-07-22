@@ -22,6 +22,10 @@ $icons: (
   dashboard-tag: ('material', 'tag-multiple'),
   dashboard-page: ('material', 'view-carousel'),
   dashboard-post: ('material', 'text-box'),
+  dashboard-option: ('material', 'cog'),
+  dashboard-profile: ('material', 'account-edit'),
+  dashboard-audio: ('material', 'music'),
+  dashboard-video: ('material', 'video'),
 );
 
 @include register_icons($icons);
