@@ -20,6 +20,7 @@ import { PagePartService } from './parts/page/page.service';
 import { PostPartService } from './parts/post/post.service';
 import { OptionPartService } from './parts/option/option.service';
 import { ProfilePartService } from './parts/profile/profile.service';
+import { AudioPartService } from './parts/audio/audio.service';
 
 import { DatabaseState } from './states/database/database.state';
 import { MediaState } from './states/media/media.state';
@@ -69,6 +70,8 @@ import { UserState } from './states/user/user.state';
     PagePartService,
     PostPartService,
     OptionPartService,
+    ProfilePartService,
+    AudioPartService,
   ],
   exports: [
     NguixDashboardHeaderComponentModule

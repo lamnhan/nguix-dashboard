@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
-import { PostDataService } from '@lamnhan/ngx-schemata';
+import { AudioDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta, DataType } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
@@ -8,18 +8,18 @@ import { Schemas } from '../../services/schema/schema.service';
 @Injectable({
   providedIn: 'root'
 })
-export class PostPartService {
-  public readonly name = 'post';
+export class AudioPartService {
+  public readonly name = 'audio';
 
   public readonly menuItem: MenuItem = {
     name: this.name,
-    text: 'Posts',
+    text: 'Audios',
     routerLink: ['admin', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
     activeAlso: [`admin/new/${this.name}`],
     subItems: [
       {
-        text: 'All Posts',
+        text: 'All Audios',
         routerLink: ['admin', 'list', this.name],
       },
       {
@@ -39,45 +39,29 @@ export class PostPartService {
 
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.type,
+    { label: 'Src', name: 'src', type: 'upload', required: true },
+    Schemas.duration,
     Schemas.description,
-    { label: 'TLDR', name: 'tldr', type: 'textarea' },
-    {
-      label: 'TOC',
-      name: 'toc',
-      type: 'json',
-      meta: {
-        type: 'array',
-        schema: [
-          {name: 'text', type: 'string', required: true, width: 150},
-          {name: 'level', type: 'number', required: true, defaultValue: 1},
-          {name: 'id', type: 'string', width: 100},
-          {name: 'href', type: 'string', width: 150},
-          {name: 'routerLink', type: 'string', width: 150},
-        ],
-      } as JsonSchemaMeta,
-    },
     Schemas.thumbnail,
     Schemas.image,
     Schemas.authors,
-    Schemas.duration,
     Schemas.contentSrc,
     Schemas.content,
+    { label: 'Birthday', name: 'birthday', type: 'text' },
+    { label: 'Sheet', name: 'sheet', type: 'upload' },
     {
-      label: 'Slides',
-      name: 'slides',
+      label: 'Props',
+      name: 'props',
       type: 'json',
       meta: {
         type: 'record',
+        recordKey: 'name',
         schema: [
-          {name: 'id', type: 'string', required: true, width: 100},
-          {name: 'image', type: 'string', required: true, width: 150},
-          {name: 'title', type: 'string', width: 150},
-          {name: 'description', type: 'string', width: 150},
+          {name: 'name', type: 'string', required: true, width: 100},
+          {name: 'value', type: 'string', required: true, width: 150},
         ],
       } as JsonSchemaMeta,
     },
-    { label: 'Audio', name: 'audio', type: 'upload' },
-    { label: 'Video', name: 'video', type: 'upload' },
     {
       label: 'Parents',
       name: 'parents',
@@ -85,7 +69,7 @@ export class PostPartService {
       meta: {
         source: 'bundle',
         keys: ['id', 'title'],
-        contentType: 'post',
+        contentType: 'audio',
       } as LinkingSchemaMeta,
     },
     Schemas.categories,
@@ -94,8 +78,8 @@ export class PostPartService {
   ];
 
   public readonly dataTypes: DataType[]  = [
-    { text: 'Post', value: 'post', icon: `icon-dashboard-${this.name}` },
+    { text: 'Audio', value: 'audio', icon: `icon-dashboard-${this.name}` },
   ];
 
-  constructor(public readonly dataService: PostDataService) {}
+  constructor(public readonly dataService: AudioDataService) {}
 }

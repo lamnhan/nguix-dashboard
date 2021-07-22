@@ -11,6 +11,7 @@ import { PagePartService } from '../../parts/page/page.service';
 import { PostPartService } from '../../parts/post/post.service';
 import { OptionPartService } from '../../parts/option/option.service';
 import { ProfilePartService } from '../../parts/profile/profile.service';
+import { AudioPartService } from '../../parts/audio/audio.service';
 
 export interface DashboardListingStatus {
   title: string;
@@ -47,6 +48,7 @@ export class DashboardService {
     public readonly postPart: PostPartService,
     public readonly optionPart: OptionPartService,
     public readonly profilePart: ProfilePartService,
+    public readonly audioPart: AudioPartService,
   ) {
     // run plugins
     (this.configService.getConfig().plugins || [])
@@ -73,6 +75,7 @@ export class DashboardService {
       post: this.postPart,
       option: this.optionPart,
       profile: this.profilePart,
+      audio: this.audioPart,
       ...this.customParts,
     };
     return allParts[part];

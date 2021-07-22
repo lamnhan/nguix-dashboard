@@ -38,8 +38,13 @@ export const Schemas = {
   },
   keywords: { label: 'Keywords', name: 'keywords', type: 'text' },
   authors: {
-    label: 'Authors', name: 'authors', type: 'link',
-    meta: { source: 'profile' } as LinkingSchemaMeta,
+    label: 'Authors',
+    name: 'authors',
+    type: 'link',
+    meta: {
+      source: 'profile',
+      keys: ['id', 'title', 'thumbnail'],
+    } as LinkingSchemaMeta,
   },
   categories: {
     label: 'Categories', name: 'categories', type: 'link',
