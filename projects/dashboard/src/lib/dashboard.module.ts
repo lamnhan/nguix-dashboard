@@ -19,6 +19,7 @@ import { TagPartService } from './parts/tag/tag.service';
 import { PagePartService } from './parts/page/page.service';
 import { PostPartService } from './parts/post/post.service';
 import { OptionPartService } from './parts/option/option.service';
+import { ProfilePartService } from './parts/profile/profile.service';
 
 import { DatabaseState } from './states/database/database.state';
 import { MediaState } from './states/media/media.state';
