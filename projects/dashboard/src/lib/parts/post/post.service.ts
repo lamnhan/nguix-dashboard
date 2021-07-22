@@ -15,7 +15,7 @@ export class PostPartService {
     name: this.name,
     text: 'Posts',
     routerLink: ['admin', 'list', this.name],
-    icon: `icon-dashboard-${this.name}`,
+    icon: `icon-dashboard-part-${this.name}`,
     activeAlso: [`admin/new/${this.name}`],
     subItems: [
       {

@@ -11,7 +11,7 @@ export class MediaPartService {
     name: this.name,
     text: 'Media',
     routerLink: ['admin', this.name],
-    icon: `icon-dashboard-${this.name}`,
+    icon: `icon-dashboard-part-${this.name}`,
     activeAlso: [`admin/${this.name}/new`],
     subItems: [
       {

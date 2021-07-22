@@ -11,7 +11,7 @@ export class UserPartService {
     name: this.name,
     text: 'Users',
     routerLink: ['admin', this.name],
-    icon: `icon-dashboard-${this.name}`,
+    icon: `icon-dashboard-part-${this.name}`,
     subItems: [
       {
         text: 'All Users',

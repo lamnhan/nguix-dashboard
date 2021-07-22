@@ -15,7 +15,7 @@ export class OptionPartService {
     name: this.name,
     text: 'Options',
     routerLink: ['admin', 'list', this.name],
-    icon: `icon-dashboard-${this.name}`,
+    icon: `icon-dashboard-part-${this.name}`,
     activeAlso: [`admin/new/${this.name}`],
     subItems: [
       {
@@ -30,7 +30,6 @@ export class OptionPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.status,
     Schemas.value,
   ];
 

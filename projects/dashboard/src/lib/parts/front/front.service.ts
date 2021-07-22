@@ -11,7 +11,7 @@ export class FrontPartService {
     name: this.name,
     text: 'Dashboard',
     routerLink: ['admin'],
-    icon: `icon-dashboard-${this.name}`,
+    icon: `icon-dashboard-part-${this.name}`,
     activeAlso: ['admin/about'],
     subItems: [
       {

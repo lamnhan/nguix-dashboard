@@ -1,31 +1,32 @@
 @import '../scss/skin';
 
 $icons: (
-  // general
+  // misc
   dashboard-mola: ('direct', 'http://localhost:4200/assets/icons/mola.svg'),
   dashboard-menu: ('bootstrap', 'list'),
   dashboard-home: ('bootstrap', 'house-fill'),
   dashboard-comment: ('material', 'comment'),
   dashboard-record: ('material', 'code-braces'),
   dashboard-array: ('material', 'code-brackets'),
-  dashboard-type-image: ('material', 'file-image'),
-  dashboard-type-audio: ('material', 'file-music'),
-  dashboard-type-video: ('material', 'file-video'),
-  dashboard-type-document: ('material', 'file-document'),
-  dashboard-type-archive: ('material', 'zip-box'),
-  dashboard-type-unknown: ('material', 'file-question'),
+  // media
+  dashboard-media-image: ('material', 'file-image'),
+  dashboard-media-audio: ('material', 'file-music'),
+  dashboard-media-video: ('material', 'file-video'),
+  dashboard-media-document: ('material', 'file-document'),
+  dashboard-media-archive: ('material', 'zip-box'),
+  dashboard-media-unknown: ('material', 'file-question'),
   // parts
-  dashboard-front: ('material', 'gauge'),
-  dashboard-media: ('material', 'image'),
-  dashboard-user: ('material', 'account'),
-  dashboard-category: ('material', 'shape'),
-  dashboard-tag: ('material', 'tag-multiple'),
-  dashboard-page: ('material', 'view-carousel'),
-  dashboard-post: ('material', 'text-box'),
-  dashboard-option: ('material', 'cog'),
-  dashboard-profile: ('material', 'account-edit'),
-  dashboard-audio: ('material', 'music'),
-  dashboard-video: ('material', 'video'),
+  dashboard-part-front: ('material', 'gauge'),
+  dashboard-part-media: ('material', 'image'),
+  dashboard-part-user: ('material', 'account'),
+  dashboard-part-category: ('material', 'shape'),
+  dashboard-part-tag: ('material', 'tag-multiple'),
+  dashboard-part-page: ('material', 'view-carousel'),
+  dashboard-part-post: ('material', 'text-box'),
+  dashboard-part-option: ('material', 'cog'),
+  dashboard-part-profile: ('material', 'account-edit'),
+  dashboard-part-audio: ('material', 'music'),
+  dashboard-part-video: ('material', 'video'),
 );
 
 @include register_icons($icons);
