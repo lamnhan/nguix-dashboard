@@ -31,6 +31,7 @@ export interface DashboardListingItem {
   providedIn: 'root'
 })
 export class DashboardService {
+  private customParts: Record<string, DashboardPart> = {};
 
   constructor(
     private configService: ConfigService,
@@ -48,37 +49,35 @@ export class DashboardService {
       .forEach(plugin => plugin(this));
   }
 
+  registerAvailableParts(customParts: Record<string, DashboardPart>) {
+    this.customParts = customParts;
+    return this as DashboardService;
+  }
+
+  init() {
+    return this as DashboardService;
+  }
+
+  getPart(part: string): undefined | DashboardPart {
+    const allParts: Record<string, DashboardPart> = {
+      front: this.frontPart,
+      media: this.mediaPart,
+      user: this.userPart,
+      category: this.categoryPart,
+      tag: this.tagPart,
+      page: this.pagePart,
+      post: this.postPart,
+      ...this.customParts,
+    };
+    return allParts[part];
+  }
+
   getParts() {
     return this.configService
       .getConfig()
       .parts
       .map(item => typeof item === 'string' ? this.getPart(item) : item)
       .filter(item => !!item) as DashboardPart[];
-  }
-
-  getPart(part: string): undefined | DashboardPart {
-    switch (part) {
-      case 'front':
-        return this.frontPart;
-      case 'media':
-        return this.mediaPart;
-      case 'user':
-        return this.userPart;
-      case 'category':
-        return this.categoryPart;
-      case 'tag':
-        return this.tagPart;
-      case 'page':
-        return this.pagePart;
-      case 'post':
-        return this.postPart;    
-      default:
-        return this.configService
-          .getConfig()
-          .parts
-          .filter(item => typeof item !== 'string' && item.name === part)
-          .shift() as (undefined | DashboardPart);
-    }
   }
 
   getMenu() {

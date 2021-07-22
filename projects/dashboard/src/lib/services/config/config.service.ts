@@ -12,7 +12,7 @@ export function dashboardConfig(config: DashboardConfig) {
 }
 
 export interface DashboardConfig {
-  parts: Array<string | DashboardPart>;
+  parts: string[];
   plugins?: DashboardPlugin[];
   allowDirectContent?: boolean;
   useUploadUrl?: boolean;
