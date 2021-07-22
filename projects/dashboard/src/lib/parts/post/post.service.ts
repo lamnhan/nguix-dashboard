@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { PostDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta, DataType } from '../../services/config/config.service';
+import { FormSchemaItem, DataType } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -41,53 +41,17 @@ export class PostPartService {
     Schemas.type,
     Schemas.description,
     { label: 'TLDR', name: 'tldr', type: 'textarea' },
-    {
-      label: 'TOC',
-      name: 'toc',
-      type: 'json',
-      meta: {
-        type: 'array',
-        schema: [
-          {name: 'text', type: 'string', required: true, width: 150},
-          {name: 'level', type: 'number', required: true, defaultValue: 1},
-          {name: 'id', type: 'string', width: 100},
-          {name: 'href', type: 'string', width: 150},
-          {name: 'routerLink', type: 'string', width: 150},
-        ],
-      } as JsonSchemaMeta,
-    },
+    Schemas.toc,
     Schemas.thumbnail,
     Schemas.image,
     Schemas.authors,
     Schemas.duration,
     Schemas.contentSrc,
     Schemas.content,
-    {
-      label: 'Slides',
-      name: 'slides',
-      type: 'json',
-      meta: {
-        type: 'record',
-        schema: [
-          {name: 'id', type: 'string', required: true, width: 100},
-          {name: 'image', type: 'string', required: true, width: 150},
-          {name: 'title', type: 'string', width: 150},
-          {name: 'description', type: 'string', width: 150},
-        ],
-      } as JsonSchemaMeta,
-    },
+    Schemas.slides,
     { label: 'Audio', name: 'audio', type: 'upload' },
-    { label: 'Video', name: 'video', type: 'upload' },
-    {
-      label: 'Parents',
-      name: 'parents',
-      type: 'link',
-      meta: {
-        source: 'bundle',
-        keys: ['id', 'title'],
-        contentType: 'post',
-      } as LinkingSchemaMeta,
-    },
+    { label: 'Video', name: 'video', type: 'upload' },    
+    { ...Schemas.parents, meta: { ...Schemas.parents.meta, contentType: 'post' } },
     Schemas.categories,
     Schemas.tags,
     Schemas.keywords,

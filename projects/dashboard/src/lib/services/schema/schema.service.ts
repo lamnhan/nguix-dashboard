@@ -1,42 +1,104 @@
 import { Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 
-import { FormSchemaItem, LinkingSchemaMeta } from '../config/config.service';
+import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta } from '../config/config.service';
 
 export const Schemas = {
   id: {
-    label: 'ID', name: 'id', type: 'text', required: true,
+    label: 'ID',
+    name: 'id',
+    type: 'text',
+    required: true,
     validators: [Validators.required],
   },
   title: {
-    label: 'Title', name: 'title', type: 'text', required: true,
+    label: 'Title',
+    name: 'title',
+    type: 'text',
+    required: true,
     validators: [Validators.required],
   },
   description: { label: 'Description', name: 'description', type: 'textarea' },
   thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'upload' },
   image: { label: 'Image', name: 'image', type: 'upload' },
+  src: { label: 'Src', name: 'src', type: 'upload' },
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 1 },
   contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'text' },
   content: { label: 'Content', name: 'content', type: 'html' },
   value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
   locale: {
-    label: 'Locale', name: 'locale', type: 'locale', required: true,
+    label: 'Locale',
+    name: 'locale',
+    type: 'locale',
+    required: true,
     validators: [Validators.required],
   },
   origin: {
-    label: 'Origin', name: 'origin', type: 'text', required: true,
+    label: 'Origin',
+    name: 'origin',
+    type: 'text',
+    required: true,
     validators: [Validators.required],
   },
   type: {
-    label: 'Type', name: 'type', type: 'type', required: true,
+    label: 'Type',
+    name: 'type',
+    type: 'type',
+    required: true,
     validators: [Validators.required],
   },
   status: {
-    label: 'Status', name: 'status', type: 'status', defaultValue: 'draft', required: true,
+    label: 'Status',
+    name: 'status',
+    type: 'status',
+    defaultValue: 'draft',
+    required: true,
     validators: [Validators.required],
   },
   keywords: { label: 'Keywords', name: 'keywords', type: 'text' },
+  toc: {
+    label: 'TOC',
+    name: 'toc',
+    type: 'json',
+    meta: {
+      type: 'array',
+      schema: [
+        {name: 'text', type: 'string', required: true, width: 150},
+        {name: 'level', type: 'number', required: true, defaultValue: 1},
+        {name: 'id', type: 'string', width: 100},
+        {name: 'href', type: 'string', width: 150},
+        {name: 'routerLink', type: 'string', width: 150},
+      ],
+    } as JsonSchemaMeta,
+  },
+  slides: {
+    label: 'Slides',
+    name: 'slides',
+    type: 'json',
+    meta: {
+      type: 'record',
+      schema: [
+        {name: 'id', type: 'string', required: true, width: 100},
+        {name: 'image', type: 'string', required: true, width: 150},
+        {name: 'title', type: 'string', width: 150},
+        {name: 'description', type: 'string', width: 150},
+      ],
+    } as JsonSchemaMeta,
+  },
+  props: {
+    label: 'Props',
+    name: 'props',
+    type: 'json',
+    meta: {
+      type: 'record',
+      recordKey: 'name',
+      schema: [
+        {name: 'name', type: 'string', required: true, width: 100},
+        {name: 'value', type: 'string', required: true, width: 150},
+      ],
+    } as JsonSchemaMeta,
+  },
   authors: {
     label: 'Authors',
     name: 'authors',
@@ -46,13 +108,30 @@ export const Schemas = {
       keys: ['id', 'title', 'thumbnail'],
     } as LinkingSchemaMeta,
   },
+  parents: {
+    label: 'Parents',
+    name: 'parents',
+    type: 'link',
+    meta: {
+      source: 'bundle',
+      keys: ['id', 'title'],
+    } as LinkingSchemaMeta,
+  },
   categories: {
-    label: 'Categories', name: 'categories', type: 'link',
-    meta: { source: 'category' } as LinkingSchemaMeta,
+    label: 'Categories',
+    name: 'categories',
+    type: 'link',
+    meta: {
+      source: 'category',
+    } as LinkingSchemaMeta,
   },
   tags: {
-    label: 'Tags', name: 'tags', type: 'link',
-    meta: { source: 'tag' } as LinkingSchemaMeta,
+    label: 'Tags',
+    name: 'tags',
+    type: 'link',
+    meta: {
+      source: 'tag',
+    } as LinkingSchemaMeta,
   },
 };
 
