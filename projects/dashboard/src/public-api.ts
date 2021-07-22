@@ -20,6 +20,7 @@ export * from './lib/parts/option/option.service';
 export * from './lib/parts/profile/profile.service';
 export * from './lib/parts/audio/audio.service';
 export * from './lib/parts/video/video.service';
+export * from './lib/parts/bundle/bundle.service';
 
 export * from './lib/components/header/header.component';
 export * from './lib/components/header/header.module';

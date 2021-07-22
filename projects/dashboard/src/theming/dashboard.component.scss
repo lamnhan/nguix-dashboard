@@ -27,6 +27,7 @@ $icons: (
   dashboard-part-profile: ('material', 'account-edit'),
   dashboard-part-audio: ('material', 'music'),
   dashboard-part-video: ('material', 'video'),
+  dashboard-part-bundle: ('material', 'animation'),
 );
 
 @include register_icons($icons);

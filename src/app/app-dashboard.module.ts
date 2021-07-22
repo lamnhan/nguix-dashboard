@@ -20,6 +20,7 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
           'profile',
           'audio',
           'video',
+          'bundle',
         ],
         plugins: [
           dashboardService => {

@@ -13,6 +13,7 @@ import { OptionPartService } from '../../parts/option/option.service';
 import { ProfilePartService } from '../../parts/profile/profile.service';
 import { AudioPartService } from '../../parts/audio/audio.service';
 import { VideoPartService } from '../../parts/video/video.service';
+import { BundlePartService } from '../../parts/bundle/bundle.service';
 
 export interface DashboardListingStatus {
   title: string;
@@ -51,6 +52,7 @@ export class DashboardService {
     public readonly profilePart: ProfilePartService,
     public readonly audioPart: AudioPartService,
     public readonly videoPart: VideoPartService,
+    public readonly bundlePart: BundlePartService,
   ) {
     // run plugins
     (this.configService.getConfig().plugins || [])
@@ -79,6 +81,7 @@ export class DashboardService {
       profile: this.profilePart,
       audio: this.audioPart,
       video: this.videoPart,
+      bundle: this.bundlePart,
       ...this.customParts,
     };
     return allParts[part];
