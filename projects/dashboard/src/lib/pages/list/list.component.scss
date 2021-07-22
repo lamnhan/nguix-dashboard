@@ -106,6 +106,10 @@
 
       table.listing {
 
+        thead tr th {
+          font-weight: 400;
+        }
+
         thead tr th,
         tbody tr td {
           display: none;

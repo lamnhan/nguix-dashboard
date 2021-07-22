@@ -68,60 +68,54 @@
       }
 
       .major {
-        border: 1px solid $medium;
-        background: $light;
 
-        .listing {
-  
-          .thead {
-            padding: .5rem;
-            color: $dark;
-            border-bottom: 1px solid $medium;
+        table.listing {
+
+          thead tr th {
+            font-weight: 400;
           }
-          
-          .tbody {
-            padding: 1rem .5rem;
-            color: $medium;
-            border-bottom: 1px solid $light-shade;
 
-            &:last-child {
-              border-bottom: none;
+          tbody tr td {
+            border-top-color: $light-shade;
+          }
+
+          tbody tr:first-child td {
+            border-top-color: $medium;
+          }
+
+          tbody tr {
+
+            td {
+              color: $medium;
+              padding: 1rem .5rem;
+
+              strong {
+                font-weight: 500;
+              }
             }
-          }
-  
-          .thead, .tbody {
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center; 
-  
+
             .name {
-              flex: 1;
-  
+
               a {
                 display: flex;
                 flex-wrap: nowrap;
                 align-items: center;
   
                 i {
-                  margin-right: .5rem;
                   width: 1.5rem;
                   height: 1.5rem;
                 }
   
                 strong {
-                  font-weight: 400;
+                  margin-left: .5rem;
                 }
               }
             }
-  
-            .size {}
-  
-            .type {
-              text-align: right;
-              display: none;
-            }
-  
-            .date {
+          }
+
+          thead tr, tbody tr {
+
+            .type, .date {
               display: none;
             }
           }
@@ -210,11 +204,6 @@
               margin: 1rem 0;
             }
           }
-        }
-
-        .pagination {
-          padding: .5rem;
-          border-top: 1px solid $medium;
         }
       }  
     }

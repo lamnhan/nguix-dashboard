@@ -49,48 +49,60 @@
 
       <div class="major">
 
-        <ul class="listing">
-          <li class="thead">
-            <div class="name">Name</div>
-            <div class="size">Size</div>
-            <div class="type">Type</div>
-            <div class="date">Date</div>
-          </li>
-          <li
-            class="tbody"
-            *ngFor="
-              let listingItem of filteredItems
-              | mediaTypeFilter : type
-              | paginate : {itemsPerPage: 30, currentPage: pageNo}
-              | mediaListingCounter : counting
-            "
-          >
-            <div class="name">
-              <a href="#" (click)="detailItem=listingItem;false">
-                <i class="icon-medium" [class]="'icon-dashboard-type-' + listingItem.type"></i>
-                <strong>{{ listingItem.name }}</strong>
-              </a>
-            </div>
-            <ng-container
-              *ngIf="
-                listingItem.metadata$ | async;
-                let metadata
+        <table class="listing table-striped">
+
+          <thead>
+            <tr>
+              <th class="name">Name</th>
+              <th class="size">Size</th>
+              <th class="type">Type</th>
+              <th class="date">Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="
+                let listingItem of filteredItems
+                | mediaTypeFilter : type
+                | paginate : {itemsPerPage: 30, currentPage: pageNo}
+                | mediaListingCounter : counting
               "
             >
-              <div class="size">{{ metadata.size | filesize }}</div>
-              <div class="type">{{ metadata.contentType }}</div>
-              <div class="date">{{ metadata.updated | date }}</div>
-            </ng-container>
-          </li>
-        </ul>
+              <td class="name">
+                <a href="#" (click)="detailItem=listingItem;false">
+                  <i class="icon-medium" [class]="'icon-dashboard-type-' + listingItem.type"></i>
+                  <strong>{{ listingItem.name }}</strong>
+                </a>
+              </td>
+              <ng-container *ngIf="listingItem.metadata$ | async as metadata; else noMetadata">
+                <td class="size">{{ metadata.size | filesize }}</td>
+                <td class="type">{{ metadata.contentType }}</td>
+                <td class="date">{{ metadata.updated | date }}</td>
+              </ng-container>
+              <ng-template #noMetadata>
+                <td class="size">-</td>
+                <td class="type">-</td>
+                <td class="date">-</td>
+              </ng-template>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colspan="42">
+                <pagination-controls
+                  (pageChange)="pageNo=$event"
+                  [directionLinks]="false"
+                ></pagination-controls>
+              </td>
+            </tr>
+          </tfoot>
+
+        </table>
 
         <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
-          <ng-container
-            *ngIf="
-              detailItem.metadata$ | async;
-              let detailMetadata
-            "
-          >
+          <ng-container *ngIf="detailItem.metadata$ | async; let detailMetadata">
           <ng-container *ngIf="detailItem.downloadUrl$ | async; let downloadUrl">
             <div class="top">
               <div class="title">
@@ -122,13 +134,6 @@
             </div>
           </ng-container>
           </ng-container>
-        </div>
-
-        <div class="pagination">
-          <pagination-controls
-            (pageChange)="pageNo=$event"
-            [directionLinks]="false"
-          ></pagination-controls>
         </div>
 
       </div>
