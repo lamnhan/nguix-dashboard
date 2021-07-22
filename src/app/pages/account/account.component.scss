@@ -1,0 +1,60 @@
+.host {
+  padding: 1rem;
+  width: 100%;
+  max-width: 768px;
+  margin: auto;
+
+  .head {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+
+    .avatar {
+      width: 6rem;
+      height: 6rem;
+      overflow: hidden;
+      border-radius: 100%;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .info {
+      width: 100%;
+      margin-top: 1rem;
+      text-align: center;
+
+      h3 {
+        margin-bottom: 0;
+      }
+
+      .email {
+        margin-top: 0;
+        color: var(--app-color-medium);
+
+        em, a {
+          display: block;
+          font-style: normal;
+        }
+
+        a {
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  .foot {
+    margin-top: 1rem;
+    text-align: center;
+  }
+}
+
+.loading {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}

@@ -14,7 +14,7 @@ export class UserExtractRolesPipe implements PipeTransform {
       count: 0
     };
     const sadmin: DashboardListingUserRole = {
-      title: 'SAdmin',
+      title: 'Super Admin',
       value: 'sadmin',
       count: 0
     };

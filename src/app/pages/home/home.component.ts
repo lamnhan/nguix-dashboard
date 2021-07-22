@@ -17,7 +17,7 @@ export class HomePage implements OnInit {
   ngOnInit(): void {}
 
   gotoDashboard() {
-    this.settingService.changePersona('admin');
+    this.settingService.changePersona('dashboard');
     this.navService.navigate(['admin']);
   }
 

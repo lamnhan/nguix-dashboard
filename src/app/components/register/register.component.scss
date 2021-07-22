@@ -1,4 +1,4 @@
-.app-login {
+.app-register {
   width: 100%;
 
   .title h3 {
@@ -27,11 +27,9 @@
       }
     }
 
+    .foot {
+      text-align: center;
+      margin-top: 1rem;
+    }
   }
-
-  .foot {
-    text-align: center;
-    margin-top: 1rem;
-  }
-
 }

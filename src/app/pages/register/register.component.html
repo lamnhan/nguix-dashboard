@@ -1,0 +1,18 @@
+<div class="host" *ngIf="page$ | async as page; else loading">
+
+  <section class="title">
+    <h3>Register</h3>
+  </section>
+
+  <section class="main" *ngIf="authChecked">
+    <app-register
+      (signedUp)="nav.navigate([''])"
+      (goLogin)="nav.navigate(['login'])"
+    ></app-register>
+  </section>
+
+</div>
+
+<ng-template #loading>
+  <div class="loading">Loading ...</div>
+</ng-template>

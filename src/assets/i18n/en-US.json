@@ -8,7 +8,7 @@
   "PERSONA": {
     "TITLE": "Persona",
     "DEFAULT": "Default",
-    "ADMIN": "Admin"
+    "DASHBOARD": "Dashboard"
   },
   "LOCALE": {
     "TITLE": "Language"

@@ -78,7 +78,7 @@ export class AppComponent {
         browserColor: true,
         onReady: () => this.appService.hideSplashScreen(),
         personaValidator: (persona, userService) =>
-          persona !== 'admin' || !!userService?.allowedLevel(5)
+          persona !== 'dashboard' || !!userService?.allowedLevel(2)
       })
       .setIntegrations({
         localstorageService: this.localstorageService,        
@@ -92,7 +92,7 @@ export class AppComponent {
         ],
         personas: [
           { text: 'PERSONA.DEFAULT', value: 'default' },
-          { text: 'PERSONA.ADMIN', value: 'admin' },
+          { text: 'PERSONA.DASBOARD', value: 'dashboard' },
         ],
         locales: [
           { text: 'English', value: 'en-US' },

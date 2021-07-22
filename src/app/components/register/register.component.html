@@ -1,0 +1,39 @@
+<div class="app-register">
+
+  <div class="message margin-bottom" *ngIf="message">
+    <div class="alert-danger" [innerHtml]="message"></div>
+  </div>
+
+  <div class="form">
+
+    <form [formGroup]="registerFormGroup" (ngSubmit)="signUp()" #registerForm="ngForm">
+  
+      <label class="group margin-bottom">
+        <span class="form-label">Email</span>
+        <input class="form-control" type="email" formControlName="email" placeholder="Email ...">
+      </label>
+  
+      <label class="group margin-bottom">
+        <span class="form-label">Password</span>
+        <input class="form-control" type="password" formControlName="password" placeholder="Password ...">
+      </label>
+  
+      <label class="group margin-bottom">
+        <span class="form-label">Confirm</span>
+        <input class="form-control" type="password" formControlName="passwordConfirm" placeholder="Confirm password ...">
+      </label>
+  
+      <div class="action">
+        <button class="button-primary" type="submit"
+          [disabled]="!registerForm.form.valid || lockdown">Register</button>
+      </div>
+  
+    </form>
+
+    <div class="foot">
+      <a class="button-link" href="/login" (click)="goLogin.emit(); false;">Login?</a>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,27 @@
+<div class="host" *ngIf="page$ | async as page; else loading">
+
+  <div *ngIf="user.currentUser && user.data">
+  
+    <section class="head">
+      <div class="avatar">
+        <img [src]="user.data.photoURL" [alt]="user.data.displayName">
+      </div>
+      <div class="info">
+        <h3>{{user.data.displayName}}</h3>
+        <p class="email">
+          <em>{{user.data.email}}</em>
+        </p>
+      </div>
+    </section>
+  
+    <section class="foot">
+      <button class="button-outline" (click)="signOut()">Logout</button>
+    </section>
+  
+  </div>
+
+</div>
+
+<ng-template #loading>
+  <div class="loading">Loading ...</div>
+</ng-template>

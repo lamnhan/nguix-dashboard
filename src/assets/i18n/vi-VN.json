@@ -8,7 +8,7 @@
   "PERSONA": {
     "TITLE": "Chức năng",
     "DEFAULT": "Mặc định",
-    "ADMIN": "Quản trị"
+    "DASHBOARD": "Quản trị"
   },
   "LOCALE": {
     "TITLE": "Ngôn ngữ"

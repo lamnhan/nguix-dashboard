@@ -8,8 +8,6 @@ import { AuthService, NativeUserCredential } from '@lamnhan/ngx-useful';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  @Input('authService') auth?: AuthService;
-
   @Output() goRegister: EventEmitter<void> = new EventEmitter();
   @Output() signedIn: EventEmitter<NativeUserCredential> = new EventEmitter();
   @Output() error: EventEmitter<any> = new EventEmitter();
@@ -19,6 +17,7 @@ export class LoginComponent implements OnInit {
   message?: string;
 
   constructor(
+    public authService: AuthService,
     private formBuilder: FormBuilder,
   ) {
     this.loginFormGroup = this.formBuilder.group({
@@ -36,11 +35,11 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   signIn() {
-    if (this.auth && !this.auth.authenticated && !this.lockdown) {
+    if (this.authService && !this.authService.authenticated && !this.lockdown) {
       this.beforeSignin();
       const email: string = this.loginFormGroup.get('email')?.value;
       const password: string = this.loginFormGroup.get('password')?.value;
-      this.auth.signInWithEmailAndPassword(email, password).subscribe(
+      this.authService.signInWithEmailAndPassword(email, password).subscribe(
         credential => this.onSignedIn(credential),
         error => this.onError(error)
       );
@@ -60,8 +59,8 @@ export class LoginComponent implements OnInit {
   private onError(error: any) {
     // default error handling
     const {code, message, email} = error;
-    if (this.auth && code === 'auth/account-exists-with-different-credential') {
-      this.auth
+    if (this.authService && code === 'auth/account-exists-with-different-credential') {
+      this.authService
         .handleAccountExistsWithDifferentCredential(email as string)
         .subscribe(() => this.message = message);
     } else {

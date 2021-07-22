@@ -5,7 +5,21 @@
     <div><h2>Demo</h2></div>
 
     <div class="login" *ngIf="!authService.authenticated; else account">
-      <app-login [authService]="authService"></app-login>
+
+      <app-login (goRegister)="navService.navigate(['register'])"></app-login>
+
+      <hr>
+      <h3>Different roles</h3>
+      <p>Use these accounts to see different roles, all password are the same = <strong>1234567890</strong>:</p>
+      <ul>
+        <li>sadmin@lamnhan.com</li>
+        <li>admin@lamnhan.com</li>
+        <li>editor@lamnhan.com</li>
+        <li>author@lamnhan.com</li>
+        <li>contributor@lamnhan.com</li>
+        <li>subscriber@lamnhan.com</li>
+      </ul>
+
     </div>
 
     <ng-template #account>

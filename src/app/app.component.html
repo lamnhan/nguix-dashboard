@@ -1,12 +1,12 @@
 <nguix-dashboard-header
-  *ngIf="personaService.name==='admin'; else appHeaders"></nguix-dashboard-header>
+  *ngIf="personaService.name==='dashboard'; else appHeaders"></nguix-dashboard-header>
 <ng-template #appHeaders>
   <app-header></app-header>
   <app-header2nd></app-header2nd>
 </ng-template>
 
-<main id="page-container" [class.single-header]="personaService.name==='admin'">
+<main id="page-container" [class.single-header]="personaService.name==='dashboard'">
   <router-outlet></router-outlet>
 </main>
 
-<app-footer *ngIf="personaService.name!=='admin'"></app-footer>
+<app-footer *ngIf="personaService.name!=='dashboard'"></app-footer>

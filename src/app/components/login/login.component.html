@@ -1,10 +1,10 @@
-<div class="app-login" *ngIf="auth">
+<div class="app-login" *ngIf="authService">
 
   <div class="message margin-bottom" *ngIf="message">
     <div class="alert-danger" [innerHtml]="message"></div>
   </div>
 
-  <div class="form" *ngIf="auth.methodAllowedForEmailPassword">
+  <div class="form" *ngIf="authService.methodAllowedForEmailPassword">
 
     <form
       [formGroup]="loginFormGroup"
@@ -28,6 +28,10 @@
       </div>
   
     </form>
+
+    <div class="foot">
+      <a class="button-link" href="/register" (click)="goRegister.emit(); false;">Register?</a>
+    </div>
 
   </div>
 
