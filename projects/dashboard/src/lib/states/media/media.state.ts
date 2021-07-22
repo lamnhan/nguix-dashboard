@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { tap, map, catchError, take } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
-
-import { StorageService, MediaItem } from '../../services/storage/storage.service';
+import { StorageService, MediaItem } from '@lamnhan/ngx-useful';
 
 export interface MediaStateModel {
   remoteLoaded: boolean;

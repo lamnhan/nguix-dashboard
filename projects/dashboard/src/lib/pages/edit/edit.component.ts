@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { Subscription, combineLatest, of } from 'rxjs';
 import { tap, map, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
-import { MediaItem } from '../../services/storage/storage.service';
+import { MediaItem } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem, FormSchemaItem, CheckboxAlikeChild, ConfigService } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';

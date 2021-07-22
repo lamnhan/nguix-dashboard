@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { MediaItem } from '@lamnhan/ngx-useful';
 
-import { MediaItem } from '../../services/storage/storage.service';
 import { DashboardListingMediaType } from '../../services/dashboard/dashboard.service';
 
 @Pipe({

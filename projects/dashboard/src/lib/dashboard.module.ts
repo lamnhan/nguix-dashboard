@@ -29,7 +29,14 @@ import { UserState } from './states/user/user.state';
     BrowserAnimationsModule,
     DashboardRoutingModule,
     NguixDashboardHeaderComponentModule,
-    NgxsModule.forRoot([DatabaseState, MediaState, UserState], {developmentMode: false}),
+    NgxsModule.forRoot(
+      [
+        DatabaseState,
+        MediaState,
+        UserState,
+      ],
+      { developmentMode: false }
+    ),
     ToastrModule.forRoot(),
   ],
   providers: [
@@ -44,7 +51,6 @@ import { UserState } from './states/user/user.state';
           'category',
           'tag',
           'media',
-          'user'
         ]
       }),
     },

@@ -15,10 +15,10 @@ import {
   PwaService,
   PersonaService,
   DatabaseService,
+  StorageService,
   AuthService,
   UserService,
 } from '@lamnhan/ngx-useful';
-import { StorageService } from '@lamnhan/nguix-dashboard';
 import { UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
 
 @Component({
@@ -43,9 +43,9 @@ export class AppComponent {
     public pwaService: PwaService,
     public personaService: PersonaService,
     private databaseService: DatabaseService,
+    private storageService: StorageService,
     public authService: AuthService,
     private userService: UserService,
-    private storageService: StorageService,
     // data services
     private userDataService: UserDataService,
     private profileDataService: ProfileDataService,
@@ -111,9 +111,6 @@ export class AppComponent {
       })
       .setMenuRegistry({
         home: { name: 'home', text: 'APP.HOME', routerLink: [''] },
-      })
-      .setActions({
-        admin: {redirect: ['admin']}
       })
       .init({
         default: {},

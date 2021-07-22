@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
-import { MediaItem } from '../../services/storage/storage.service';
+import { MediaItem } from '@lamnhan/ngx-useful';
 
 @Pipe({
   name: 'mediaTypeFilter'

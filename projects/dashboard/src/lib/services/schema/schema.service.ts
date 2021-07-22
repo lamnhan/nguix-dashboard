@@ -16,7 +16,7 @@ export const Schemas = {
   thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'upload' },
   image: { label: 'Image', name: 'image', type: 'upload' },
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 1 },
-  contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'upload' },
+  contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'text' },
   content: { label: 'Content', name: 'content', type: 'html' },
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
   locale: {

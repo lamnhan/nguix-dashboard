@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
-
-import { MediaItem } from '../../services/storage/storage.service';
+import { MediaItem } from '@lamnhan/ngx-useful';
 
 import { GetMedia, DeleteUpload } from '../../states/media/media.state';
 

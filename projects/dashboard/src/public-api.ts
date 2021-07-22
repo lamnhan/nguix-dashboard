@@ -4,13 +4,14 @@
 
 export * from './lib/dashboard.module';
 
-export * from './lib/services/storage/storage.service';
 export * from './lib/services/config/config.service';
 export * from './lib/services/schema/schema.service';
 export * from './lib/services/data/data.service';
 export * from './lib/services/dashboard/dashboard.service';
 
 export * from './lib/parts/front/front.service';
+export * from './lib/parts/media/media.service';
+export * from './lib/parts/user/user.service';
 export * from './lib/parts/category/category.service';
 export * from './lib/parts/tag/tag.service';
 export * from './lib/parts/page/page.service';

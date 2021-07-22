@@ -11,7 +11,7 @@
     <ng-template #account>
       <div class="account" *ngIf="userService.currentUser">
         <div>Account: <strong>{{ userService?.data?.email }}</strong></div>
-        <div><button class="button-primary" (click)="settingService.changePersona('admin')">Go to Dashboard</button></div>
+        <div><button class="button-primary" (click)="gotoDashboard()">Go to Dashboard</button></div>
       </div>
       <hr>
       <button class="button" (click)="signOut()">Logout</button>

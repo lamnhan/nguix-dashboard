@@ -17,6 +17,7 @@ import {
   PwaService,
   PersonaService,
   DatabaseService,
+  StorageService,
   AuthService,
   UserService,
 } from '@lamnhan/ngx-useful';
@@ -59,6 +60,7 @@ import { FooterComponentModule } from './components/footer/footer.module';
     PwaService,
     PersonaService,
     DatabaseService,
+    StorageService,
     AuthService,
     UserService,
     // schemata data services

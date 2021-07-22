@@ -2,8 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { StorageService, MediaItem } from '@lamnhan/ngx-useful';
 
-import { StorageService, MediaItem } from '../../services/storage/storage.service';
 
 import { AddUpload } from '../../states/media/media.state';
 
