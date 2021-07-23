@@ -29,6 +29,8 @@ export class TagPartService {
     ]
   };
 
+  public readonly noI18n = true;
+
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.count,
   ];

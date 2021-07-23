@@ -186,7 +186,7 @@ export class EditPage implements OnInit, OnDestroy {
         ? media.downloadUrl$
         : media.downloadUrl$.pipe(
           map(url => {
-            // TODO: create hybrid url
+            // TODO: create hybrid
             return url;
           }),
         );
@@ -304,10 +304,10 @@ export class EditPage implements OnInit, OnDestroy {
     }
   }
 
-  delete(part: DashboardPart, origin: string) {
+  delete(part: DashboardPart, databaseItem: DatabaseItem) {
     return this.dataService.deletePermanently(
       part,
-      origin,
+      databaseItem,
       result => {
         if (result !== null) {
           this.navService.navigate(['admin', 'new', part.name]);
@@ -339,19 +339,22 @@ export class EditPage implements OnInit, OnDestroy {
     // set id & title
     else {
       const schema = part.formSchema.map(item => this.processSchema(item));
-      const isTranslation = this.isCopy && this.prioritizedData.locale;
       // title
       schema.unshift(Schemas.title);
       // id (new only)
       schema.unshift({ ...Schemas.id, disabled: !this.isNew });
-      // locale
-      schema.push({
-        ...Schemas.locale,
-        disabled: !this.isNew || isTranslation,
-        defaultValue: this.settingService.defaultLocale,
-      });
-      // origin
-      schema.push({ ...Schemas.origin, disabled: !this.isNew || isTranslation });
+      // i18n
+      if (!part.noI18n) {
+        const isTranslation = this.isCopy && this.prioritizedData.locale;
+        // locale
+        schema.push({
+          ...Schemas.locale,
+          disabled: !this.isNew || isTranslation,
+          defaultValue: this.settingService.defaultLocale,
+        });
+        // origin
+        schema.push({ ...Schemas.origin, disabled: !this.isNew || isTranslation });
+      }
       // status
       if (this.isNew || (this.databaseItem?.status === 'draft')) {
         schema.push(Schemas.status);

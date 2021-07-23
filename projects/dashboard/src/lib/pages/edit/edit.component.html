@@ -192,19 +192,19 @@
                 <a
                   class="archive button-dark"                
                   href="javascript:void(0)"
-                  (click)="dataService.archiveItem(part, databaseItem.origin)"
+                  (click)="dataService.archiveItem(part, databaseItem)"
                 >Archive</a>
               </div>
               <div class="right">                
                 <a
                   class="delete button-outline-danger"
                   href="javascript:void(0)"
-                  (click)="delete(part, databaseItem.origin)"
+                  (click)="delete(part, databaseItem)"
                 >Delete</a>
                 <a
                   class="trash button-danger"
                   href="javascript:void(0)"
-                  (click)="dataService.removeItem(part, databaseItem.origin)"
+                  (click)="dataService.removeItem(part, databaseItem)"
                 >Trash</a>
               </div>
             </ng-container>
@@ -214,7 +214,7 @@
                 <a
                   class="unarchive button-success"
                   href="javascript:void(0)"
-                  (click)="dataService.unarchiveItem(part, databaseItem.origin)"
+                  (click)="dataService.unarchiveItem(part, databaseItem)"
                 >Unarchive</a>
               </div>
             </ng-container>
@@ -224,7 +224,7 @@
                 <a
                   class="trash button-success"
                   href="javascript:void(0)"
-                  (click)="dataService.restoreItem(part, databaseItem.origin)"
+                  (click)="dataService.restoreItem(part, databaseItem)"
                 >Restore</a>  
               </div>
             </ng-container>

@@ -4,7 +4,7 @@ import { tap, map, catchError } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { DatabaseData } from '@lamnhan/ngx-useful';
 
-import { DashboardPart } from '../../services/config/config.service';
+import { DashboardPart, DatabaseItem } from '../../services/config/config.service';
 
 export interface DatabaseStateModel {
   [part: string]: any[];
@@ -17,7 +17,7 @@ export class GetPart {
 
 export class ChangeStatus {
   static readonly type = '[Database] Change status by origin';
-  constructor(public part: DashboardPart, public origin: string, public status: string) {}
+  constructor(public part: DashboardPart, public databaseItem: DatabaseItem, public status: string) {}
 }
 
 export class AddItem {
@@ -41,7 +41,7 @@ export class UpdateBatch {
 
 export class DeleteItem {
   static readonly type = '[Database] Delete item';
-  constructor(public part: DashboardPart, public origin: string) {}
+  constructor(public part: DashboardPart, public databaseItem: DatabaseItem) {}
 }
 
 @State<DatabaseStateModel>({
@@ -78,20 +78,21 @@ export class DatabaseState {
   @Action(ChangeStatus)
   changeStatus({ getState, patchState }: StateContext<DatabaseStateModel>, action: ChangeStatus) {
     const state = getState();
-    const {part, origin, status} = action;
+    const {part, databaseItem, status} = action;
+    const originOrId = databaseItem.origin || databaseItem.id;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
     return combineLatest(
       state[part.name]
-        .filter(item => item.origin === origin)
+        .filter(item => item.id === originOrId || item.origin === originOrId)
         .map(item => (part.dataService as DatabaseData<any>).update(item.id, {status}))
     )
     .pipe(
       tap(() =>
         patchState({
           [part.name]: state[part.name].map(item => {
-            if (item.origin === origin) {
+            if (item.id === originOrId || item.origin === originOrId) {
               item.status = status;
             }
             return item;
@@ -191,19 +192,21 @@ export class DatabaseState {
   @Action(DeleteItem)
   deleteItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: DeleteItem) {
     const state = getState();
-    const {part, origin} = action;
+    const {part, databaseItem} = action;
+    const originOrId = databaseItem.origin || databaseItem.id;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
     return combineLatest(
       state[part.name]
-        .filter(item => item.origin === origin)
+        .filter(item => item.id === originOrId || item.origin === originOrId)
         .map(item => (part.dataService as DatabaseData<any>).delete(item.id))
     )
     .pipe(
       tap(() =>
         patchState({
-          [part.name]: state[part.name].filter(item => item.origin !== origin),
+          [part.name]: state[part.name]
+            .filter(item => item.id !== originOrId && item.origin !== originOrId),
         })
       ),
     );

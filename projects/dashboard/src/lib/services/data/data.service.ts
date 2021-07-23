@@ -90,7 +90,7 @@ export class DataService {
 
   archiveItem(
     part: DashboardPart,
-    origin: string,
+    databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
@@ -99,10 +99,10 @@ export class DataService {
       return;
     }
     const batchResultById = {} as Record<string, Record<string, any[]>>;
-    this.store.dispatch(new ChangeStatus(part, origin, 'archive'))
+    this.store.dispatch(new ChangeStatus(part, databaseItem, 'archive'))
     .pipe(
       take(1),
-      switchMap(() => this.runBatchRemove(part, origin, batchResultById)),
+      switchMap(() => this.runBatchRemove(part, databaseItem, batchResultById)),
       map(() => batchResultById),
     )
     .subscribe(
@@ -118,7 +118,7 @@ export class DataService {
 
   unarchiveItem(
     part: DashboardPart,
-    origin: string,
+    databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
@@ -126,14 +126,14 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(new ChangeStatus(part, origin, 'draft'))
+    this.store.dispatch(new ChangeStatus(part, databaseItem, 'draft'))
     .pipe(take(1))
     .subscribe(onSuccess, onError);
   }
 
   removeItem(
     part: DashboardPart,
-    origin: string,
+    databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
@@ -142,10 +142,10 @@ export class DataService {
       return;
     }
     const batchResultById = {} as Record<string, Record<string, any[]>>;
-    this.store.dispatch(new ChangeStatus(part, origin, 'trash'))
+    this.store.dispatch(new ChangeStatus(part, databaseItem, 'trash'))
     .pipe(
       take(1),
-      switchMap(() => this.runBatchRemove(part, origin, batchResultById)),
+      switchMap(() => this.runBatchRemove(part, databaseItem, batchResultById)),
       map(() => batchResultById),
     )
     .subscribe(
@@ -161,7 +161,7 @@ export class DataService {
 
   restoreItem(
     part: DashboardPart,
-    origin: string,
+    databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
@@ -169,14 +169,14 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(new ChangeStatus(part, origin, 'draft'))
+    this.store.dispatch(new ChangeStatus(part, databaseItem, 'draft'))
     .pipe(take(1))
     .subscribe(onSuccess, onError);
   }
 
   deletePermanently(
     part: DashboardPart,
-    origin: string,
+    databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
@@ -185,10 +185,10 @@ export class DataService {
       return;
     }
     const batchResultById = {} as Record<string, Record<string, any[]>>;
-    this.store.dispatch(new DeleteItem(part, origin))
+    this.store.dispatch(new DeleteItem(part, databaseItem))
     .pipe(
       take(1),
-      switchMap(() => this.runBatchRemove(part, origin, batchResultById)),
+      switchMap(() => this.runBatchRemove(part, databaseItem, batchResultById)),
       map(() => batchResultById),
     )
     .subscribe(
@@ -276,9 +276,10 @@ export class DataService {
 
   private runBatchRemove(
     part: DashboardPart,
-    origin: string,
+    databaseItem: DatabaseItem,
     batchResultById: Record<string, Record<string, any[]>>,
   ) {
+    const originOrId = databaseItem.origin || databaseItem.id;
     // filter effects
     const effectedUpdates = this.getEffectedUpdates(part);
     // update item and effects 
@@ -287,7 +288,7 @@ export class DataService {
       switchMap(state => {
         const {database} = state;
         const byIdItems = (database[part.name] as any[] || [])
-          .filter(item => item.origin === origin)
+          .filter(item => item.id === originOrId || item.origin === originOrId)
           .map(item => {
             const {id} = item;
             batchResultById[id] = {} as Record<string, any[]>;

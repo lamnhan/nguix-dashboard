@@ -82,7 +82,7 @@
               <ul>
                 <li *ngFor="let item of items">
 
-                  <div class="locale">{{ data.recordLocales[item.locale].text }}</div>
+                  <div class="locale" *ngIf="item.locale">{{ data.recordLocales[item.locale].text }}</div>
 
                   <div class="major">
                     <span class="label" [class]="item.status" *ngIf="item.status!=='publish'">{{ item.status }}</span>
@@ -92,11 +92,11 @@
                     </ng-container>
                     <!-- archive -->
                     <ng-container *ngIf="item.status==='archive'">
-                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item.origin)">{{ item.title }}</a>
+                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item)">{{ item.title }}</a>
                     </ng-container>
                     <!-- trash -->
                     <ng-container *ngIf="item.status==='trash'">
-                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item.origin)">{{ item.title }}</a>
+                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item)">{{ item.title }}</a>
                     </ng-container>
                   </div>  
   
@@ -111,10 +111,10 @@
                       <a [usefulRouterLink]="['admin', 'copy', part.name, item.id]">Copy</a>
                     </li>
                     <li class="archive">
-                      <a href="javascript:void(0)" (click)="dataService.archiveItem(part, item.origin)">Archive</a>
+                      <a href="javascript:void(0)" (click)="dataService.archiveItem(part, item)">Archive</a>
                     </li>
                     <li class="trash">
-                      <a href="javascript:void(0)" (click)="dataService.removeItem(part, item.origin)">Trash</a>
+                      <a href="javascript:void(0)" (click)="dataService.removeItem(part, item)">Trash</a>
                     </li>
                     <li class="preview">
                       <a href="javascript:void(0)" (click)="dataService.previewItem(part)">Preview</a>
@@ -124,14 +124,14 @@
                     <!-- archive -->
                     <ng-container *ngIf="item.status==='archive'">
                     <li class="unarchive">
-                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item.origin)">Unarchive</a>
+                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item)">Unarchive</a>
                     </li>
                     </ng-container>
 
                     <!-- trash -->
                     <ng-container *ngIf="item.status==='trash'">
                     <li class="restore">
-                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item.origin)">Restore</a>
+                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item)">Restore</a>
                     </li>
                     </ng-container>
 
@@ -152,22 +152,24 @@
                     </li>
                     <li class="date">
                       <span>Date</span>
-                      <em>{{ item.updatedAt === item.createdAt ? 'Published' : 'Modified' }} — {{ item.updatedAt }}</em>
+                      <em>{{ item.updatedAt === item.createdAt ? 'Published' : 'Modified' }} — {{ item.updatedAt | date }}</em>
                     </li>
                   </ul>
 
                 </li>
 
+                <ng-container *ngIf="!part.noI18n">
                 <ng-container *ngFor="let missingTranslation of listingItem.missingTranslations">
-                <li class="missing-item">
-                  <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
-                  <div class="major">
-                    <a
-                      [usefulRouterLink]="['admin', 'copy', part.name, listingItem.origin.id]"
-                      [usefulRouteExtras]="{queryParams: {locale: missingTranslation}}"
-                    >Add the translation</a>
-                  </div>
-                </li>
+                  <li class="missing-item">
+                    <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
+                    <div class="major">
+                      <a
+                        [usefulRouterLink]="['admin', 'copy', part.name, listingItem.origin.id]"
+                        [usefulRouteExtras]="{queryParams: {locale: missingTranslation}}"
+                      >Add the translation</a>
+                    </div>
+                  </li>
+                </ng-container>
                 </ng-container>
 
               </ul>
@@ -197,7 +199,7 @@
               <ul>
                 <li *ngFor="let item of items">
                   <span>Date</span>
-                  <em>{{ item.updatedAt === item.createdAt ? 'Published' : 'Modified' }} — {{ item.updatedAt }}</em>
+                  <em>{{ item.updatedAt === item.createdAt ? 'Published' : 'Modified' }} — {{ item.updatedAt | date }}</em>
                 </li>
               </ul>  
             </td>

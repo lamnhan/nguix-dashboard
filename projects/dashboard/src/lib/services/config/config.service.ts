@@ -23,6 +23,7 @@ export type DashboardPlugin = (dashboardService: DashboardService) => any;
 export interface DashboardPart {
   name: string;
   menuItem: MenuItem;
+  noI18n?: boolean;
   dataTypes?: DataType[];
   dataService?: DatabaseData<any>;
   formSchema?: FormSchemaItem[];

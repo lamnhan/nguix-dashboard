@@ -131,7 +131,7 @@ export class ListPage implements OnInit {
             (!keywords ? '' : keywords);
           return text +
             (EOL + text.toLowerCase()) +
-            (locale !== 'vi-VN' ? '' : EOL + this.helperService.cleanupStr(text));
+            (locale && locale !== 'vi-VN' ? '' : EOL + this.helperService.cleanupStr(text));
         })
         .join(EOL);
       // final

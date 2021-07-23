@@ -29,8 +29,10 @@ export class OptionPartService {
     ]
   };
 
+  public readonly noI18n = true;
+
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.value,
+    { ...Schemas.value, required: true },
   ];
 
   constructor(public readonly dataService: OptionDataService) {}

@@ -3,7 +3,6 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { ProfileDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem, DataType } from '../../services/config/config.service';
-import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,9 +36,9 @@ export class ProfilePartService {
     ]
   };
 
-  public readonly formSchema: FormSchemaItem[] = [
-    Schemas.type,
-  ];
+  public readonly noI18n = true;
+
+  public readonly formSchema: FormSchemaItem[] = [];
 
   public readonly dataTypes: DataType[]  = [
     { text: 'User', value: 'user', icon: `icon-dashboard-${this.name}` },
