@@ -15,7 +15,7 @@ export interface DashboardConfig {
   parts: string[];
   plugins?: DashboardPlugin[];
   allowDirectContent?: boolean;
-  useUploadUrl?: boolean;
+  uploadRetrieval?: 'path' | 'hybrid' | 'url';
 }
 
 export type DashboardPlugin = (dashboardService: DashboardService) => any;
