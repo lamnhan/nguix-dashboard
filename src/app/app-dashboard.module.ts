@@ -17,7 +17,6 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
           'media',
           'user',
           'option',
-          'profile',
           'audio',
           'video',
           'bundle',
