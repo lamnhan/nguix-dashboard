@@ -1,0 +1,19 @@
+{
+  "THEME": {
+    "DARK_MODE": "Dark mode",
+    "TITLE": "Theming",
+    "LIGHT": "Light",
+    "DARK": "Dark"
+  },
+  "PERSONA": {
+    "TITLE": "Persona",
+    "DEFAULT": "Default",
+    "DASHBOARD": "Dashboard"
+  },
+  "LOCALE": {
+    "TITLE": "Language"
+  },
+  "APP": {
+    "HOME": "Home"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "THEME": {
+    "DARK_MODE": "Chế độ màu tối",
+    "TITLE": "Giao diện",
+    "LIGHT": "Sáng",
+    "DARK": "Tối"
+  },
+  "PERSONA": {
+    "TITLE": "Chức năng",
+    "DEFAULT": "Mặc định",
+    "DASHBOARD": "Quản trị"
+  },
+  "LOCALE": {
+    "TITLE": "Ngôn ngữ"
+  },
+  "APP": {
+    "HOME": "Trang nhà",
+    "PRIVACY": "Bảo mật"
+  }
+}
