@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
 
   onSignedIn() {
     const url = this.auth.redirectUrl ? this.auth.redirectUrl : '';
-    this.auth.setRedirectUrl(null); // reset auth redirect
+    this.auth.setRedirectUrl(); // reset auth redirect
     this.nav.navigate([url]);
   }
 

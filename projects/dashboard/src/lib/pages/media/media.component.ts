@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
-import { MediaItem } from '@lamnhan/ngx-useful';
+import { StorageItem } from '@lamnhan/ngx-useful';
 
 import { GetMedia, DeleteUpload } from '../../states/media/media.state';
 
@@ -39,7 +39,7 @@ export class MediaPage implements OnInit {
     total: 0,
   };
 
-  detailItem?: MediaItem;
+  detailItem?: StorageItem;
 
   constructor(
     private store: Store,
@@ -48,7 +48,7 @@ export class MediaPage implements OnInit {
 
   ngOnInit(): void {}
 
-  delete(item: MediaItem) {
+  delete(item: StorageItem) {
     const yes = confirm('Are you sure you want to delete this file?');
     if (yes) {
       this.detailItem = undefined;

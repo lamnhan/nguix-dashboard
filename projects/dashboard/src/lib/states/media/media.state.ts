@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { tap, map, catchError, take } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
-import { StorageService, MediaItem } from '@lamnhan/ngx-useful';
+import { StorageService, StorageItem } from '@lamnhan/ngx-useful';
 
 export interface MediaStateModel {
   remoteLoaded: boolean;
-  files: MediaItem[];
+  files: StorageItem[];
 }
 
 export class GetMedia {
@@ -16,12 +16,12 @@ export class GetMedia {
 
 export class AddUpload {
   static readonly type = '[Media] Add new upload';
-  constructor(public item: MediaItem) {}
+  constructor(public item: StorageItem) {}
 }
 
 export class DeleteUpload {
   static readonly type = '[Media] Delete an upload';
-  constructor(public item: MediaItem) {}
+  constructor(public item: StorageItem) {}
 }
 
 @State<MediaStateModel>({
@@ -56,11 +56,11 @@ export class MediaState {
             prefixes.forEach(prefix => listDeep(prefix.fullPath));
             // return items
             return items.map(item =>
-              this.storageService.buildMediaItem(item.name, item.fullPath)
+              this.storageService.buildStorageItem(item.fullPath)
             );
           }),
           catchError(() => {
-            return of([] as MediaItem[]);
+            return of([] as StorageItem[]);
           }),
           map(files => {
             // ignore if error or listing result has no items

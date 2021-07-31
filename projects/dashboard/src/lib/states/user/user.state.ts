@@ -37,7 +37,7 @@ export class UserState {
       return of(state.profiles);
     } else {
       return this.profileDataService.getCollection(
-        ref => ref.where('type', '==', 'user'),
+        ref => ref.where('type', '==', 'default'),
         false
       )
       .pipe(

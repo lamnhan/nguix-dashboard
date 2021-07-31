@@ -12,7 +12,8 @@
       "ngx-toastr": "toastr",
       "ngx-tinymce": "tinymce",
       "tui-image-editor": "tuiImageEditor",
-      "ngx-filesize": "ng.filesize"
+      "ngx-filesize": "ng.filesize",
+      "croppie": "croppie"
     }
   },
   "allowedNonPeerDependencies": [
@@ -20,6 +21,7 @@
     "ngx-toastr",
     "ngx-tinymce",
     "tui-image-editor",
-    "ngx-filesize"
+    "ngx-filesize",
+    "croppie"
   ]
 }

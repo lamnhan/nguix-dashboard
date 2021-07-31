@@ -17,16 +17,22 @@ export const Schemas = {
     type: 'text',
     required: true,
     validators: [Validators.required],
-  },
-  description: { label: 'Description', name: 'description', type: 'textarea' },
-  thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'upload' },
-  image: { label: 'Image', name: 'image', type: 'upload' },
-  src: { label: 'Src', name: 'src', type: 'upload' },
-  duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 1 },
-  contentSrc: { label: 'Content Source', name: 'contentSrc', type: 'text' },
-  content: { label: 'Content', name: 'content', type: 'html' },
-  value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
-  count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
+  },  
+  type: {
+    label: 'Type',
+    name: 'type',
+    type: 'type',
+    required: true,
+    validators: [Validators.required],
+  },  
+  status: {
+    label: 'Status',
+    name: 'status',
+    type: 'status',
+    defaultValue: 'draft',
+    required: true,
+    validators: [Validators.required],
+  },  
   locale: {
     label: 'Locale',
     name: 'locale',
@@ -41,22 +47,15 @@ export const Schemas = {
     required: true,
     validators: [Validators.required],
   },
-  type: {
-    label: 'Type',
-    name: 'type',
-    type: 'type',
-    required: true,
-    validators: [Validators.required],
-  },
-  status: {
-    label: 'Status',
-    name: 'status',
-    type: 'status',
-    defaultValue: 'draft',
-    required: true,
-    validators: [Validators.required],
-  },
-  keywords: { label: 'Keywords', name: 'keywords', type: 'text' },
+  description: { label: 'Description', name: 'description', type: 'textarea' },
+  thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'upload' },
+  image: { label: 'Image', name: 'image', type: 'upload' },
+  src: { label: 'Src', name: 'src', type: 'upload' },
+  duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 0 },
+  content: { label: 'Content', name: 'content', type: 'content' }, // TODO: ...
+  value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
+  count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
+  keyword: { label: 'Keyword', name: 'keyword', type: 'text' },
   toc: {
     label: 'TOC',
     name: 'toc',
@@ -105,7 +104,7 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'profile',
-      keys: ['id', 'title', 'thumbnail'],
+      fields: ['id', 'title', 'type', 'createdAt', 'thumbnail', 'description', 'thumbnail', 'badges'],
     } as LinkingSchemaMeta,
   },
   parents: {
@@ -114,7 +113,7 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'bundle',
-      keys: ['id', 'title'],
+      fields: ['id', 'title', 'type', 'createdAt', 'thumbnail', 'description', 'count'],
     } as LinkingSchemaMeta,
   },
   categories: {
@@ -123,6 +122,7 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'category',
+      fields: ['id', 'title', 'type', 'thumbnail', 'description', 'count'],
     } as LinkingSchemaMeta,
   },
   tags: {
@@ -131,6 +131,7 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'tag',
+      fields: ['id', 'title', 'type', 'count'],
     } as LinkingSchemaMeta,
   },
 };

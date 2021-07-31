@@ -11,7 +11,7 @@ import { DashboardPart } from '../../services/config/config.service';
 export class LinkEditorComponent implements OnInit, OnChanges {
   @Input() part!: DashboardPart;
   @Input() items$!: Observable<any[]>;
-  @Input() keys?: string[];
+  @Input() fields?: string[];
   @Input() currentData?: Record<string, any>;
   @Input() contentType?: string;
   @Input() contentLocale?: string;
@@ -40,7 +40,7 @@ export class LinkEditorComponent implements OnInit, OnChanges {
     const id = e.target.value;
     const checked = e.target.checked;
     if (checked) {
-      this.selectedData[id] = (['id', 'title'].concat(this.keys || []))
+      this.selectedData[id] = (['id', 'title', 'type'].concat(this.fields || []))
         .map(key => ({key, value: item[key]}))
         .reduce(
           (result, item) => {

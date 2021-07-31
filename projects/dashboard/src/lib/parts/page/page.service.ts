@@ -14,32 +14,30 @@ export class PagePartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Pages',
-    routerLink: ['admin', 'list', this.name],
+    routerLink: ['app-admin', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`admin/new/${this.name}`],
+    activeAlso: [`app-admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Pages',
-        routerLink: ['admin', 'list', this.name],
+        routerLink: ['app-admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', this.name],
+        routerLink: ['app-admin', 'new', this.name],
       }
     ]
   };
   
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.type,
     Schemas.description,
     Schemas.thumbnail,
     Schemas.image,
-    Schemas.contentSrc,
     Schemas.content,
   ];
 
   public readonly dataTypes: DataType[]  = [
-    { text: 'Page', value: 'page', icon: `icon-dashboard-${this.name}` },
+    { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
   
   constructor(public readonly dataService: PageDataService) {}

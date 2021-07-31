@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { CategoryDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, UpdateEffect } from '../../services/config/config.service';
+import { FormSchemaItem, UpdateEffect, DataType } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -14,27 +14,27 @@ export class CategoryPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Categories',
-    routerLink: ['admin', 'list', this.name],
+    routerLink: ['app-admin', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`admin/new/${this.name}`],
+    activeAlso: [`app-admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Categories',
-        routerLink: ['admin', 'list', this.name],
+        routerLink: ['app-admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', this.name],
+        routerLink: ['app-admin', 'new', this.name],
       }
     ]
   };
 
   public readonly formSchema: FormSchemaItem[] = [
+    { label: 'Only', name: 'only', type: 'only' },
     Schemas.description,
     Schemas.thumbnail,
     Schemas.image,
     Schemas.count,
-    { label: 'Only', name: 'only', type: 'only' },
   ];
 
   public readonly updateEffects: UpdateEffect[] = [
@@ -44,6 +44,10 @@ export class CategoryPartService {
       key: 'categories',
       props: ['id', 'title'],
     },
+  ];
+
+  public readonly dataTypes: DataType[]  = [
+    { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 
   constructor(public readonly dataService: CategoryDataService) {}

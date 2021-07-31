@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { MediaItem } from '@lamnhan/ngx-useful';
+import { StorageItem } from '@lamnhan/ngx-useful';
 
 @Pipe({
   name: 'mediaListingCounter'
 })
 export class MediaListingCounterPipe implements PipeTransform {
-  transform(items: MediaItem[], counting: {total: number}): MediaItem[] {
+  transform(items: StorageItem[], counting: {total: number}): StorageItem[] {
     counting.total = items.length;
     return items;
   }

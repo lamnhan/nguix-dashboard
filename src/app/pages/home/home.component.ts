@@ -18,7 +18,7 @@ export class HomePage implements OnInit {
 
   gotoDashboard() {
     this.settingService.changePersona('dashboard');
-    this.navService.navigate(['admin']);
+    this.navService.navigate(['app-admin']);
   }
 
   signOut() {

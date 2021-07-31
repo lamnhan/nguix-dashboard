@@ -10,12 +10,12 @@ export class UserPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Users',
-    routerLink: ['admin', this.name],
+    routerLink: ['app-admin', this.name],
     icon: `icon-dashboard-part-${this.name}`,
     subItems: [
       {
         text: 'All Users',
-        routerLink: ['admin', this.name]
+        routerLink: ['app-admin', this.name]
       },
     ],
   };

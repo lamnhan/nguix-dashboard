@@ -9,7 +9,7 @@
         <h1>{{ isNew ? 'Add New ' : 'Update' }} {{ part.name }}</h1>
         <a
           class="button-outline-primary"
-          [usefulRouterLink]="['admin', 'list', part.name]"
+          [usefulRouterLink]="['app-admin', 'list', part.name]"
         >All {{ part.menuItem.text || 'Items' }}</a>
       </div>
   
@@ -141,7 +141,7 @@
             <nguix-dashboard-link-editor
               [part]="schema.meta.part"
               [items$]="schema.meta.items$"
-              [keys]="schema.meta.keys"
+              [fields]="schema.meta.fields"
               [currentData]="schema.meta.currentData"
               [contentLocale]="activeLocale"
               [contentType]="schema.meta.activeType"

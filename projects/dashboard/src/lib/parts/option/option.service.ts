@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { OptionDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, UpdateEffect } from '../../services/config/config.service';
+import { FormSchemaItem, DataType } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -14,17 +14,17 @@ export class OptionPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Options',
-    routerLink: ['admin', 'list', this.name],
+    routerLink: ['app-admin', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`admin/new/${this.name}`],
+    activeAlso: [`app-admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Options',
-        routerLink: ['admin', 'list', this.name],
+        routerLink: ['app-admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', this.name],
+        routerLink: ['app-admin', 'new', this.name],
       }
     ]
   };
@@ -33,6 +33,10 @@ export class OptionPartService {
 
   public readonly formSchema: FormSchemaItem[] = [
     { ...Schemas.value, required: true },
+  ];
+
+  public readonly dataTypes: DataType[]  = [
+    { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 
   constructor(public readonly dataService: OptionDataService) {}

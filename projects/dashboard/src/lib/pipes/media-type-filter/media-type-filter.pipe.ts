@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { MediaItem } from '@lamnhan/ngx-useful';
+import { StorageItem } from '@lamnhan/ngx-useful';
 
 @Pipe({
   name: 'mediaTypeFilter'
 })
 export class MediaTypeFilterPipe implements PipeTransform {
-  transform(items: MediaItem[], type?: string): MediaItem[] {
+  transform(items: StorageItem[], type?: string): StorageItem[] {
     return !type || type === 'all'
       ? items
       : items.filter(item => !item.type || item.type === type);

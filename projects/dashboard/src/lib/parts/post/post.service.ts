@@ -14,31 +14,30 @@ export class PostPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Posts',
-    routerLink: ['admin', 'list', this.name],
+    routerLink: ['app-admin', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`admin/new/${this.name}`],
+    activeAlso: [`app-admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Posts',
-        routerLink: ['admin', 'list', this.name],
+        routerLink: ['app-admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', this.name],
+        routerLink: ['app-admin', 'new', this.name],
       },
       {
         text: 'Categories',
-        routerLink: ['admin', 'list', 'category'],
+        routerLink: ['app-admin', 'list', 'category'],
       },
       {
         text: 'Tags',
-        routerLink: ['admin', 'list', 'tag'],
+        routerLink: ['app-admin', 'list', 'tag'],
       }
     ]
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.type,
     Schemas.description,
     { label: 'TLDR', name: 'tldr', type: 'textarea' },
     Schemas.toc,
@@ -46,7 +45,6 @@ export class PostPartService {
     Schemas.image,
     Schemas.authors,
     Schemas.duration,
-    Schemas.contentSrc,
     Schemas.content,
     Schemas.slides,
     { label: 'Audio', name: 'audio', type: 'upload' },
@@ -54,11 +52,11 @@ export class PostPartService {
     { ...Schemas.parents, meta: { ...Schemas.parents.meta, contentType: 'post' } },
     Schemas.categories,
     Schemas.tags,
-    Schemas.keywords,
+    Schemas.keyword,
   ];
 
   public readonly dataTypes: DataType[]  = [
-    { text: 'Post', value: 'post', icon: `icon-dashboard-${this.name}` },
+    { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 
   constructor(public readonly dataService: PostDataService) {}

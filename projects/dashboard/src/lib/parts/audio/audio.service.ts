@@ -14,38 +14,36 @@ export class AudioPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Audios',
-    routerLink: ['admin', 'list', this.name],
+    routerLink: ['app-admin', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`admin/new/${this.name}`],
+    activeAlso: [`app-admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Audios',
-        routerLink: ['admin', 'list', this.name],
+        routerLink: ['app-admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', this.name],
+        routerLink: ['app-admin', 'new', this.name],
       },
       {
         text: 'Categories',
-        routerLink: ['admin', 'list', 'category'],
+        routerLink: ['app-admin', 'list', 'category'],
       },
       {
         text: 'Tags',
-        routerLink: ['admin', 'list', 'tag'],
+        routerLink: ['app-admin', 'list', 'tag'],
       }
     ]
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.type,
     { ...Schemas.src, required: true },
     Schemas.duration,
     Schemas.description,
     Schemas.thumbnail,
     Schemas.image,
     Schemas.authors,
-    Schemas.contentSrc,
     Schemas.content,
     { label: 'Birthday', name: 'birthday', type: 'text' },
     { label: 'Sheet', name: 'sheet', type: 'upload' },
@@ -53,11 +51,11 @@ export class AudioPartService {
     { ...Schemas.parents, meta: { ...Schemas.parents.meta, contentType: 'audio' } },
     Schemas.categories,
     Schemas.tags,
-    Schemas.keywords,
+    Schemas.keyword,
   ];
 
   public readonly dataTypes: DataType[]  = [
-    { text: 'Audio', value: 'audio', icon: `icon-dashboard-${this.name}` },
+    { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 
   constructor(public readonly dataService: AudioDataService) {}

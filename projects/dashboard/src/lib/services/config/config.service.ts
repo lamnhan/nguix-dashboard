@@ -101,7 +101,7 @@ export interface LinkingSchemaMeta {
   // auto-generated from source
   part?: DashboardPart;
   items$?: Observable<DatabaseItem[]>;
-  keys?: string[];
+  fields?: string[];
   currentData?: Record<string, any>;
   contentType?: string;
 }

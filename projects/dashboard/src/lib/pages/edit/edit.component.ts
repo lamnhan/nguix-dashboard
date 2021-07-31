@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { Subscription, combineLatest, of } from 'rxjs';
 import { tap, map, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
-import { MediaItem } from '@lamnhan/ngx-useful';
+import { StorageItem } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem, FormSchemaItem, CheckboxAlikeChild, ConfigService } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
@@ -176,7 +176,7 @@ export class EditPage implements OnInit, OnDestroy {
     }
   }
 
-  uploadChanges(media: MediaItem) {
+  uploadChanges(media: StorageItem) {
     if (this.uploadCallerData) {
       const {schema, formGroup} = this.uploadCallerData;
       const { uploadRetrieval = 'url' } = this.configService.getConfig();
@@ -274,7 +274,7 @@ export class EditPage implements OnInit, OnDestroy {
           data,
           () => {
             this.lockdown = false;
-            this.navService.navigate(['admin', 'edit', part.name, data.id as string]);
+            this.navService.navigate(['app-admin', 'edit', part.name, data.id as string]);
           },
           error => {
             this.lockdown = false;
@@ -310,7 +310,7 @@ export class EditPage implements OnInit, OnDestroy {
       databaseItem,
       result => {
         if (result !== null) {
-          this.navService.navigate(['admin', 'new', part.name]);
+          this.navService.navigate(['app-admin', 'new', part.name]);
         }
       }
     );
@@ -339,10 +339,19 @@ export class EditPage implements OnInit, OnDestroy {
     // set id & title
     else {
       const schema = part.formSchema.map(item => this.processSchema(item));
+      // type
+      schema.unshift({
+        ...Schemas.type,
+        disabled: !this.isNew || (this.part?.dataTypes && this.part?.dataTypes.length <= 1)
+      });
       // title
-      schema.unshift(Schemas.title);
+      schema.unshift(Schemas.title);      
       // id (new only)
       schema.unshift({ ...Schemas.id, disabled: !this.isNew });
+      // status
+      if (this.isNew || (this.databaseItem?.status === 'draft')) {
+        schema.push(Schemas.status);
+      }
       // i18n
       if (!part.noI18n) {
         const isTranslation = this.isCopy && this.prioritizedData.locale;
@@ -354,10 +363,6 @@ export class EditPage implements OnInit, OnDestroy {
         });
         // origin
         schema.push({ ...Schemas.origin, disabled: !this.isNew || isTranslation });
-      }
-      // status
-      if (this.isNew || (this.databaseItem?.status === 'draft')) {
-        schema.push(Schemas.status);
       }
       // result
       return schema;
@@ -483,11 +488,7 @@ export class EditPage implements OnInit, OnDestroy {
           [] as any[],
         ) as CheckboxAlikeChild[];
     }
-    // 2. type
-    if (type === 'type' && this.part?.dataTypes && this.part?.dataTypes.length <= 1) {
-      item.disabled = true;
-    }
-    // 3. content
+    // 2. content
     const { allowDirectContent } = this.configService.getConfig();
     if (name === 'content' && !allowDirectContent) {
       item.hidden = true;

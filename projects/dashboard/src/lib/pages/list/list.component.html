@@ -10,7 +10,7 @@
         <h1>All {{ part.menuItem.text || 'Items' }}</h1>
         <a
           class="button-outline-primary"
-          [usefulRouterLink]="['admin', 'new', part.name]"
+          [usefulRouterLink]="['app-admin', 'new', part.name]"
         >Add New</a>
       </div>
 
@@ -88,7 +88,7 @@
                     <span class="label" [class]="item.status" *ngIf="item.status!=='publish'">{{ item.status }}</span>
                     <!-- draft / publish -->
                     <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
-                      <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">{{ item.title }}</a>
+                      <a [usefulRouterLink]="['app-admin', 'edit', part.name, item.id]">{{ item.title }}</a>
                     </ng-container>
                     <!-- archive -->
                     <ng-container *ngIf="item.status==='archive'">
@@ -105,10 +105,10 @@
                     <!-- draft / publish -->
                     <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
                     <li class="edit">
-                      <a [usefulRouterLink]="['admin', 'edit', part.name, item.id]">Edit</a>
+                      <a [usefulRouterLink]="['app-admin', 'edit', part.name, item.id]">Edit</a>
                     </li>
                     <li class="copy">
-                      <a [usefulRouterLink]="['admin', 'copy', part.name, item.id]">Copy</a>
+                      <a [usefulRouterLink]="['app-admin', 'copy', part.name, item.id]">Copy</a>
                     </li>
                     <li class="archive">
                       <a href="javascript:void(0)" (click)="dataService.archiveItem(part, item)">Archive</a>
@@ -164,7 +164,7 @@
                     <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
                     <div class="major">
                       <a
-                        [usefulRouterLink]="['admin', 'copy', part.name, listingItem.origin.id]"
+                        [usefulRouterLink]="['app-admin', 'copy', part.name, listingItem.origin.id]"
                         [usefulRouteExtras]="{queryParams: {locale: missingTranslation}}"
                       >Add the translation</a>
                     </div>

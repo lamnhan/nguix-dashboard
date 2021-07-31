@@ -59,9 +59,9 @@ $recolors: (
         background-image: url('#{$srcOrName}');
       } @else {
         @if $srcOrName != null {
-          background-image: url('https://unpkg.com/@unistylus/#{$pack}-icons@latest/light/#{$srcOrName}.svg');
+          background-image: url('https://unpkg.com/@unistylus/#{$pack}-icons@latest/#{$srcOrName}.svg');
         } @else {
-          background-image: url('https://unpkg.com/@unistylus/#{$pack}-icons@latest/light/#{$name}.svg');
+          background-image: url('https://unpkg.com/@unistylus/#{$pack}-icons@latest/#{$name}.svg');
         }
       }
     }

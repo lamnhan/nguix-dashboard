@@ -14,39 +14,36 @@ export class BundlePartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Bundles',
-    routerLink: ['admin', 'list', this.name],
+    routerLink: ['app-admin', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`admin/new/${this.name}`],
+    activeAlso: [`app-admin/new/${this.name}`],
     subItems: [
       {
         text: 'All Bundles',
-        routerLink: ['admin', 'list', this.name],
+        routerLink: ['app-admin', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['admin', 'new', this.name],
+        routerLink: ['app-admin', 'new', this.name],
       },
     ]
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.type,
+    { label: 'Only', name: 'only', type: 'only' },
     Schemas.description,
     Schemas.thumbnail,
     Schemas.image,
     Schemas.authors,
-    Schemas.contentSrc,
     Schemas.content,
     Schemas.count,
     Schemas.categories,
     Schemas.tags,
-    Schemas.keywords,
+    Schemas.keyword,
   ];
 
   public readonly dataTypes: DataType[]  = [
-    { text: 'Post', value: 'post', icon: `icon-dashboard-part-post` },
-    { text: 'Audio', value: 'audio', icon: `icon-dashboard-part-audio` },
-    { text: 'Video', value: 'video', icon: `icon-dashboard-part-video` },
+    { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 
   constructor(public readonly dataService: BundleDataService) {}

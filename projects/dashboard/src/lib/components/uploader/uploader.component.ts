@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { StorageService, MediaItem } from '@lamnhan/ngx-useful';
+import { StorageService, StorageItem } from '@lamnhan/ngx-useful';
 
 
 import { AddUpload } from '../../states/media/media.state';
@@ -22,7 +22,7 @@ export class UploaderComponent implements OnInit {
   @Input() show = false;
   @Input() closeOnCompleted = false;
   @Output() close = new EventEmitter<void>();
-  @Output() done = new EventEmitter<MediaItem>();
+  @Output() done = new EventEmitter<StorageItem>();
 
   tab: 'upload' | 'image' = 'upload';
 
@@ -31,7 +31,7 @@ export class UploaderComponent implements OnInit {
   };
 
   uploading?: Uploading;
-  result?: MediaItem;
+  result?: StorageItem;
 
   constructor(
     private store: Store,
@@ -53,7 +53,7 @@ export class UploaderComponent implements OnInit {
     // completed
     task.snapshotChanges().pipe(
       finalize(() => {
-        this.result = this.storageService.buildMediaItem(name, fullPath);
+        this.result = this.storageService.buildStorageItem(fullPath);
         // emit event
         this.done.emit(this.result);
         // update state
