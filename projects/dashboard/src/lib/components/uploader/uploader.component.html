@@ -2,24 +2,25 @@
 
   <div class="head">
     <div class="left">
-      <ul class="tabs">
+      <ul class="tabs">        
+        <li *ngIf="withLibrary">
+          <a href="javascript:void(0)" [class.active]="tab==='library'" (click)="tab='library'">
+            <i class="icon-medium-tint icon-dashboard-media-library"></i>
+            <span>Library</span>
+          </a>
+        </li>
         <li>
           <a href="javascript:void(0)" [class.active]="tab==='upload'" (click)="tab='upload'">
-            <!-- <i class="icon-dark icon-dashboard-home"></i> -->
+            <i class="icon-medium-tint icon-dashboard-media-upload"></i>
             <span>Upload</span>
           </a>
         </li>
         <li>
-          <a href="javascript:void(0)" [class.active]="tab==='image'" (click)="tab='image'">
-            <!-- <i class="icon-dark icon-dashboard-home"></i> -->
-            <span>Image</span>
+          <a href="javascript:void(0)" [class.active]="tab==='editor'" (click)="tab='editor'">
+            <i class="icon-medium-tint icon-dashboard-media-editor"></i>
+            <span>Editor</span>
           </a>
         </li>
-        <!-- <li>
-          <a href="javascript:void(0)" [class.active]="tab==='library'" (click)="tab='library'">
-            <span>Library</span>
-          </a>
-        </li> -->
       </ul>
     </div>
     <div class="right">
@@ -29,36 +30,59 @@
 
   <div class="body">
 
-    <div class="upload" *ngIf="tab==='upload'">
-      <ng-container *ngIf="uploading; else uploadInput">
-        <div class="name">Name: {{ uploading.name }}</div>
-        <div class="size">Size: {{ uploading.size | filesize }}</div>
-        <ng-container *ngIf="result; else statusShow">
-          <div class="path">Path: <a href="#">{{ result.fullPath }}</a></div>
-          <div class="url">URL: <a [href]="result.downloadUrl$ | async" target="_blank">Open link</a></div>
-        </ng-container>
-        <ng-template #statusShow>
-          <div class="status">
-            <progress [value]="uploading.uploadPercent$ | async" max="100"></progress>
-          </div>
-        </ng-template>
-      </ng-container>
-      <ng-template #uploadInput>
-        <input type="file" (change)="uploadFile($event)">
-      </ng-template>
+    <div class="library" *ngIf="withLibrary && tab==='library'">
+      Media library!
     </div>
 
-    <div class="image" *ngIf="tab==='image'">
+    <div class="upload" *ngIf="tab==='upload'">
+
+      <ng-container *ngIf="selectedFile; else uploadInput">
+
+        <div class="cropper" *ngIf="fileDataUrl">
+          <image-cropper
+            [url]="fileDataUrl"
+            [options]="cropperOptions"
+            [resultOptions]="cropperResultOptions"
+            (change)="cropResult=$event"
+          ></image-cropper>
+          <div style="text-align: center;">
+            <button class="button-primary" (click)="doneCropping()">Done & Upload</button>
+          </div>
+        </div>
+
+        <div class="uploading" *ngIf="uploading">
+          <div class="name">File name: {{ uploading.name }}</div>
+          <div class="size">File size: {{ uploading.size | filesize }}</div>
+          <ng-container *ngIf="uploadResult; else statusShow">
+            <div class="upload-size" *ngIf="uploadResult.metadata$ | async; let metadata;">
+              Upload size: {{ metadata.size | filesize }}
+            </div>
+            <div class="path">Upload path: <a href="#">{{ uploadResult.fullPath }}</a></div>
+            <div class="url">Download URL: <a [href]="uploadResult.downloadUrl$ | async" target="_blank">Open link</a></div>
+          </ng-container>
+          <ng-template #statusShow>
+            <div class="status">
+              <progress [value]="uploading.uploadPercent$ | async" max="100"></progress>
+            </div>
+          </ng-template>
+        </div>
+
+      </ng-container>
+
+      <ng-template #uploadInput>
+        <input type="file" (change)="selectFile($event)">
+      </ng-template>
+  
+    </div>
+
+    <div class="editor" *ngIf="tab==='editor'">
       <div id="tui-image-editor"></div>
     </div>
-
-    <!-- <div class="library" *ngIf="tab==='library'"></div> -->
 
   </div>
 
   <div class="foot">
     <div class="left">
-      <!-- <a class="button-outline-dark" href="javascript:void(0)" (click)="closeAndReset()">Cancel</a> -->
       <label class="option">
         <input type="checkbox" [(ngModel)]="closeOnCompleted">
         <span>Close on completed</span>

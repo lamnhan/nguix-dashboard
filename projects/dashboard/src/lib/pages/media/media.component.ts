@@ -39,7 +39,7 @@ export class MediaPage implements OnInit {
     total: 0,
   };
 
-  detailItem?: StorageItem;
+  detailItem?: { media: StorageItem, downloadUrl: string, metadata: any };
 
   constructor(
     private store: Store,
@@ -47,6 +47,10 @@ export class MediaPage implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  setDetailItem(media: StorageItem, downloadUrl: string, metadata: any) {
+    this.detailItem = { media, downloadUrl, metadata };
+  }
 
   delete(item: StorageItem) {
     const yes = confirm('Are you sure you want to delete this file?');

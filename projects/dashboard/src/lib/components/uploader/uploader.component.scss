@@ -57,6 +57,12 @@
               color: $light-contrast;
               background: $light-shade;
             }
+
+            i {
+              width: 1.5rem;
+              height: 1.5rem;
+              margin-right: .5rem;
+            }
           }
         }
       }
@@ -69,7 +75,9 @@
   
   .body {
     padding: 1rem;
-    min-height: 150px;
+    overflow-y: scroll;
+    min-height: 300px;
+    max-height: 439px;
   }
   
   .foot {

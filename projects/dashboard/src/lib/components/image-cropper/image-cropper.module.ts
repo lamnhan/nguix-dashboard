@@ -13,4 +13,4 @@ import { ImageCropperComponent } from './image-cropper.component';
   ],
   exports: [ImageCropperComponent]
 })
-export class NguixImageCropperComponentModule {}
+export class ImageCropperComponentModule {}

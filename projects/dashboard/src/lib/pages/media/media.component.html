@@ -69,22 +69,22 @@
                 | mediaListingCounter : counting
               "
             >
+            <ng-container *ngIf="listingItem.metadata$ | async as metadata">
+            <ng-container *ngIf="listingItem.downloadUrl$ | async; let downloadUrl">
               <td class="name">
-                <a href="#" (click)="detailItem=listingItem;false">
+                <a
+                  href="#"
+                  (click)="setDetailItem(listingItem, downloadUrl, metadata); false;"
+                >
                   <i class="icon-medium" [class]="'icon-dashboard-media-' + listingItem.type"></i>
                   <strong>{{ listingItem.name }}</strong>
                 </a>
               </td>
-              <ng-container *ngIf="listingItem.metadata$ | async as metadata; else noMetadata">
-                <td class="size">{{ metadata.size | filesize }}</td>
-                <td class="type">{{ metadata.contentType }}</td>
-                <td class="date">{{ metadata.updated | date }}</td>
-              </ng-container>
-              <ng-template #noMetadata>
-                <td class="size">-</td>
-                <td class="type">-</td>
-                <td class="date">-</td>
-              </ng-template>
+              <td class="size">{{ metadata.size | filesize }}</td>
+              <td class="type">{{ metadata.contentType }}</td>
+              <td class="date">{{ metadata.updated | date }}</td>
+            </ng-container>
+            </ng-container>
             </tr>
           </tbody>
 
@@ -102,38 +102,34 @@
         </table>
 
         <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
-          <ng-container *ngIf="detailItem.metadata$ | async; let detailMetadata">
-          <ng-container *ngIf="detailItem.downloadUrl$ | async; let downloadUrl">
-            <div class="top">
-              <div class="title">
-                <i class="icon-medium" [class]="'icon-dashboard-type-' + detailItem.type"></i>
-                <strong>{{ detailItem.name }}</strong>
-              </div>
-              <a href="#" (click)="detailItem=undefined;false">X</a>
+          <div class="top">
+            <div class="title">
+              <i class="icon-medium" [class]="'icon-dashboard-type-' + detailItem.media.type"></i>
+              <strong>{{ detailItem.media.name }}</strong>
             </div>
-            <div class="content">
-              <div class="view">
-                <img *ngIf="detailItem.type==='image'" [src]="downloadUrl" [alt]="detailItem.name">
-                <audio *ngIf="detailItem.type==='audio'" controls [src]="downloadUrl"></audio>
-                <video *ngIf="detailItem.type==='video'" controls [src]="downloadUrl"></video>
-              </div>
-              <div class="name">
-                <span>Name</span>
-                <strong>
-                  <a [href]="downloadUrl" target="_blank">{{ detailItem.name }}</a>
-                </strong>
-              </div>
-              <div class="path"><span>Path</span><strong>{{ detailItem.fullPath }}</strong></div>
-              <div class="size"><span>Size</span><strong>{{ detailMetadata.size | number }} bytes</strong></div>
-              <div class="type"><span>Type</span><strong>{{ detailMetadata.contentType }}</strong></div>
-              <div class="created"><span>Created</span><strong>{{ detailMetadata.timeCreated | date }}</strong></div>
-              <div class="updated"><span>Updated</span><strong>{{ detailMetadata.updated | date }}</strong></div>
-              <div class="actions">
-                <button class="button-danger-sm" (click)="delete(detailItem)">Delete</button>
-              </div>
+            <a href="#" (click)="detailItem=undefined;false;">X</a>
+          </div>
+          <div class="content">
+            <div class="view">
+              <img *ngIf="detailItem.media.type==='image'" [src]="detailItem.downloadUrl" [alt]="detailItem.media.name">
+              <audio *ngIf="detailItem.media.type==='audio'" controls [src]="detailItem.downloadUrl"></audio>
+              <video *ngIf="detailItem.media.type==='video'" controls [src]="detailItem.downloadUrl"></video>
             </div>
-          </ng-container>
-          </ng-container>
+            <div class="name">
+              <span>Name</span>
+              <strong>
+                <a [href]="detailItem.downloadUrl" target="_blank">{{ detailItem.media.name }}</a>
+              </strong>
+            </div>
+            <div class="path"><span>Path</span><strong>{{ detailItem.media.fullPath }}</strong></div>
+            <div class="size"><span>Size</span><strong>{{ detailItem.metadata.size | number }} bytes</strong></div>
+            <div class="type"><span>Type</span><strong>{{ detailItem.metadata.contentType }}</strong></div>
+            <div class="created"><span>Created</span><strong>{{ detailItem.metadata.timeCreated | date }}</strong></div>
+            <div class="updated"><span>Updated</span><strong>{{ detailItem.metadata.updated | date }}</strong></div>
+            <div class="actions">
+              <button class="button-danger-sm" (click)="delete(detailItem.media)">Delete</button>
+            </div>
+          </div>
         </div>
 
       </div>

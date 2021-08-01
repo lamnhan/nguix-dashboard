@@ -5,6 +5,8 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
+import { ImageCropperComponentModule } from '../image-cropper/image-cropper.module';
+
 import { UploaderComponent } from './uploader.component';
 
 @NgModule({
@@ -15,6 +17,7 @@ import { UploaderComponent } from './uploader.component';
     TranslocoModule,
     NgxFilesizeModule,
     RouterLinkDirectiveModule,
+    ImageCropperComponentModule,
   ],
   exports: [UploaderComponent]
 })

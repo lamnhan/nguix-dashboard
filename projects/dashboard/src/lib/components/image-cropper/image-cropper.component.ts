@@ -1,12 +1,13 @@
-import { Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import * as Croppie from 'croppie';
 
 @Component({
-  selector: 'nguix-image-cropper',
+  selector: 'image-cropper',
   templateUrl: './image-cropper.component.html',
-  styleUrls: ['./image-cropper.component.scss']
+  styleUrls: ['./image-cropper.component.scss'],
+  encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class ImageCropperComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('cropper', {static: true}) private cropperRef?: ElementRef;
@@ -67,6 +68,9 @@ export class ImageCropperComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     if (this.croppingSubscription) {
       this.croppingSubscription.unsubscribe();
+    }
+    if (this.croppieInstance) {
+      this.croppieInstance.destroy();
     }
   }
 
