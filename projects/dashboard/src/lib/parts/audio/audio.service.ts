@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { AudioDataService } from '@lamnhan/ngx-schemata';
 
@@ -38,17 +39,36 @@ export class AudioPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    { ...Schemas.src, required: true },
-    Schemas.duration,
+    {
+      ...Schemas.src,
+      required: true,
+      validators: [Validators.required],
+    },
+    {
+      ...Schemas.duration,
+      required: true,
+      validators: [Validators.required],
+    },
     Schemas.description,
     Schemas.thumbnail,
     Schemas.image,
     Schemas.authors,
     Schemas.content,
     { label: 'Birthday', name: 'birthday', type: 'text' },
-    { label: 'Sheet', name: 'sheet', type: 'upload' },
+    {
+      label: 'Sheets',
+      name: 'sheets',
+      type: 'json',
+      meta: {
+        type: 'array',
+        schema: [
+          {name: 'name', type: 'string', required: true, width: 100},
+          {name: 'url', type: 'string', required: true, width: 250},
+        ],
+      },
+    },
     Schemas.props,
-    { ...Schemas.parents, meta: { ...Schemas.parents.meta, contentType: 'audio' } },
+    Schemas.parents,
     Schemas.categories,
     Schemas.tags,
     Schemas.keyword,

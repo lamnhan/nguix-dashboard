@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { OptionDataService } from '@lamnhan/ngx-schemata';
 
@@ -32,7 +33,11 @@ export class OptionPartService {
   public readonly noI18n = true;
 
   public readonly formSchema: FormSchemaItem[] = [
-    { ...Schemas.value, required: true },
+    {
+      ...Schemas.value,
+      required: true,
+      validators: [Validators.required],
+    },
   ];
 
   public readonly dataTypes: DataType[]  = [

@@ -28,20 +28,21 @@
             min-width: 7rem;
           }
 
-          .form-select {
-            min-width: 7rem;
-          }
-
-          .form-checkbox {
-            margin-left: 7rem;
-          }
-
           &.required .form-label {
             font-weight: 700;
           }
 
           textarea {
             height: 100px;
+          }
+
+          .form-select {
+            min-width: 7rem;
+          }
+
+          .checkboxes, .radios {
+            padding-left: 7rem;
+            margin-top: -2rem;
           }
 
           .uploadable {
@@ -55,6 +56,23 @@
 
             a {
               margin-left: .5rem;
+            }
+          }
+
+          .content-editor {
+            margin-top: -2rem;
+
+            .toggler {
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: center;
+              justify-content: flex-end;
+              width: 100%;
+              margin-bottom: .5rem;
+
+              input {
+                margin-right: .5rem;
+              }
             }
           }
         }

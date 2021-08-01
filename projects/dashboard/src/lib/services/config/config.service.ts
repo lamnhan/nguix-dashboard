@@ -52,6 +52,7 @@ export interface FormSchemaItem {
   description?: string;
   validators?: any[];
   children?: CheckboxAlikeChild[];
+  selections?: RadioAlikeChild[];
   meta?: Record<string, any>;
 }
 
@@ -61,6 +62,10 @@ export interface CheckboxAlikeChild {
   text: string;
   name: string;
   checked: boolean;
+}
+
+export interface RadioAlikeChild extends Omit<CheckboxAlikeChild, 'checked'> {
+  selected: boolean;
 }
 
 export interface DataType {
@@ -75,6 +80,13 @@ export interface UpdateEffect {
   key: string;
   props: string[];
   idBuilder?: (id: string) => string;
+}
+
+export interface ContentSchemaMeta {
+  // auto-generated from current value
+  allowDirect?: boolean;
+  isDirect?: boolean;
+  contentHtml?: string;
 }
 
 export interface HtmlSchemaMeta {
@@ -98,12 +110,12 @@ export interface JsonSchemaMeta {
 
 export interface LinkingSchemaMeta {
   source: string;
+  fields: string[];
+  contentType?: string;
   // auto-generated from source
   part?: DashboardPart;
   items$?: Observable<DatabaseItem[]>;
-  fields?: string[];
   currentData?: Record<string, any>;
-  contentType?: string;
 }
 
 @Injectable({

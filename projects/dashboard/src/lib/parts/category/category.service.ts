@@ -3,7 +3,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { CategoryDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem, UpdateEffect, DataType } from '../../services/config/config.service';
-import { Schemas } from '../../services/schema/schema.service';
+import { Schemas, Effects } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class CategoryPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    { label: 'Only', name: 'only', type: 'only' },
+    Schemas.only,
     Schemas.description,
     Schemas.thumbnail,
     Schemas.image,
@@ -39,10 +39,24 @@ export class CategoryPartService {
 
   public readonly updateEffects: UpdateEffect[] = [
     {
+      ...Effects.categories,
       part: 'post',
       collection: 'posts',
-      key: 'categories',
-      props: ['id', 'title'],
+    },
+    {
+      ...Effects.categories,
+      part: 'audio',
+      collection: 'audios',
+    },
+    {
+      ...Effects.categories,
+      part: 'video',
+      collection: 'videos',
+    },
+    {
+      ...Effects.categories,
+      part: 'profile',
+      collection: 'profiles',
     },
   ];
 

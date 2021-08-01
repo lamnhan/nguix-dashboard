@@ -3,6 +3,8 @@ import { Validators } from '@angular/forms';
 
 import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta } from '../config/config.service';
 
+const mimimumLinkingFields = ['id', 'title', 'type'];
+
 export const Schemas = {
   id: {
     label: 'ID',
@@ -47,14 +49,21 @@ export const Schemas = {
     required: true,
     validators: [Validators.required],
   },
+  only: {
+    label: 'Only',
+    name: 'only',
+    type: 'only',
+    required: true,
+    validators: [Validators.required],
+  },
   description: { label: 'Description', name: 'description', type: 'textarea' },
   thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'upload' },
   image: { label: 'Image', name: 'image', type: 'upload' },
   src: { label: 'Src', name: 'src', type: 'upload' },
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 0 },
-  content: { label: 'Content', name: 'content', type: 'content' }, // TODO: ...
+  content: { label: 'Content', name: 'content', type: 'content' },
   value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
-  count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 },
+  count: { label: 'Count', name: 'count', type: 'count', defaultValue: 0 }, // TODO: add "count" type
   keyword: { label: 'Keyword', name: 'keyword', type: 'text' },
   toc: {
     label: 'TOC',
@@ -76,11 +85,11 @@ export const Schemas = {
     name: 'slides',
     type: 'json',
     meta: {
-      type: 'record',
+      type: 'array',
       schema: [
         {name: 'id', type: 'string', required: true, width: 100},
-        {name: 'image', type: 'string', required: true, width: 150},
         {name: 'title', type: 'string', width: 150},
+        {name: 'image', type: 'string', required: true, width: 150},
         {name: 'description', type: 'string', width: 150},
       ],
     } as JsonSchemaMeta,
@@ -104,7 +113,14 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'profile',
-      fields: ['id', 'title', 'type', 'createdAt', 'thumbnail', 'description', 'thumbnail', 'badges'],
+      fields: [
+        ...mimimumLinkingFields,
+        'createdAt',
+        'thumbnail',
+        'description',
+        'thumbnail',
+        'badges',
+      ],
     } as LinkingSchemaMeta,
   },
   parents: {
@@ -113,7 +129,13 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'bundle',
-      fields: ['id', 'title', 'type', 'createdAt', 'thumbnail', 'description', 'count'],
+      fields: [
+        ...mimimumLinkingFields,
+        'createdAt',
+        'thumbnail',
+        'description',
+        'count',
+      ],
     } as LinkingSchemaMeta,
   },
   categories: {
@@ -122,7 +144,12 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'category',
-      fields: ['id', 'title', 'type', 'thumbnail', 'description', 'count'],
+      fields: [
+        ...mimimumLinkingFields,
+        'thumbnail',
+        'description',
+        'count'
+      ],
     } as LinkingSchemaMeta,
   },
   tags: {
@@ -131,8 +158,31 @@ export const Schemas = {
     type: 'link',
     meta: {
       source: 'tag',
-      fields: ['id', 'title', 'type', 'count'],
+      fields: [
+        ...mimimumLinkingFields,
+        'count'
+      ],
     } as LinkingSchemaMeta,
+  },
+};
+
+
+export const Effects = {
+  authors: {
+    key: Schemas.authors.name,
+    props: Schemas.authors.meta.fields,
+  },
+  parents: {
+    key: Schemas.parents.name,
+    props: Schemas.parents.meta.fields,
+  },
+  categories: {
+    key: Schemas.categories.name,
+    props: Schemas.categories.meta.fields,
+  },
+  tags: {
+    key: Schemas.tags.name,
+    props: Schemas.tags.meta.fields,
   },
 };
 

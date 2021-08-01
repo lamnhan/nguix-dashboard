@@ -3,7 +3,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { TagDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem, UpdateEffect, DataType } from '../../services/config/config.service';
-import { Schemas } from '../../services/schema/schema.service';
+import { Schemas, Effects } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,10 +37,24 @@ export class TagPartService {
 
   public readonly updateEffects: UpdateEffect[] = [
     {
+      ...Effects.tags,
       part: 'post',
       collection: 'posts',
-      key: 'tags',
-      props: ['id', 'title'],
+    },
+    {
+      ...Effects.tags,
+      part: 'audio',
+      collection: 'audios',
+    },
+    {
+      ...Effects.tags,
+      part: 'video',
+      collection: 'videos',
+    },
+    {
+      ...Effects.tags,
+      part: 'profile',
+      collection: 'profiles',
     },
   ];
 

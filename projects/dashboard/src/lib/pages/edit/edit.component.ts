@@ -7,7 +7,15 @@ import { tap, map, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
-import { DashboardPart, DatabaseItem, FormSchemaItem, CheckboxAlikeChild, ConfigService } from '../../services/config/config.service';
+import {
+  DashboardPart,
+  DatabaseItem,
+  FormSchemaItem,
+  CheckboxAlikeChild,
+  RadioAlikeChild,
+  ConfigService,
+  ContentSchemaMeta,
+} from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
@@ -147,14 +155,35 @@ export class EditPage implements OnInit, OnDestroy {
   checkboxChanges(
     schema: FormSchemaItem,
     formGroup: FormGroup,
-    children: any,
-    item: Record<string, any>,
+    children: CheckboxAlikeChild[],
+    checkboxItem: CheckboxAlikeChild,
     e: any
   ) {
-    item.checked = e.target.checked;
+    checkboxItem.checked = e.target.checked;
     const value = children
       .filter((child: any) => child.checked)
       .map((child: any) => child.name);
+    const control = formGroup.get(schema.name);
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
+  }
+
+  radioChanges(
+    schema: FormSchemaItem,
+    formGroup: FormGroup,
+    selections: RadioAlikeChild[],
+    radioItem: RadioAlikeChild,
+  ) {
+    const value = radioItem.name;
+    selections.forEach(selection => {
+      if (selection.name === value) {
+        selection.selected = true;
+      } else {
+        selection.selected = false;
+      }
+    });
     const control = formGroup.get(schema.name);
     if (control) {
       control.setValue(value);
@@ -451,63 +480,63 @@ export class EditPage implements OnInit, OnDestroy {
 
   private processSchema(schema: FormSchemaItem) {
     const item = {...schema};
-    const { type, name } = schema;
+    const { type } = schema;
     // 1. only
     if (type === 'only' && this.part?.updateEffects) {
-      item.children = this.part?.updateEffects
+      item.selections = this.part?.updateEffects
         .map(item => {
           const part = this.dashboardService.getPart(item.part);
           if (!part) {
             return null;
           }
-          const collection = item.collection;
-          const children: CheckboxAlikeChild[] = [];
-          // main
-          children.push({
-            text: collection,
-            name: collection,
-            checked: false,
-          });
-          // data types
-          children.concat(
-            (part.dataTypes || []).map(type => ({
-              text: `${collection}:${type.value}`,
-              name: `${collection}:${type.value}`,
-              checked: false,
-            })),
-          );
-          // result
-          return children;
+          return (part.dataTypes || []).map(type => ({
+            text: `${item.collection}:${type.value}`,
+            name: `${item.collection}:${type.value}`,
+            selected: false,
+          })) as RadioAlikeChild[];
         })
         .filter(item => !!item)
         .reduce(
           (result, item) => {
-            result = (result as any[]).concat(item as CheckboxAlikeChild[]);
+            result = (result as any[]).concat(item as RadioAlikeChild[]);
             return result;
           },
           [] as any[],
-        ) as CheckboxAlikeChild[];
-    }
-    // 2. content
-    const { allowDirectContent } = this.configService.getConfig();
-    if (name === 'content' && !allowDirectContent) {
-      item.hidden = true;
+        ) as RadioAlikeChild[];
     }
     // result
     return item;
   }
 
   private processSchemaData(schema: FormSchemaItem, value: any) {
-    const { type, children } = schema;
+    const { type, children, selections } = schema;
     // 1. checkbox alike
-    if ((type === 'checkbox' || type === 'only') && value &&  children) {
-      children.forEach(child => (value as string[]).indexOf(child.name) ? false : child.checked = true);
+    if (type === 'checkbox' && value &&  children) {
+      children.forEach(child =>
+        (value as string[]).indexOf(child.name) === -1 ? false : child.checked = true);
     }
-    // 2. json
+    // 2. radio alike
+    if ((type === 'radio' || type === 'only') && value &&  selections) {
+      selections.forEach(child =>
+        (value as string) !== child.name ? false : child.selected = true);
+    }
+    // 2. content
+    if (type === 'content') {
+      const allowDirect = !!this.configService.getConfig().allowDirectContent;
+      schema.meta = { allowDirect } as ContentSchemaMeta;
+      if (!value || value.substr(0, 4) === 'http') {
+        schema.meta.isDirect = false;
+        schema.meta.contentHtml = '<p></p>';
+      } else {
+        schema.meta.isDirect = true;
+        schema.meta.contentHtml = value;
+      }
+    }
+    // 3. json
     if (type === 'json' && schema.meta) {
       schema.meta.currentData = value;
     }
-    // 3. link
+    // 4. link
     if (type === 'link' && schema.meta && schema.meta.source) {
       const part = this.dashboardService.getPart(schema.meta.source as string);
       if (part) {
@@ -520,7 +549,7 @@ export class EditPage implements OnInit, OnDestroy {
         schema.meta.currentData = value;
       }
     }
-    // 4. html
+    // 5. html
     if (type === 'html') {
       schema.meta = { htmlContent: value };
     }

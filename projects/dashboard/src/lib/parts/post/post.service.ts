@@ -39,8 +39,8 @@ export class PostPartService {
 
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.description,
-    { label: 'TLDR', name: 'tldr', type: 'textarea' },
     Schemas.toc,
+    { label: 'TLDR', name: 'tldr', type: 'textarea' },
     Schemas.thumbnail,
     Schemas.image,
     Schemas.authors,
@@ -49,7 +49,7 @@ export class PostPartService {
     Schemas.slides,
     { label: 'Audio', name: 'audio', type: 'upload' },
     { label: 'Video', name: 'video', type: 'upload' },    
-    { ...Schemas.parents, meta: { ...Schemas.parents.meta, contentType: 'post' } },
+    Schemas.parents,
     Schemas.categories,
     Schemas.tags,
     Schemas.keyword,

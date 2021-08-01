@@ -51,26 +51,46 @@
             ></textarea>
           </ng-container>
   
+          <ng-container *ngIf="schema.type==='checkbox'">
+          <div class="checkboxes">
+              <label class="form-checkbox" *ngFor="let checkboxItem of schema.children || []">
+                <input
+                  type="checkbox"
+                  (change)="checkboxChanges(
+                    schema,
+                    data.formGroup,
+                    schema.children || [],
+                    checkboxItem,
+                    $event
+                  )"
+                  [checked]="checkboxItem.checked"
+                >
+                <span>{{ checkboxItem.text }}</span>
+              </label>
+          </div>
+          </ng-container>
+
           <ng-container
             *ngIf="
-              schema.type==='checkbox' ||
+              schema.type==='radio' ||
               schema.type==='only'
             "
           >
-            <label class="form-checkbox" *ngFor="let checkboxItem of schema.children || []">
+          <div class="radios">
+            <label class="form-radio" *ngFor="let radioItem of schema.selections || []">
               <input
-                type="checkbox"
-                (change)="checkboxChanges(
+                type="radio"
+                (change)="radioChanges(
                   schema,
                   data.formGroup,
-                  schema.children,
-                  checkboxItem,
-                  $event
+                  schema.selections || [],
+                  radioItem
                 )"
-                [checked]="checkboxItem.checked"
+                [checked]="radioItem.selected"
               >
-              <span>{{ checkboxItem.text }}</span>
+              <span>{{ radioItem.text }}</span>
             </label>
+          </div>
           </ng-container>
   
           <ng-container *ngIf="schema.type==='locale'">
@@ -112,6 +132,47 @@
             </div>
           </ng-container>
   
+          <ng-container *ngIf="schema.type==='content'">
+          <ng-container *ngIf="schema.meta as ceData">
+            <div class="content-editor">
+              <label class="toggler" *ngIf="ceData.allowDirect">
+                <input
+                  type="checkbox"
+                  [checked]="ceData.isDirect"
+                  (change)="ceData.isDirect=!ceData.isDirect"
+                >
+                <span>Direct</span>
+              </label>
+              <ng-container
+                *ngIf="
+                  ceData.allowDirect &&
+                  ceData.isDirect &&
+                  ceData.contentHtml;
+                  else indirectContent;
+                "
+              >
+                <nguix-dashboard-html-editor
+                  [htmlContent]="ceData.contentHtml"
+                  (save)="htmlChanges(
+                    schema,
+                    data.formGroup,
+                    $event
+                  )"
+                ></nguix-dashboard-html-editor>
+              </ng-container>
+              <ng-template #indirectContent>
+                <input
+                  class="form-control"
+                  [id]="schema.name"
+                  type="text"
+                  [formControlName]="schema.name"
+                  [placeholder]="schema.placeholder || ''"
+                >
+              </ng-template>
+            </div>
+          </ng-container>
+          </ng-container>
+
           <ng-container *ngIf="schema.type==='html' && schema.meta">
             <nguix-dashboard-html-editor
               [htmlContent]="schema.meta.htmlContent"

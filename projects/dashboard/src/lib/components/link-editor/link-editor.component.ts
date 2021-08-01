@@ -40,7 +40,7 @@ export class LinkEditorComponent implements OnInit, OnChanges {
     const id = e.target.value;
     const checked = e.target.checked;
     if (checked) {
-      this.selectedData[id] = (['id', 'title', 'type'].concat(this.fields || []))
+      this.selectedData[id] = (this.fields || [])
         .map(key => ({key, value: item[key]}))
         .reduce(
           (result, item) => {
