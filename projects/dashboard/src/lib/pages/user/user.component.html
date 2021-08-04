@@ -96,7 +96,7 @@
           </div>
           <div class="content">
             <div class="image">
-              <img [src]="detailItem.thumbnail" [alt]="detailItem.id">
+              <img [src]="(detailItem.thumbnails?.md || detailItem.thumbnails?.default)?.src" [alt]="detailItem.id">
             </div>
             <div class="username">
               <span>Username</span>

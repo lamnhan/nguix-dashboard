@@ -31,8 +31,8 @@ export class PagePartService {
   
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.description,
-    Schemas.thumbnail,
-    Schemas.image,
+    Schemas.thumbnails,
+    Schemas.images,
     Schemas.content,
   ];
 

@@ -55,6 +55,21 @@
                 <input class="form-checkbox" type="checkbox" [(ngModel)]="schemaItem.value">
               </ng-container>
 
+              <ng-container *ngIf="schemaItem.type === 'upload'">
+                <div class="uploadable">
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="schemaItem.value"
+                  >
+                  <a
+                    href="#"
+                    class="button-outline-primary-sm"
+                    (click)="openUploader(schemaItem); false;"
+                  >Upload</a>
+                </div>
+              </ng-container>
+
             </td>
           </tr>
         </tbody>
@@ -116,3 +131,10 @@
   </ng-template>
 
 </div>
+
+<nguix-dashboard-uploader
+  [show]="showUploader"
+  [closeOnCompleted]="true"
+  (close)="showUploader=false"
+  (done)="uploadChanges($event)"
+></nguix-dashboard-uploader>

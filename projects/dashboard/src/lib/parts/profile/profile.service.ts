@@ -43,9 +43,15 @@ export class ProfilePartService {
     Schemas.categories,
     Schemas.tags,
     Schemas.keyword,
+    Schemas.relatedProfiles,
   ];
 
   public readonly updateEffects: UpdateEffect[] = [
+    {
+      ...Effects.relatedProfiles,
+      part: 'profile',
+      collection: 'profiles',
+    },
     {
       ...Effects.authors,
       part: 'post',

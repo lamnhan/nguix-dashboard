@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { PostDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, DataType } from '../../services/config/config.service';
-import { Schemas } from '../../services/schema/schema.service';
+import { FormSchemaItem, DataType, UpdateEffect } from '../../services/config/config.service';
+import { Schemas, Effects } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -41,8 +41,8 @@ export class PostPartService {
     Schemas.description,
     Schemas.toc,
     { label: 'TLDR', name: 'tldr', type: 'textarea' },
-    Schemas.thumbnail,
-    Schemas.image,
+    Schemas.thumbnails,
+    Schemas.images,
     Schemas.authors,
     Schemas.duration,
     Schemas.content,
@@ -53,6 +53,15 @@ export class PostPartService {
     Schemas.categories,
     Schemas.tags,
     Schemas.keyword,
+    Schemas.relatedPosts,
+  ];
+
+  public readonly updateEffects: UpdateEffect[] = [
+    {
+      ...Effects.relatedPosts,
+      part: 'post',
+      collection: 'posts',
+    },
   ];
 
   public readonly dataTypes: DataType[]  = [

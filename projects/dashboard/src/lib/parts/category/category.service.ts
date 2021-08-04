@@ -32,8 +32,8 @@ export class CategoryPartService {
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.only,
     Schemas.description,
-    Schemas.thumbnail,
-    Schemas.image,
+    Schemas.thumbnails,
+    Schemas.images,
     Schemas.count,
   ];
 
@@ -47,6 +47,12 @@ export class CategoryPartService {
       ...Effects.categories,
       part: 'audio',
       collection: 'audios',
+    },
+    {
+      part: 'audio',
+      collection: 'audios',
+      key: 'genres',
+      props: Schemas.categories.meta.fields,
     },
     {
       ...Effects.categories,

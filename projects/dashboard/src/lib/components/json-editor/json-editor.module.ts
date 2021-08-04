@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@ngneat/transloco';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
+import { NguixDashboardUploaderComponentModule } from '../../components/uploader/uploader.module';
+
 import { JsonEditorComponent } from './json-editor.component';
 
 @NgModule({
@@ -13,6 +15,7 @@ import { JsonEditorComponent } from './json-editor.component';
     FormsModule,
     TranslocoModule,
     RouterLinkDirectiveModule,
+    NguixDashboardUploaderComponentModule,
   ],
   exports: [JsonEditorComponent]
 })

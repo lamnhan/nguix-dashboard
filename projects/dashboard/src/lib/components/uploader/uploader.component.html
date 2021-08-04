@@ -3,24 +3,24 @@
   <div class="head">
     <div class="left">
       <ul class="tabs">        
-        <li *ngIf="withLibrary">
+        <!-- <li *ngIf="withLibrary">
           <a href="javascript:void(0)" [class.active]="tab==='library'" (click)="tab='library'">
             <i class="icon-medium-tint icon-dashboard-media-library"></i>
             <span>Library</span>
           </a>
-        </li>
+        </li> -->
         <li>
           <a href="javascript:void(0)" [class.active]="tab==='upload'" (click)="tab='upload'">
             <i class="icon-medium-tint icon-dashboard-media-upload"></i>
             <span>Upload</span>
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a href="javascript:void(0)" [class.active]="tab==='editor'" (click)="tab='editor'">
             <i class="icon-medium-tint icon-dashboard-media-editor"></i>
             <span>Editor</span>
           </a>
-        </li>
+        </li> -->
       </ul>
     </div>
     <div class="right">
@@ -30,9 +30,7 @@
 
   <div class="body">
 
-    <div class="library" *ngIf="withLibrary && tab==='library'">
-      Media library!
-    </div>
+    <!-- <div class="library" *ngIf="withLibrary && tab==='library'"></div> -->
 
     <div class="upload" *ngIf="tab==='upload'">
 
@@ -75,9 +73,9 @@
   
     </div>
 
-    <div class="editor" *ngIf="tab==='editor'">
+    <!-- <div class="editor" *ngIf="tab==='editor'">
       <div id="tui-image-editor"></div>
-    </div>
+    </div> -->
 
   </div>
 

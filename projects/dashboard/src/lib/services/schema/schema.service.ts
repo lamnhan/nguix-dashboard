@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 
 import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta } from '../config/config.service';
 
-const mimimumLinkingFields = ['id', 'title', 'type'];
+export const minimumLinkingFields = ['id', 'title', 'type'];
 
 export const Schemas = {
   id: {
@@ -57,9 +57,45 @@ export const Schemas = {
     validators: [Validators.required],
   },
   description: { label: 'Description', name: 'description', type: 'textarea' },
-  thumbnail: { label: 'Thumbnail', name: 'thumbnail', type: 'upload' },
-  image: { label: 'Image', name: 'image', type: 'upload' },
-  src: { label: 'Src', name: 'src', type: 'upload' },
+  thumbnails: {
+    label: 'Thumbnails',
+    name: 'thumbnails',
+    type: 'json',
+    meta: {
+      type: 'record',
+      recordKey: 'name',
+      schema: [
+        {name: 'name', type: 'string', required: true, width: 100},
+        {name: 'src', type: 'upload', required: true, width: 250},
+      ],
+    } as JsonSchemaMeta,
+  },
+  images: {
+    label: 'Images',
+    name: 'images',    
+    type: 'json',
+    meta: {
+      type: 'record',
+      recordKey: 'name',
+      schema: [
+        {name: 'name', type: 'string', required: true, width: 100},
+        {name: 'src', type: 'upload', required: true, width: 250},
+      ],
+    } as JsonSchemaMeta,
+  },
+  srcs: {
+    label: 'Srcs',
+    name: 'srcs',   
+    type: 'json',
+    meta: {
+      type: 'record',
+      recordKey: 'name',
+      schema: [
+        {name: 'name', type: 'string', required: true, width: 100},
+        {name: 'src', type: 'upload', required: true, width: 250},
+      ],
+    } as JsonSchemaMeta,    
+  },
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 0 },
   content: { label: 'Content', name: 'content', type: 'content' },
   value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
@@ -114,11 +150,10 @@ export const Schemas = {
     meta: {
       source: 'profile',
       fields: [
-        ...mimimumLinkingFields,
+        ...minimumLinkingFields,
         'createdAt',
-        'thumbnail',
+        'thumbnails',
         'description',
-        'thumbnail',
         'badges',
       ],
     } as LinkingSchemaMeta,
@@ -130,9 +165,9 @@ export const Schemas = {
     meta: {
       source: 'bundle',
       fields: [
-        ...mimimumLinkingFields,
+        ...minimumLinkingFields,
         'createdAt',
-        'thumbnail',
+        'thumbnails',
         'description',
         'count',
       ],
@@ -145,8 +180,8 @@ export const Schemas = {
     meta: {
       source: 'category',
       fields: [
-        ...mimimumLinkingFields,
-        'thumbnail',
+        ...minimumLinkingFields,
+        'thumbnails',
         'description',
         'count'
       ],
@@ -159,8 +194,100 @@ export const Schemas = {
     meta: {
       source: 'tag',
       fields: [
-        ...mimimumLinkingFields,
+        ...minimumLinkingFields,
         'count'
+      ],
+    } as LinkingSchemaMeta,
+  },
+  relatedPosts: {
+    label: 'Related posts',
+    name: 'relatedPosts',
+    type: 'link',
+    meta: {
+      source: 'post',
+      fields: [
+        ...minimumLinkingFields,
+        'createdAt',
+        'thumbnails',
+        'description',
+        'duration',
+      ],
+    } as LinkingSchemaMeta,
+  },
+  relatedAudios: {
+    label: 'Related audios',
+    name: 'relatedAudios',
+    type: 'link',
+    meta: {
+      source: 'audio',
+      fields: [
+        ...minimumLinkingFields,
+        'createdAt',
+        'thumbnails',
+        'description',
+        'duration',
+      ],
+    } as LinkingSchemaMeta,
+  },
+  relatedVideos: {
+    label: 'Related videos',
+    name: 'relatedVideos',
+    type: 'link',
+    meta: {
+      source: 'video',
+      fields: [
+        ...minimumLinkingFields,
+        'createdAt',
+        'thumbnails',
+        'description',
+        'duration',
+      ],
+    } as LinkingSchemaMeta,
+  },
+  relatedBundles: {
+    label: 'Related bundles',
+    name: 'relatedBundles',
+    type: 'link',
+    meta: {
+      source: 'bundle',
+      fields: [
+        ...minimumLinkingFields,
+        'createdAt',
+        'thumbnails',
+        'description',
+        'count',
+      ],
+    } as LinkingSchemaMeta,
+  },
+  relatedProfiles: {
+    label: 'Related profiles',
+    name: 'relatedProfiles',
+    type: 'link',
+    meta: {
+      source: 'profile',
+      fields: [
+        ...minimumLinkingFields,
+        'createdAt',
+        'thumbnails',
+        'description',
+        'badges',
+      ],
+    } as LinkingSchemaMeta,
+  },
+  relatedProducts: {
+    label: 'Related products',
+    name: 'relatedProducts',
+    type: 'link',
+    meta: {
+      source: 'product',
+      fields: [
+        ...minimumLinkingFields,
+        'createdAt',
+        'thumbnails',
+        'description',
+        'sku',
+        'unit',
+        'price',
       ],
     } as LinkingSchemaMeta,
   },
@@ -183,6 +310,30 @@ export const Effects = {
   tags: {
     key: Schemas.tags.name,
     props: Schemas.tags.meta.fields,
+  },
+  relatedPosts: {
+    key: Schemas.relatedPosts.name,
+    props: Schemas.relatedPosts.meta.fields,
+  },
+  relatedAudios: {
+    key: Schemas.relatedAudios.name,
+    props: Schemas.relatedAudios.meta.fields,
+  },
+  relatedVideos: {
+    key: Schemas.relatedVideos.name,
+    props: Schemas.relatedVideos.meta.fields,
+  },
+  relatedBundles: {
+    key: Schemas.relatedBundles.name,
+    props: Schemas.relatedBundles.meta.fields,
+  },
+  relatedProfiles: {
+    key: Schemas.relatedProfiles.name,
+    props: Schemas.relatedProfiles.meta.fields,
+  },
+  relatedProducts: {
+    key: Schemas.relatedProducts.name,
+    props: Schemas.relatedProducts.meta.fields,
   },
 };
 

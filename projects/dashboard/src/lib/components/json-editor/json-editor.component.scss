@@ -62,7 +62,21 @@
     }
   }
 
-  .edit {}
+  .edit {
+
+    table tbody tr td {
+
+      .uploadable {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+
+        input {
+          margin-right: .5rem;
+        }
+      }
+    }
+  }
 
   .actions {
     display: flex;

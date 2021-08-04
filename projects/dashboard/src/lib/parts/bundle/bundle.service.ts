@@ -32,17 +32,23 @@ export class BundlePartService {
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.only,
     Schemas.description,
-    Schemas.thumbnail,
-    Schemas.image,
+    Schemas.thumbnails,
+    Schemas.images,
     Schemas.authors,
     Schemas.content,
     Schemas.count,
     Schemas.categories,
     Schemas.tags,
     Schemas.keyword,
+    Schemas.relatedBundles,
   ];
 
   public readonly updateEffects: UpdateEffect[] = [
+    {
+      ...Effects.relatedBundles,
+      part: 'bundle',
+      collection: 'bundles',
+    },
     {
       ...Effects.parents,
       part: 'post',

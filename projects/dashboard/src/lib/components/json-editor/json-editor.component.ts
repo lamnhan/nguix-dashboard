@@ -1,4 +1,8 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { of } from 'rxjs';
+import { StorageItem } from '@lamnhan/ngx-useful';
+
+import { ConfigService } from '../../services/config/config.service';
 
 interface JsonSchema {
   name: string;
@@ -30,12 +34,32 @@ export class JsonEditorComponent implements OnInit, OnChanges {
   dataMatrix: MatrixItem[][] = [];
   dataRaw = '';
 
-  constructor() {}
+  showUploader = false;
+  uploadCaller?: MatrixItem;
+
+  constructor(private configService: ConfigService) {}
 
   ngOnInit(): void {}
   
   ngOnChanges(): void {
     this.buildData();
+  }
+
+  openUploader(item: MatrixItem) {
+    this.uploadCaller = item;
+    this.showUploader = true;
+  }
+
+  uploadChanges(media: StorageItem) {
+    if (this.uploadCaller) {
+      const { uploadRetrieval = 'url' } = this.configService.getConfig();
+      const value$ = uploadRetrieval === 'path'
+        ? of(media.fullPath)
+        : uploadRetrieval === 'url'
+        ? media.downloadUrl$
+        : media.downloadUrl$;
+      value$.subscribe(value => (this.uploadCaller as MatrixItem).value = value);
+    }
   }
 
   add() {

@@ -3,8 +3,8 @@ import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { AudioDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, DataType } from '../../services/config/config.service';
-import { Schemas } from '../../services/schema/schema.service';
+import { FormSchemaItem, DataType, LinkingSchemaMeta, UpdateEffect } from '../../services/config/config.service';
+import { Schemas, Effects, minimumLinkingFields } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +40,7 @@ export class AudioPartService {
 
   public readonly formSchema: FormSchemaItem[] = [
     {
-      ...Schemas.src,
+      ...Schemas.srcs,
       required: true,
       validators: [Validators.required],
     },
@@ -50,8 +50,8 @@ export class AudioPartService {
       validators: [Validators.required],
     },
     Schemas.description,
-    Schemas.thumbnail,
-    Schemas.image,
+    Schemas.thumbnails,
+    Schemas.images,
     Schemas.authors,
     Schemas.content,
     { label: 'Birthday', name: 'birthday', type: 'text' },
@@ -63,15 +63,39 @@ export class AudioPartService {
         type: 'array',
         schema: [
           {name: 'name', type: 'string', required: true, width: 100},
-          {name: 'url', type: 'string', required: true, width: 250},
+          {name: 'src', type: 'upload', required: true, width: 250},
         ],
       },
     },
     Schemas.props,
     Schemas.parents,
     Schemas.categories,
+    {
+      label: 'Genres',
+      name: 'genres',
+      type: 'link',
+      meta: {
+        source: 'category',
+        contentType: 'genre',
+        fields: [
+          ...minimumLinkingFields,
+          'thumbnails',
+          'description',
+          'count'
+        ],
+      } as LinkingSchemaMeta,
+    },
     Schemas.tags,
     Schemas.keyword,
+    Schemas.relatedAudios,
+  ];
+
+  public readonly updateEffects: UpdateEffect[] = [
+    {
+      ...Effects.relatedAudios,
+      part: 'audio',
+      collection: 'audios',
+    },
   ];
 
   public readonly dataTypes: DataType[]  = [
