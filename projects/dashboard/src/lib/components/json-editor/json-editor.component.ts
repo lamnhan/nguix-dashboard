@@ -46,8 +46,14 @@ export class JsonEditorComponent implements OnInit, OnChanges {
   }
 
   openUploader(item: MatrixItem) {
-    this.uploadCaller = item;
-    this.showUploader = true;
+    // check if there is a value
+    const isCurrentValue = item.value;
+    const yes = !isCurrentValue ? true : confirm('Override current value?');
+    // no value or override
+    if (yes) {
+      this.uploadCaller = item;
+      this.showUploader = true;
+    }
   }
 
   uploadChanges(media: StorageItem) {

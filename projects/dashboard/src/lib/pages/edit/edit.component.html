@@ -127,7 +127,14 @@
               <a
                 href="#"
                 class="button-outline-primary"
-                (click)="openUploader(schema, data.formGroup); false"
+                (click)="
+                  openUploader(
+                    schema,
+                    data.formGroup,
+                    schema.meta?.imageCropping
+                  );
+                  false;
+                "
               >Upload</a>
             </div>
           </ng-container>
@@ -313,6 +320,7 @@
 <nguix-dashboard-uploader
   [show]="showUploader"
   [closeOnCompleted]="true"
+  [imageCropping]="uploadCallerData?.imageCropping"
   (close)="showUploader=false"
   (done)="uploadChanges($event)"
 ></nguix-dashboard-uploader>

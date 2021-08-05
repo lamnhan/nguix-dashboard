@@ -43,8 +43,21 @@
             [resultOptions]="cropperResultOptions"
             (change)="cropResult=$event"
           ></image-cropper>
+          <div class="sizing" *ngIf="!enforceCroppingSize">
+            <input
+              class="form-control"
+              type="number"
+              [value]="imageCropping?.width"
+              (change)="croppingWidthChanges($event)">
+            <div>X</div>
+            <input
+              class="form-control"
+              type="number"
+              [value]="imageCropping?.height"
+              (change)="croppingHeightChanges($event)">
+          </div>
           <div style="text-align: center;">
-            <button class="button-primary" (click)="doneCropping()">Done & Upload</button>
+            <a href="#" class="button-primary" (click)="doneCropping();false;">Done & Upload</a>
           </div>
         </div>
 
@@ -87,7 +100,7 @@
       </label>
     </div>
     <div class="right">
-      <button class="button-primary" (click)="closeAndReset()">Close</button>
+      <a href="#" class="button-primary" (click)="closeAndReset();false;">Close</a>
     </div>
   </div>
 

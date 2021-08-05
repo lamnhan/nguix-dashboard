@@ -77,7 +77,31 @@
     padding: 1rem;
     overflow-y: scroll;
     min-height: 300px;
-    max-height: 439px;
+    max-height: 386px;
+
+    .upload {
+
+      .cropper {
+
+        .sizing {
+          display: flex;
+          flex-grow: no-wrap;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1rem;
+
+          input {
+            width: 100px;
+          }
+
+          div {
+            color: $medium;
+            width: 50px;
+            text-align: center;
+          }
+        }
+      }
+    }
   }
   
   .foot {

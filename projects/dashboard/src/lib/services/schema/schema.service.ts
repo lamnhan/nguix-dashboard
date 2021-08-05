@@ -65,7 +65,7 @@ export const Schemas = {
       type: 'record',
       recordKey: 'name',
       schema: [
-        {name: 'name', type: 'string', required: true, width: 100},
+        {name: 'name', type: 'string', required: true, width: 50},
         {name: 'src', type: 'upload', required: true, width: 250},
       ],
     } as JsonSchemaMeta,
@@ -78,7 +78,7 @@ export const Schemas = {
       type: 'record',
       recordKey: 'name',
       schema: [
-        {name: 'name', type: 'string', required: true, width: 100},
+        {name: 'name', type: 'string', required: true, width: 50},
         {name: 'src', type: 'upload', required: true, width: 250},
       ],
     } as JsonSchemaMeta,
@@ -91,7 +91,7 @@ export const Schemas = {
       type: 'record',
       recordKey: 'name',
       schema: [
-        {name: 'name', type: 'string', required: true, width: 100},
+        {name: 'name', type: 'string', required: true, width: 50},
         {name: 'src', type: 'upload', required: true, width: 250},
       ],
     } as JsonSchemaMeta,    

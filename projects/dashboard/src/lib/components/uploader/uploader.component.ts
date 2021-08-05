@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { StorageService, StorageItem } from '@lamnhan/ngx-useful';
 
+import { ImageCropping } from '../../services/config/config.service';
 import { AddUpload } from '../../states/media/media.state';
 
 interface Uploading {
@@ -21,7 +22,7 @@ export class UploaderComponent implements OnInit, OnChanges {
   @Input() show = false;
   @Input() closeOnCompleted = false;
   @Input() withLibrary = false;
-  @Input() imageCropping?: {width: number, height: number};
+  @Input() imageCropping?: ImageCropping;
   @Output() close = new EventEmitter<void>();
   @Output() done = new EventEmitter<StorageItem>();
 
@@ -38,6 +39,7 @@ export class UploaderComponent implements OnInit, OnChanges {
   };
 
   // cropper
+  enforceCroppingSize = true;
   fileDataUrl?: string;
   cropperOptions!: Croppie.CroppieOptions;
   cropperResultOptions!: Croppie.ResultOptions;
@@ -48,29 +50,27 @@ export class UploaderComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {}
-
+  
   ngOnChanges() {
-    const { width: resultWidth = 500, height: resultHeight = 500 } = this.imageCropping || {};
-    const ratio = resultWidth / resultHeight;
-    const width = 250;
-    const height = width / ratio;
-    this.cropperOptions = {
-      viewport: {
-        width,
-        height,
-      },
-      boundary: {
-        width,
-        height,
-      },
-      showZoomer: true,
-    };
-    this.cropperResultOptions = {
-      size: {
-        width: resultWidth,
-        height: resultHeight,
-      }
-    };
+    // default cropping size (no enforcement)
+    if (!this.imageCropping) {
+      this.imageCropping = { width: 500, height: 500 };
+      this.enforceCroppingSize = false;
+    }
+    // calculate cropper data
+    this.setCropperData();
+  }
+
+  croppingWidthChanges(e: any) {
+    (this.imageCropping as ImageCropping).width = e.target.value;
+    // calculate cropper data
+    this.setCropperData();
+  }
+
+  croppingHeightChanges(e: any) {
+    (this.imageCropping as ImageCropping).height = e.target.value;
+    // calculate cropper data
+    this.setCropperData();
   }
 
   selectFile(e: any) {
@@ -135,4 +135,27 @@ export class UploaderComponent implements OnInit, OnChanges {
     this.close.emit();
   }
 
+  private setCropperData() {
+    const { width: resultWidth, height: resultHeight } = this.imageCropping as ImageCropping;
+    const ratio = resultWidth / resultHeight;
+    const width = 250;
+    const height = width / ratio;
+    this.cropperOptions = {
+      viewport: {
+        width,
+        height,
+      },
+      boundary: {
+        width,
+        height,
+      },
+      showZoomer: true,
+    };
+    this.cropperResultOptions = {
+      size: {
+        width: resultWidth,
+        height: resultHeight,
+      }
+    };
+  }
 }

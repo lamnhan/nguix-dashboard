@@ -15,6 +15,7 @@ import {
   RadioAlikeChild,
   ConfigService,
   ContentSchemaMeta,
+  ImageCropping,
 } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 import { DataService } from '../../services/data/data.service';
@@ -41,7 +42,11 @@ export class EditPage implements OnInit, OnDestroy {
   prioritizedData: Record<string, any> = {};
 
   showUploader = false;
-  uploadCallerData?: { schema: FormSchemaItem; formGroup: FormGroup };
+  uploadCallerData?: {
+    schema: FormSchemaItem;
+    formGroup: FormGroup;
+    imageCropping?: ImageCropping;
+  };
 
   public readonly page$ = combineLatest([
     this.route.params,
@@ -194,13 +199,14 @@ export class EditPage implements OnInit, OnDestroy {
   openUploader(
     schema: FormSchemaItem,
     formGroup: FormGroup,
+    imageCropping?: ImageCropping,
   ) {
     // check if there is a value
     const isCurrentValue = formGroup.get(schema.name)?.value;
     const yes = !isCurrentValue ? true : confirm('Override current value?');
     // no value or override
     if (yes) {
-      this.uploadCallerData = {schema, formGroup};
+      this.uploadCallerData = {schema, formGroup, imageCropping};
       this.showUploader = true;
     }
   }

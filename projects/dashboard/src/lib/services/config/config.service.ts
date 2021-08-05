@@ -89,6 +89,10 @@ export interface ContentSchemaMeta {
   contentHtml?: string;
 }
 
+export interface UploadSchemaMeta {
+  imageCropping?: ImageCropping;
+}
+
 export interface HtmlSchemaMeta {
   // auto-generated from current value
   htmlContent?: string;
@@ -116,6 +120,11 @@ export interface LinkingSchemaMeta {
   part?: DashboardPart;
   items$?: Observable<DatabaseItem[]>;
   currentData?: Record<string, any>;
+}
+
+export interface ImageCropping {
+  width: number;
+  height: number;
 }
 
 @Injectable({
