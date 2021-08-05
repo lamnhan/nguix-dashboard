@@ -39,7 +39,7 @@ export class UploaderComponent implements OnInit, OnChanges {
   };
 
   // cropper
-  enforceCroppingSize = true;
+  enforceCroppingSize = false;
   fileDataUrl?: string;
   cropperOptions!: Croppie.CroppieOptions;
   cropperResultOptions!: Croppie.ResultOptions;
@@ -56,6 +56,8 @@ export class UploaderComponent implements OnInit, OnChanges {
     if (!this.imageCropping) {
       this.imageCropping = { width: 500, height: 500 };
       this.enforceCroppingSize = false;
+    } else {
+      this.enforceCroppingSize = true;
     }
     // calculate cropper data
     this.setCropperData();

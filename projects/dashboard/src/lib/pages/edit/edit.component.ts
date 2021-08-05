@@ -526,7 +526,7 @@ export class EditPage implements OnInit, OnDestroy {
       selections.forEach(child =>
         (value as string) !== child.name ? false : child.selected = true);
     }
-    // 2. content
+    // 3. content
     if (type === 'content') {
       const allowDirect = !!this.configService.getConfig().allowDirectContent;
       schema.meta = { allowDirect } as ContentSchemaMeta;
@@ -538,11 +538,15 @@ export class EditPage implements OnInit, OnDestroy {
         schema.meta.contentHtml = value;
       }
     }
-    // 3. json
-    if (type === 'json' && schema.meta) {
-      schema.meta.currentData = value;
+    // 4. html
+    if (type === 'html') {
+      schema.meta = { htmlContent: value };
     }
-    // 4. link
+    // 5. json
+    if (type === 'json' && schema.meta) {
+      schema.meta.currentData = value || schema.meta.defaultData;
+    }
+    // 6. link
     if (type === 'link' && schema.meta && schema.meta.source) {
       const part = this.dashboardService.getPart(schema.meta.source as string);
       if (part) {
@@ -554,10 +558,6 @@ export class EditPage implements OnInit, OnDestroy {
           );
         schema.meta.currentData = value;
       }
-    }
-    // 5. html
-    if (type === 'html') {
-      schema.meta = { htmlContent: value };
     }
   }
 }

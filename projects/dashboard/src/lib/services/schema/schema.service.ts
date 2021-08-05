@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 
-import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta } from '../config/config.service';
+import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta, ImageCropping } from '../config/config.service';
 
 export const minimumLinkingFields = ['id', 'title', 'type'];
 
@@ -63,11 +63,23 @@ export const Schemas = {
     type: 'json',
     meta: {
       type: 'record',
-      recordKey: 'name',
       schema: [
         {name: 'name', type: 'string', required: true, width: 50},
-        {name: 'src', type: 'upload', required: true, width: 250},
+        {
+          name: 'src',
+          type: 'upload',
+          required: true,
+          width: 250,
+          itemMetas: {
+            default: {
+              imageCropping: { width: 720, height: 405 } as ImageCropping,
+            },
+          },
+        },
       ],
+      defaultData: {
+        default: { name: 'default', src: '' },
+      },
     } as JsonSchemaMeta,
   },
   images: {
@@ -76,7 +88,6 @@ export const Schemas = {
     type: 'json',
     meta: {
       type: 'record',
-      recordKey: 'name',
       schema: [
         {name: 'name', type: 'string', required: true, width: 50},
         {name: 'src', type: 'upload', required: true, width: 250},
@@ -89,7 +100,6 @@ export const Schemas = {
     type: 'json',
     meta: {
       type: 'record',
-      recordKey: 'name',
       schema: [
         {name: 'name', type: 'string', required: true, width: 50},
         {name: 'src', type: 'upload', required: true, width: 250},
@@ -136,7 +146,6 @@ export const Schemas = {
     type: 'json',
     meta: {
       type: 'record',
-      recordKey: 'name',
       schema: [
         {name: 'name', type: 'string', required: true, width: 100},
         {name: 'value', type: 'string', required: true, width: 150},

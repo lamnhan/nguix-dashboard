@@ -100,16 +100,20 @@ export interface HtmlSchemaMeta {
 
 export interface JsonSchemaMeta {
   type: 'record' | 'array';
-  schema: Array<{
-    name: string;
-    type: string;
-    required?: boolean;
-    defaultValue?: any;
-    width?: number;
-  }>;
   recordKey?: string;
+  schema: Array<JsonSchemaMetaSchemaItem>;
+  defaultData?: any[] | Record<string, any>;
   // auto-generated from current value
   currentData?: Record<string, any> | any[];
+}
+
+export interface JsonSchemaMetaSchemaItem {
+  name: string;
+  type: string;
+  required?: boolean;
+  defaultValue?: any;
+  width?: number;
+  itemMetas?: Record<string, Record<string, any>>;
 }
 
 export interface LinkingSchemaMeta {

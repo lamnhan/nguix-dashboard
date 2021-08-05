@@ -321,6 +321,6 @@
   [show]="showUploader"
   [closeOnCompleted]="true"
   [imageCropping]="uploadCallerData?.imageCropping"
-  (close)="showUploader=false"
+  (close)="showUploader=false;uploadCallerData=undefined;"
   (done)="uploadChanges($event)"
 ></nguix-dashboard-uploader>

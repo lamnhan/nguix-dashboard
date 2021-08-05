@@ -2,19 +2,13 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { of } from 'rxjs';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
-import { ConfigService } from '../../services/config/config.service';
+import { ConfigService, ImageCropping, JsonSchemaMetaSchemaItem } from '../../services/config/config.service';
 
-interface JsonSchema {
-  name: string;
-  type: string;
-  required?: boolean;
-  defaultValue?: any;
-  width?: number;
-}
-
-interface MatrixItem extends JsonSchema {
+interface SchemaItem extends JsonSchemaMetaSchemaItem {
   value?: any;
 }
+
+type MatrixItem = SchemaItem[];
 
 @Component({
   selector: 'nguix-dashboard-json-editor',
@@ -23,19 +17,17 @@ interface MatrixItem extends JsonSchema {
 })
 export class JsonEditorComponent implements OnInit, OnChanges {
   @Input() type?: 'record' | 'array';
-  @Input() currentData?: any[] | Record<string, any>;
-
-  @Input() schema?: JsonSchema[] = [];
   @Input() recordKey?: string;
-
+  @Input() schema?: JsonSchemaMetaSchemaItem[] = [];
+  @Input() currentData?: any[] | Record<string, any>;
   @Input() mode?: 'edit' | 'table' | 'raw' = 'table';
   @Output() save = new EventEmitter<any>();
 
-  dataMatrix: MatrixItem[][] = [];
+  dataMatrix: SchemaItem[][] = [];
   dataRaw = '';
 
   showUploader = false;
-  uploadCaller?: MatrixItem;
+  uploadCallerData?: { schemaItem: SchemaItem; imageCropping?: ImageCropping };
 
   constructor(private configService: ConfigService) {}
 
@@ -45,26 +37,39 @@ export class JsonEditorComponent implements OnInit, OnChanges {
     this.buildData();
   }
 
-  openUploader(item: MatrixItem) {
+  openUploader(schemaItem: SchemaItem, matrixItem: MatrixItem) {
     // check if there is a value
-    const isCurrentValue = item.value;
+    const isCurrentValue = schemaItem.value;
     const yes = !isCurrentValue ? true : confirm('Override current value?');
     // no value or override
     if (yes) {
-      this.uploadCaller = item;
+      this.uploadCallerData = {
+        schemaItem,
+        imageCropping:
+          !schemaItem.itemMetas
+            ? undefined
+            : schemaItem
+                .itemMetas[matrixItem[0].value || '$never']
+                ?.imageCropping as (undefined | ImageCropping),
+      };
       this.showUploader = true;
     }
   }
 
   uploadChanges(media: StorageItem) {
-    if (this.uploadCaller) {
+    if (this.uploadCallerData) {
       const { uploadRetrieval = 'url' } = this.configService.getConfig();
       const value$ = uploadRetrieval === 'path'
         ? of(media.fullPath)
         : uploadRetrieval === 'url'
         ? media.downloadUrl$
         : media.downloadUrl$;
-      value$.subscribe(value => (this.uploadCaller as MatrixItem).value = value);
+      value$.subscribe(value => {
+        // set value
+        (this.uploadCallerData?.schemaItem as SchemaItem).value = value;
+        // reset caller data
+        this.uploadCallerData = undefined;
+      });
     }
   }
 
@@ -97,7 +102,16 @@ export class JsonEditorComponent implements OnInit, OnChanges {
       ? result
       : result.reduce(
         (result, item) => {
-          result[item[this.recordKey as string || 'id']] = item;
+          result[
+            item[
+              this.recordKey as string || // 1. recordKey
+              (
+                !this.schema
+                  ? 'id' // 3. default to id
+                  : this.schema[0].name // 2. first column
+              )
+            ]
+          ] = item;
           return result;
         },
         {} as any,
@@ -118,10 +132,12 @@ export class JsonEditorComponent implements OnInit, OnChanges {
       : Object.keys(currentData)
           .map(key => (currentData as Record<string, any>)[key])
     )
-    .map(data => (this.schema || []).map(schema => this.getMatrixItem(schema, data)));
+    .map(data =>
+      (this.schema || []).map(schema => this.getMatrixItem(schema, data))
+    );
   }
 
-  private getMatrixItem(schema: JsonSchema, data: any = {}): MatrixItem {
+  private getMatrixItem(schema: JsonSchemaMetaSchemaItem, data: any = {}): SchemaItem {
     return { ...schema, value: data[schema.name] || schema.defaultValue };
   }
 
