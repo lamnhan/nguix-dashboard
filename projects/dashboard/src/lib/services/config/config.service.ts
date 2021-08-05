@@ -24,7 +24,7 @@ export interface DashboardPart {
   name: string;
   menuItem: MenuItem;
   noI18n?: boolean;
-  dataTypes?: DataType[];
+  contentTypes?: ContentType[];
   dataService?: DatabaseData<any>;
   formSchema?: FormSchemaItem[];
   updateEffects?: UpdateEffect[];
@@ -68,7 +68,7 @@ export interface RadioAlikeChild extends Omit<CheckboxAlikeChild, 'checked'> {
   selected: boolean;
 }
 
-export interface DataType {
+export interface ContentType {
   text: string;
   value: string;
   icon?: string;

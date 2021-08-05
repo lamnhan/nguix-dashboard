@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { OptionDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, DataType } from '../../services/config/config.service';
+import { FormSchemaItem, ContentType } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -40,7 +40,7 @@ export class OptionPartService {
     },
   ];
 
-  public readonly dataTypes: DataType[]  = [
+  public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 

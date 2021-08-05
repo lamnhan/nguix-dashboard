@@ -46,14 +46,14 @@
         <ng-container *ngTemplateOutlet="listingBar"></ng-container>
       </div>
 
-      <ul class="type-filter" *ngIf="part.dataTypes && part.dataTypes.length > 1">
-        <li *ngFor="let dataType of part.dataTypes" [class.active]="type===dataType.value">
+      <ul class="type-filter" *ngIf="part.contentTypes && part.contentTypes.length > 1">
+        <li *ngFor="let contentType of part.contentTypes" [class.active]="type===contentType.value">
           <a
             href="javascript:void(0)"
-            (click)="type===dataType.value?false:type=dataType.value"
+            (click)="type===contentType.value?false:type=contentType.value"
           >
-            <i *ngIf="dataType.icon" class="icon-medium-tint" [class]="dataType.icon"></i>
-            <span>{{ dataType.text }}</span>
+            <i *ngIf="contentType.icon" class="icon-medium-tint" [class]="contentType.icon"></i>
+            <span>{{ contentType.text }}</span>
           </a>
         </li>
       </ul>

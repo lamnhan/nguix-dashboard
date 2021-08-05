@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { AudioDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, DataType, LinkingSchemaMeta, UpdateEffect } from '../../services/config/config.service';
+import { FormSchemaItem, ContentType, LinkingSchemaMeta, UpdateEffect } from '../../services/config/config.service';
 import { Schemas, Effects, minimumLinkingFields } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -98,7 +98,7 @@ export class AudioPartService {
     },
   ];
 
-  public readonly dataTypes: DataType[]  = [
+  public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 

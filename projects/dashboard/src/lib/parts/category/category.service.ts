@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { CategoryDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, UpdateEffect, DataType } from '../../services/config/config.service';
+import { FormSchemaItem, UpdateEffect, ContentType } from '../../services/config/config.service';
 import { Schemas, Effects } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -66,7 +66,7 @@ export class CategoryPartService {
     },
   ];
 
-  public readonly dataTypes: DataType[]  = [
+  public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 

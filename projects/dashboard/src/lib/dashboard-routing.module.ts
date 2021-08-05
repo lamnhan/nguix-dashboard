@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardGuard } from '@lamnhan/ngx-useful';
+import { OnlineGuard, DashboardGuard } from '@lamnhan/ngx-useful';
 
 const routes: Routes = [
   {
-    path: 'app-admin', pathMatch: 'full', canLoad: [DashboardGuard], canActivate: [DashboardGuard],
+    path: 'app-admin',
+    pathMatch: 'full',
+    canLoad: [OnlineGuard, DashboardGuard],
+    canActivate: [OnlineGuard, DashboardGuard],
     loadChildren: () => import('./pages/home/home.module').then(m => m.NguixDashboardHomePageModule),
   },
   {
-    path: 'app-admin/about', canLoad: [DashboardGuard], canActivate: [DashboardGuard],
+    path: 'app-admin/about',
+    canLoad: [OnlineGuard, DashboardGuard],
+    canActivate: [OnlineGuard, DashboardGuard],
     loadChildren: () => import('./pages/about/about.module').then(m => m.NguixDashboardAboutPageModule),
   },
   {

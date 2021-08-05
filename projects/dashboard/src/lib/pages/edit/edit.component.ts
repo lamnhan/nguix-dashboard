@@ -371,7 +371,7 @@ export class EditPage implements OnInit, OnDestroy {
       // type
       schema.unshift({
         ...Schemas.type,
-        disabled: !this.isNew || (this.part?.dataTypes && this.part?.dataTypes.length <= 1)
+        disabled: !this.isNew || (this.part?.contentTypes && this.part?.contentTypes.length <= 1)
       });
       // title
       schema.unshift(Schemas.title);      
@@ -457,8 +457,8 @@ export class EditPage implements OnInit, OnDestroy {
         isDirty = true;
       }
       // type
-      if (name === 'type' && this.part?.dataTypes && this.part?.dataTypes?.length > 0) {
-        control.setValue(this.part?.dataTypes[0].value);
+      if (name === 'type' && this.part?.contentTypes && this.part?.contentTypes?.length > 0) {
+        control.setValue(this.part?.contentTypes[0].value);
         isDirty = true;
       }
       // prioritized data
@@ -489,7 +489,7 @@ export class EditPage implements OnInit, OnDestroy {
           if (!part) {
             return null;
           }
-          return (part.dataTypes || []).map(type => ({
+          return (part.contentTypes || []).map(type => ({
             text: `${item.collection}:${type.value}`,
             name: `${item.collection}:${type.value}`,
             selected: false,

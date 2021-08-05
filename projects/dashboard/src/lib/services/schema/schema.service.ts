@@ -99,7 +99,7 @@ export const Schemas = {
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 0 },
   content: { label: 'Content', name: 'content', type: 'content' },
   value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
-  count: { label: 'Count', name: 'count', type: 'count', defaultValue: 0 }, // TODO: add "count" type
+  count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 }, // TODO: add "count" type
   keyword: { label: 'Keyword', name: 'keyword', type: 'text' },
   toc: {
     label: 'TOC',

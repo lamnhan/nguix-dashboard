@@ -44,8 +44,8 @@ export class ListPage implements OnInit {
         // get items
         this.store.dispatch(new GetPart(this.part, true));
         // set type
-        if (this.part.dataTypes && this.part.dataTypes.length > 1) {
-          this.type = this.part.dataTypes[0].value || '';
+        if (this.part.contentTypes && this.part.contentTypes.length > 1) {
+          this.type = this.part.contentTypes[0].value || '';
         }
       }
     }),

@@ -102,9 +102,9 @@
             </select>
           </ng-container>
   
-          <ng-container *ngIf="schema.type==='type' && part.dataTypes">
+          <ng-container *ngIf="schema.type==='type' && part.contentTypes">
             <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
-              <option *ngFor="let type of part.dataTypes" [value]="type.value">{{ type.text }}</option>
+              <option *ngFor="let type of part.contentTypes" [value]="type.value">{{ type.text }}</option>
             </select>
           </ng-container>
   
@@ -261,7 +261,7 @@
                   class="delete button-outline-danger"
                   href="javascript:void(0)"
                   (click)="delete(part, databaseItem)"
-                >Delete</a>
+                >Delete forever</a>
                 <a
                   class="trash button-danger"
                   href="javascript:void(0)"

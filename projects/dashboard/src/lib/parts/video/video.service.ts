@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { VideoDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, DataType, UpdateEffect } from '../../services/config/config.service';
+import { FormSchemaItem, ContentType, UpdateEffect } from '../../services/config/config.service';
 import { Schemas, Effects } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -71,7 +71,7 @@ export class VideoPartService {
     },
   ];
 
-  public readonly dataTypes: DataType[]  = [
+  public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];
 
