@@ -67,7 +67,7 @@ export class DatabaseState {
       return (
         !part.dataService
           ? of([] as any[])
-          : part.dataService.getCollection(ref => ref.orderBy('createdAt', 'desc'), false)
+          : part.dataService.getCollection(ref => ref.orderBy('createdAt', 'desc').limit(1000), false)
       )
       .pipe(
         tap(items => patchState({[part.name]: items}))
