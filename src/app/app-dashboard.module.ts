@@ -29,7 +29,7 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
             });
           },
           dashboardService => {
-            dashboardService.pagePart.dataTypes.push({text: 'Test', value: 'test'});
+            dashboardService.pagePart.contentTypes.push({text: 'Test', value: 'test'});
           },
         ],
         allowDirectContent: true,

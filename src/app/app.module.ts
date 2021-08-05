@@ -20,6 +20,7 @@ import {
   StorageService,
   AuthService,
   UserService,
+  NetworkService,
 } from '@lamnhan/ngx-useful';
 import { PageDataService, UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
 
@@ -63,6 +64,7 @@ import { FooterComponentModule } from './components/footer/footer.module';
     StorageService,
     AuthService,
     UserService,
+    NetworkService,
     // schemata data services
     PageDataService,
     UserDataService,

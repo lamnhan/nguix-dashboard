@@ -4,7 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { TranslocoService } from '@ngneat/transloco';
 import {
-  MenuItem,
+  NetworkService,
   LocalstorageService,
   CacheService,
   FetchService,
@@ -33,6 +33,7 @@ export class AppComponent {
     private firebaseAuth: AngularFireAuth,
     private firebaseStorage: AngularFireStorage,
     private translateService: TranslocoService,
+    private networkService: NetworkService,
     private localstorageService: LocalstorageService,
     private cacheService: CacheService,
     private fetchService: FetchService,
@@ -54,6 +55,7 @@ export class AppComponent {
   }
 
   private initialize() {
+    this.networkService.init();
     this.localstorageService.init();
     this.cacheService.init();
     this.fetchService

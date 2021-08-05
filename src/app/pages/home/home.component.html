@@ -1,35 +1,94 @@
 <div class="host">
 
-  <section class="auth">
+  <section class="heading">
 
-    <div><h2>Demo</h2></div>
+    <div class="image">
+      <img src="/assets/images/featured.jpg" alt="Angular UI/UX Dashboard">
+    </div>
 
-    <div class="login" *ngIf="!authService.authenticated; else account">
+    <div class="text">
+      <h1>NGUIX Dashboard</h1>
+      <p>An Angular Dashboard UI Kit.</p>
+    </div>
+  
+    <div class="cta">
+      <a
+        class="button-primary-xl"
+        [usefulRouterLink]="['guides']"
+      >Use it now!</a>
+      <a
+        class="source-code button-outline-medium-xl"
+        href="https://github.com/lamnhan/nguix-sahboard"
+        target="_blank"
+      >
+        <nguix-icon name="github"></nguix-icon>
+        <span>Source code</span>
+      </a>
+    </div>
 
-      <app-login (goRegister)="navService.navigate(['register'])"></app-login>
+  </section>
 
-      <hr>
-      <h3>Different roles</h3>
-      <p>Use these accounts to see different roles, all password are the same = <strong>1234567890</strong>:</p>
-      <ul>
-        <li>sadmin@lamnhan.com</li>
-        <li>admin@lamnhan.com</li>
-        <li>editor@lamnhan.com</li>
-        <li>author@lamnhan.com</li>
-        <li>contributor@lamnhan.com</li>
-        <li>subscriber@lamnhan.com</li>
-      </ul>
+  <section class="demo">
+
+    <div class="title">Demo</div>
+
+    <div class="content">
+  
+      <div class="login" *ngIf="!authService.authenticated; else account">
+        <app-login (goRegister)="navService.navigate(['register'])"></app-login>
+  
+        <!-- <hr>
+        <h3>Different roles</h3>
+        <p>Use these accounts to see different roles, all password are the same = <strong>1234567890</strong>:</p>
+        <ul>
+          <li>sadmin@lamnhan.com</li>
+          <li>admin@lamnhan.com</li>
+          <li>editor@lamnhan.com</li>
+          <li>author@lamnhan.com</li>
+          <li>contributor@lamnhan.com</li>
+          <li>subscriber@lamnhan.com</li>
+        </ul> -->
+  
+      </div>
+  
+      <ng-template #account>
+        <div class="account" *ngIf="userService.currentUser">
+          <div class="text-medium">Account:</div>
+          <div><h3>{{ userService?.data?.email }}</h3></div>
+        </div>
+        <div>
+          <button
+            class="button-primary"
+            *ngIf="userService.currentUser"
+            (click)="gotoDashboard()"
+          >Go to Dashboard</button>
+          <button class="button margin-left" (click)="signOut()">Logout</button>
+        </div>
+      </ng-template>
 
     </div>
 
-    <ng-template #account>
-      <div class="account" *ngIf="userService.currentUser">
-        <div>Account: <strong>{{ userService?.data?.email }}</strong></div>
-        <div><button class="button-primary" (click)="gotoDashboard()">Go to Dashboard</button></div>
-      </div>
-      <hr>
-      <button class="button" (click)="signOut()">Logout</button>
-    </ng-template>
+  </section>
+
+  <section class="getting-started">
+
+    <div class="title">How?</div>
+
+    <ul class="content">
+      <li>
+        <div class="head">Installation</div>
+        <div class="body">
+          <nguix-content [content]="installContent"></nguix-content>
+        </div>
+      </li>
+      <li>
+        <div class="head">Basic usage</div>
+        <div class="body">
+          <nguix-content [content]="usageContent"></nguix-content>
+          <p>See <a [usefulRouterLink]="['guides']">guides</a> for more articles.</p>
+        </div>
+      </li>
+    </ul>
 
   </section>
 
