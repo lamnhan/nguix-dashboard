@@ -33,11 +33,6 @@ export class UploaderComponent implements OnInit, OnChanges {
   uploadResult?: StorageItem;
   cropResult?: Blob;
 
-  // editor
-  imageEditorOptions: any = {
-    usageStatistics: false,
-  };
-
   // cropper
   enforceCroppingSize = false;
   fileDataUrl?: string;

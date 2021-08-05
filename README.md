@@ -17,6 +17,30 @@
 
 </section>
 
+<section id="getting-started">
+
+## Getting started
+
+- Install:
+
+```sh
+npm i @lamnhan/nguix-dashboard
+```
+
+- Usage:
+
+Create the module `app-dashboard.module.ts`, see [example](https://github.com/lamnhan/nguix-dashboard/blob/main/src/app/app-dashboard.module.ts).
+
+For more, visit: <https://nguix-dashboard.lamnhan.com>
+
+```ts
+// Import --> app.module.ts
+import { AppDashboardModule } from './app-dashboard.module';
+@NgModule({ imports: [AppDashboardModule] })
+```
+
+</section>
+
 <section id="modules" data-note="AUTO-GENERATED CONTENT, DO NOT EDIT DIRECTLY!">
 
 <h2><a name="modules"><p>Modules</p>

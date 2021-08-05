@@ -11,7 +11,6 @@
       "@ngxs/store" : "ngxsStore",
       "ngx-toastr": "toastr",
       "ngx-tinymce": "tinymce",
-      "tui-image-editor": "tuiImageEditor",
       "ngx-filesize": "ng.filesize",
       "croppie": "croppie"
     }
@@ -20,7 +19,6 @@
     "ngx-pagination",
     "ngx-toastr",
     "ngx-tinymce",
-    "tui-image-editor",
     "ngx-filesize",
     "croppie"
   ]
