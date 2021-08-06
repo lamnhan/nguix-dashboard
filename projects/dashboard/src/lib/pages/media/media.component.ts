@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
-import { StorageItem } from '@lamnhan/ngx-useful';
 
 import { GetFolders, GetFiles, DeleteUpload, StorageItemWithUrlAndMetas } from '../../states/media/media.state';
 
@@ -30,7 +29,6 @@ export class MediaPage implements OnInit {
   );
 
   activeFolder?: string;
-
   layout: 'list' | 'thumbnail' = 'list';
   showUploader = false;
   query = '';  

@@ -34,8 +34,12 @@
       <ng-template #listingBar>
         <div class="folders">
           <select class="form-select" (change)="changeFolder($event)">
-            <option value="0" selected disabled>Select a folder</option>
-            <option *ngFor="let folder of data.folders" [value]="folder">{{ folder }}</option>
+            <option value="0" selected disabled>Select folder</option>
+            <option
+              *ngFor="let folder of data.folders"
+              [selected]="activeFolder===folder"
+              [value]="folder"
+            >{{ folder }}</option>
           </select>
         </div>
         <div class="filter">
@@ -48,10 +52,10 @@
         </div>
         <div class="layouts">
           <button [class.active]="layout==='list'" (click)="layout='list'">
-            <i class="icon icon-dashboard-layout-list"></i>
+            <i class="icon-medium-tint icon-dashboard-layout-list"></i>
           </button>
           <button [class.active]="layout==='thumbnail'" (click)="layout='thumbnail'">
-            <i class="icon icon-dashboard-layout-thumbnail"></i>
+            <i class="icon-medium-tint icon-dashboard-layout-thumbnail"></i>
           </button>
         </div>
         <div class="counter">{{ counting.total }} items</div>
@@ -63,7 +67,7 @@
 
       <div class="major">
 
-        <table class="listing table-striped" [class]="layout">
+        <table class="listing list table-striped" *ngIf="layout==='list'; else thumbnailLayout;">
 
           <thead>
             <tr>
@@ -75,7 +79,7 @@
           </thead>
 
           <tbody *ngIf="!activeFolder">
-            Select an folder to view files.
+            <tr><td colspan="42">Select an folder to view files.</td></tr>
           </tbody>
 
           <tbody>
@@ -88,11 +92,8 @@
               "
             >
               <td class="name">
-                <a
-                  href="#"
-                  (click)="detailItem=listingItem; false;"
-                >
-                  <i class="icon-medium" [class]="'icon-dashboard-media-' + listingItem.type"></i>
+                <a href="#" (click)="detailItem=listingItem; false;">
+                  <i class="icon-medium" [class]="'icon-dashboard-media-' + listingItem.type"></i>              
                   <strong>{{ listingItem.name }}</strong>
                 </a>
               </td>
@@ -114,6 +115,32 @@
           </tfoot>
 
         </table>
+
+        <ng-template #thumbnailLayout>
+          <ul class="listing thumbnail">
+            <li *ngIf="!activeFolder">
+              Select an folder to view files.
+            </li>
+            <li
+              *ngFor="
+                let listingItem of filteredItems
+                | mediaTypeFilter : type
+                | paginate : {itemsPerPage: 30, currentPage: pageNo}
+                | mediaListingCounter : counting
+              "
+            >
+              <a class="file-thumbnail" href="#" (click)="detailItem=listingItem; false;">
+                <span *ngIf="listingItem.type!=='image'; else imageThumbnail;">
+                  <i class="icon-medium" [class]="'icon-dashboard-media-' + listingItem.type"></i>
+                </span>
+                <ng-template #imageThumbnail>
+                  <img [src]="listingItem.downloadUrl" [alt]="listingItem.name">
+                </ng-template>              
+              </a>
+              <a class="file-name" href="#" (click)="detailItem=listingItem; false;">{{ listingItem.name }}</a>
+            </li>
+          </ul>
+        </ng-template>
 
         <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
           <div class="top">

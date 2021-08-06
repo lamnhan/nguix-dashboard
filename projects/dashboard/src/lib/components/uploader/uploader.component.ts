@@ -124,10 +124,10 @@ export class UploaderComponent implements OnInit, OnChanges {
         )
         .subscribe(finalUploadResult => {
           this.uploadResult = finalUploadResult;
-          // emit event
-          this.done.emit(this.uploadResult);
           // update state
           this.store.dispatch(new AddUpload(this.uploadResult));
+          // emit event
+          this.done.emit(this.uploadResult);
           // close modal
           if (this.closeOnCompleted) {
             this.closeAndReset();

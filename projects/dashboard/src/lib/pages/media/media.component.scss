@@ -53,11 +53,60 @@
         flex-wrap: nowrap;
         align-items: center;
         margin-top: 1rem;
-  
+
+        .folders {
+          margin-right: .5rem;
+
+          select {
+            padding: .25rem .5rem;
+          }
+        }
+        
         .filter {
+          display: none;
           flex: 1;
+          margin-right: .5rem;
+
+          input {
+            padding: .25rem .5rem;
+          }
         }
   
+        .layouts {
+          flex: 1;
+
+          &, button {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+          }
+
+          button {
+            padding: .25rem .5rem;
+            border: 1px solid $medium;
+            outline: none;
+            background: $light-shade;
+
+            &.active {
+              background: $light;
+            }
+
+            &:first-child {
+              border-radius: 3px 0 0 3px;
+            }
+            
+            &:last-child {
+              border-left: none;
+              border-radius: 0 3px 3px 0;
+            }
+
+            i {
+              width: 1.5rem;
+              height: 1.5rem;
+            }
+          }
+        }
+
         .counter {
           margin-left: 2rem;
         }
@@ -69,7 +118,7 @@
 
       .major {
 
-        table.listing {
+        table.listing.list {
 
           thead tr th {
             font-weight: 400;
@@ -100,12 +149,12 @@
                 display: flex;
                 flex-wrap: nowrap;
                 align-items: center;
-  
+
                 i {
                   width: 1.5rem;
                   height: 1.5rem;
                 }
-  
+
                 strong {
                   margin-left: .5rem;
                 }
@@ -119,6 +168,55 @@
               display: none;
             }
           }
+
+        }
+
+        ul.listing.thumbnail {
+          display: flex;
+          flex-wrap: wrap;
+          margin-left: -1rem;
+
+          li {
+            width: calc(50% - 1rem);
+            margin-left: 1rem;
+            margin-bottom: 2rem;
+
+            .file-thumbnail {
+              display: block;
+              position: relative;
+              width: 100%;
+              padding-top: 100%;
+              overflow: hidden;
+              border-radius: 3px;
+
+              span, img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+              }
+
+              span {
+                background: $light;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                  width: 3rem;
+                  height: 3rem;
+                }
+              }
+            }
+
+            .file-name {
+              margin-top: .5rem;
+            }
+          }          
         }
 
         .detail {
@@ -217,3 +315,17 @@
 }
 
 .loading {}
+
+@media screen and (min-width: 480px) {
+  
+  .host .main .body {
+
+    .headbar, .footbar {
+
+      .filter {
+        display: block;
+      }
+    }
+  }
+
+}
