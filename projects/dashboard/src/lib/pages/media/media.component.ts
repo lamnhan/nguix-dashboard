@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
-import { GetMedia, DeleteUpload } from '../../states/media/media.state';
+import { GetFolders, GetFiles, DeleteUpload, StorageItemWithUrlAndMetas } from '../../states/media/media.state';
 
 @Component({
   selector: 'nguix-dashboard-media-page',
@@ -14,23 +14,24 @@ import { GetMedia, DeleteUpload } from '../../states/media/media.state';
 export class MediaPage implements OnInit {
 
   public readonly page$ = this.route.params.pipe(
-    map(params => {
-      return { ok: true };
-    }),
-    tap(() => {
-      this.store.dispatch(new GetMedia(true));
-    }),
+    map(() => ({ ok: true })),
+    tap(() => this.store.dispatch(new GetFolders())),
   );
 
   public readonly data$ = this.store.select(state => state.media).pipe(
-    map(media => {
-      const listingItems = media.files || [];
+    map(mediaState => {
+      const folders = (mediaState.folders as string[] || [] as string[]).sort().reverse();
+      const listingItems = mediaState.filesByFolder[this.activeFolder || '$never'] || [];
       return {
+        folders,
         listingItems,
       };
     }),
   );
 
+  activeFolder?: string;
+
+  layout: 'list' | 'thumbnail' = 'list';
   showUploader = false;
   query = '';  
   type = 'all';
@@ -39,7 +40,7 @@ export class MediaPage implements OnInit {
     total: 0,
   };
 
-  detailItem?: { media: StorageItem, downloadUrl: string, metadata: any };
+  detailItem?: StorageItemWithUrlAndMetas;
 
   constructor(
     private store: Store,
@@ -48,11 +49,13 @@ export class MediaPage implements OnInit {
 
   ngOnInit(): void {}
 
-  setDetailItem(media: StorageItem, downloadUrl: string, metadata: any) {
-    this.detailItem = { media, downloadUrl, metadata };
+  changeFolder(e: any) {
+    const folder = e.target.value as string;
+    this.activeFolder = folder;
+    this.store.dispatch(new GetFiles(folder, true));
   }
 
-  delete(item: StorageItem) {
+  delete(item: StorageItemWithUrlAndMetas) {
     const yes = confirm('Are you sure you want to delete this file?');
     if (yes) {
       this.detailItem = undefined;

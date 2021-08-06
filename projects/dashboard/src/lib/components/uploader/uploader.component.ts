@@ -1,11 +1,11 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
 import { StorageService, StorageItem } from '@lamnhan/ngx-useful';
 
 import { ImageCropping } from '../../services/config/config.service';
-import { AddUpload } from '../../states/media/media.state';
+import { AddUpload, StorageItemWithUrlAndMetas } from '../../states/media/media.state';
 
 interface Uploading {
   name: string;
@@ -24,13 +24,13 @@ export class UploaderComponent implements OnInit, OnChanges {
   @Input() withLibrary = false;
   @Input() imageCropping?: ImageCropping;
   @Output() close = new EventEmitter<void>();
-  @Output() done = new EventEmitter<StorageItem>();
+  @Output() done = new EventEmitter<StorageItemWithUrlAndMetas>();
 
   // uploader
   tab: 'library' | 'upload' | 'editor' = this.withLibrary ? 'library' : 'upload';
   selectedFile?: File;
   uploading?: Uploading;
-  uploadResult?: StorageItem;
+  uploadResult?: StorageItemWithUrlAndMetas;
   cropResult?: Blob;
 
   // cropper
@@ -112,15 +112,27 @@ export class UploaderComponent implements OnInit, OnChanges {
     // completed
     task.snapshotChanges().pipe(
       finalize(() => {
-        this.uploadResult = this.storageService.buildStorageItem(fullPath);
-        // emit event
-        this.done.emit(this.uploadResult);
-        // update state
-        this.store.dispatch(new AddUpload(this.uploadResult));
-        // close modal
-        if (this.closeOnCompleted) {
-          this.closeAndReset();
-        }
+        const uploadResult = this.storageService.buildStorageItem(fullPath);
+        combineLatest([
+          uploadResult.downloadUrl$,
+          uploadResult.metadata$,
+        ])
+        .pipe(
+          map(([downloadUrl, metadata]) =>
+            ({...uploadResult, downloadUrl, metadata} as StorageItemWithUrlAndMetas)
+          ),
+        )
+        .subscribe(finalUploadResult => {
+          this.uploadResult = finalUploadResult;
+          // emit event
+          this.done.emit(this.uploadResult);
+          // update state
+          this.store.dispatch(new AddUpload(this.uploadResult));
+          // close modal
+          if (this.closeOnCompleted) {
+            this.closeAndReset();
+          }
+        });
       })
     ).subscribe();
   }
