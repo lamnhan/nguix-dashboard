@@ -19,6 +19,8 @@ export class MediaPage implements OnInit {
 
   public readonly data$ = this.store.select(state => state.media).pipe(
     map(mediaState => {
+      this.isListingLoading = false;
+      // set data
       const folders = (mediaState.folders as string[] || [] as string[]).sort().reverse();
       const listingItems = mediaState.filesByFolder[this.activeFolder || '$never'] || [];
       return {
@@ -28,6 +30,7 @@ export class MediaPage implements OnInit {
     }),
   );
 
+  isListingLoading = false;
   layout: 'list' | 'thumbnail' = 'list';
   type = 'all';
   query = '';  
@@ -45,6 +48,8 @@ export class MediaPage implements OnInit {
   ngOnInit(): void {}
 
   changeFolder(e: any) {
+    this.isListingLoading = true;
+    // dispatch action
     const folder = e.target.value as string;
     this.activeFolder = folder;
     this.store.dispatch(new GetFiles(folder, true));

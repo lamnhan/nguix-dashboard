@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
-import { StorageService, StorageItem } from '@lamnhan/ngx-useful';
+import { StorageService } from '@lamnhan/ngx-useful';
 
 import { ImageCropping } from '../../services/config/config.service';
 import { AddUpload, StorageItemWithUrlAndMetas } from '../../states/media/media.state';
@@ -34,7 +34,6 @@ export class UploaderComponent implements OnInit, OnChanges {
   cropResult?: Blob;
 
   // cropper
-  enforceCroppingSize = false;
   fileDataUrl?: string;
   cropperOptions!: Croppie.CroppieOptions;
   cropperResultOptions!: Croppie.ResultOptions;
@@ -49,10 +48,7 @@ export class UploaderComponent implements OnInit, OnChanges {
   ngOnChanges() {
     // default cropping size (no enforcement)
     if (!this.imageCropping) {
-      this.imageCropping = { width: 500, height: 500 };
-      this.enforceCroppingSize = false;
-    } else {
-      this.enforceCroppingSize = true;
+      this.imageCropping = { width: 500, height: 500, unenforced: true };
     }
     // calculate cropper data
     this.setCropperData();
@@ -72,13 +68,16 @@ export class UploaderComponent implements OnInit, OnChanges {
 
   selectFile(e: any) {
     const file = e.target.files[0] as File;
-    const { name: path, size } = file;
+    const { name: path, size, type } = file;
     if (file) {
       this.selectedFile = file;
-      if (['image/jpeg', 'image/png'].indexOf(file.type) !== -1) {
+      if (['image/jpeg', 'image/png', 'image/webp'].indexOf(file.type) !== -1) {
         this.storageService.readFileDataUrl(e.target.files[0])
         .subscribe(dataUrl => {
           this.fileDataUrl = dataUrl;
+          if (this.cropperResultOptions) {
+            this.cropperResultOptions.format = type.split('/')[1] as any;
+          }
         });
       } else {
         this.upload(file, path, size);
@@ -89,12 +88,10 @@ export class UploaderComponent implements OnInit, OnChanges {
 
   doneCropping() {
     if (this.selectedFile && this.cropResult) {
+      const { name: path, size } = this.selectedFile;
       this.storageService
         .compressImage(this.cropResult)
-        .subscribe(data => {
-          const { name: path, size } = (this.selectedFile as File);
-          this.upload(data, path, size);
-        });
+        .subscribe(data => this.upload(data, path, size));
       // reset
       this.fileDataUrl = undefined;
       this.cropResult = undefined;
@@ -161,6 +158,7 @@ export class UploaderComponent implements OnInit, OnChanges {
       showZoomer: true,
     };
     this.cropperResultOptions = {
+      ...this.cropperResultOptions,
       size: {
         width: resultWidth,
         height: resultHeight,

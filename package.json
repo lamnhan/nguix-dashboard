@@ -44,7 +44,7 @@
     "@angular/router": "~12.0.3",
     "@lamnhan/nguix-starter": "0.0.11",
     "@lamnhan/ngx-schemata": "0.0.10",
-    "@lamnhan/ngx-useful": "0.0.26",
+    "@lamnhan/ngx-useful": "file:../ngx-useful/dist/useful/lamnhan-ngx-useful-0.0.27.tgz",
     "@lamnhan/schemata": "0.0.20",
     "@ngxs/store": "^3.7.2",
     "@unistylus/bootstrap": "0.0.6",

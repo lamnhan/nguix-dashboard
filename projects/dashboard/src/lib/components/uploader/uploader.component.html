@@ -48,14 +48,14 @@
               class="form-control"
               type="number"
               [value]="imageCropping?.width"
-              [disabled]="enforceCroppingSize"
+              [disabled]="!imageCropping?.unenforced"
               (change)="croppingWidthChanges($event)">
             <div>X</div>
             <input
               class="form-control"
               type="number"
               [value]="imageCropping?.height"
-              [disabled]="enforceCroppingSize"
+              [disabled]="!imageCropping?.unenforced"
               (change)="croppingHeightChanges($event)">
           </div>
           <div class="action">

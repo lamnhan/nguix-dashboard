@@ -76,12 +76,10 @@
               <th class="date">Date</th>
             </tr>
           </thead>
-  
-          <tbody *ngIf="!activeFolder">
-            <tr><td colspan="42">Select an folder to view files.</td></tr>
-          </tbody>
-  
+
           <tbody>
+            <tr *ngIf="!activeFolder"><td colspan="42">Select an folder to view files.</td></tr>
+            <tr *ngIf="isListingLoading"><td colspan="42">Loading ...</td></tr>
             <tr *ngFor="let listingItem of activeItems">
               <td class="name">
                 <a href="#" (click)="detailItem=listingItem; false;">
@@ -113,6 +111,9 @@
             <li style="margin: 0 1rem; width: 100%;" *ngIf="!activeFolder">
               Select an folder to view files.
             </li>
+            <li style="margin: 0 1rem; width: 100%;" *ngIf="isListingLoading">
+              Loading ...
+            </li>
             <li *ngFor="let listingItem of activeItems">
               <a
                 class="file-thumbnail"
@@ -140,7 +141,7 @@
         <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
           <div class="top">
             <div class="title">
-              <i class="icon-medium" [class]="'icon-dashboard-type-' + detailItem.type"></i>
+              <i class="icon-medium" [class]="'icon-dashboard-media-' + detailItem.type"></i>
               <strong>{{ detailItem.name }}</strong>
             </div>
             <a href="#" (click)="detailItem=undefined;false;">X</a>

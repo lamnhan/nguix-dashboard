@@ -129,6 +129,7 @@ export interface LinkingSchemaMeta {
 export interface ImageCropping {
   width: number;
   height: number;
+  unenforced?: boolean;
 }
 
 @Injectable({
