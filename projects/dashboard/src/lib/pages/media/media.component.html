@@ -1,12 +1,11 @@
 <div class="host dashboard page" *ngIf="page$ | async as page; else loading">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container
-    *ngIf="data.listingItems | mediaQueryFilter : query; let filteredItems"
-  >
+  <ng-container *ngIf="data.listingItems | mediaQueryFilter : query; let filteredItems">
+  <ng-container *ngIf="filteredItems | mediaTypeFilter : type | paginate : {itemsPerPage: 30, currentPage: pageNo}; let activeItems;">
 
     <div class="head">
-
+  
       <div class="title">
         <h1>Media</h1>
         <button
@@ -14,7 +13,7 @@
           (click)="showUploader=true"
         >Add New</button>
       </div>
-
+  
       <ul class="types" *ngIf="filteredItems | mediaExtractTypes as listingTypes">
         <ng-container *ngFor="let listingType of listingTypes">
           <li *ngIf="listingType.count">
@@ -26,9 +25,9 @@
           </li>
         </ng-container>
       </ul>
-
+  
     </div>
-
+  
     <div class="body">
       
       <ng-template #listingBar>
@@ -58,17 +57,17 @@
             <i class="icon-medium-tint icon-dashboard-layout-thumbnail"></i>
           </button>
         </div>
-        <div class="counter">{{ counting.total }} items</div>
+        <div class="counter">{{ activeItems.length }} items</div>
       </ng-template>
-
+  
       <div class="headbar">
         <ng-container *ngTemplateOutlet="listingBar"></ng-container>
       </div>
-
+  
       <div class="major">
-
+  
         <table class="listing list table-striped" *ngIf="layout==='list'; else thumbnailLayout;">
-
+  
           <thead>
             <tr>
               <th class="name">Name</th>
@@ -77,20 +76,13 @@
               <th class="date">Date</th>
             </tr>
           </thead>
-
+  
           <tbody *ngIf="!activeFolder">
             <tr><td colspan="42">Select an folder to view files.</td></tr>
           </tbody>
-
+  
           <tbody>
-            <tr
-              *ngFor="
-                let listingItem of filteredItems
-                | mediaTypeFilter : type
-                | paginate : {itemsPerPage: 30, currentPage: pageNo}
-                | mediaListingCounter : counting
-              "
-            >
+            <tr *ngFor="let listingItem of activeItems">
               <td class="name">
                 <a href="#" (click)="detailItem=listingItem; false;">
                   <i class="icon-medium" [class]="'icon-dashboard-media-' + listingItem.type"></i>              
@@ -102,7 +94,7 @@
               <td class="date">{{ listingItem.metadata.updated | date }}</td>
             </tr>
           </tbody>
-
+  
           <tfoot>
             <tr>
               <td colspan="42">
@@ -113,35 +105,38 @@
               </td>
             </tr>
           </tfoot>
-
+  
         </table>
-
+  
         <ng-template #thumbnailLayout>
           <ul class="listing thumbnail">
-            <li *ngIf="!activeFolder">
+            <li style="margin: 0 1rem; width: 100%;" *ngIf="!activeFolder">
               Select an folder to view files.
             </li>
-            <li
-              *ngFor="
-                let listingItem of filteredItems
-                | mediaTypeFilter : type
-                | paginate : {itemsPerPage: 30, currentPage: pageNo}
-                | mediaListingCounter : counting
-              "
-            >
-              <a class="file-thumbnail" href="#" (click)="detailItem=listingItem; false;">
-                <span *ngIf="listingItem.type!=='image'; else imageThumbnail;">
+            <li *ngFor="let listingItem of activeItems">
+              <a
+                class="file-thumbnail"
+                href="#"
+                (click)="detailItem=listingItem; false;"
+                [style.background-image]="
+                  listingItem.type !== 'image'
+                    ? null
+                    : 'url(' + listingItem.downloadUrl + ')'
+                "
+              >
+                <span *ngIf="listingItem.type!=='image'">
                   <i class="icon-medium" [class]="'icon-dashboard-media-' + listingItem.type"></i>
                 </span>
-                <ng-template #imageThumbnail>
-                  <img [src]="listingItem.downloadUrl" [alt]="listingItem.name">
-                </ng-template>              
               </a>
               <a class="file-name" href="#" (click)="detailItem=listingItem; false;">{{ listingItem.name }}</a>
+              <div class="file-info">
+                <span>{{ listingItem.metadata.updated | date }}</span>
+                <span>{{ listingItem.metadata.size | filesize }}</span>
+              </div>
             </li>
           </ul>
         </ng-template>
-
+  
         <div class="detail" [class.show]="detailItem" *ngIf="detailItem">
           <div class="top">
             <div class="title">
@@ -172,15 +167,16 @@
             </div>
           </div>
         </div>
-
+  
       </div>
       
       <div class="footbar">
         <ng-container *ngTemplateOutlet="listingBar"></ng-container>
       </div>
-
+  
     </div>
 
+  </ng-container>
   </ng-container>
   </ng-container>
   </div>

@@ -8,7 +8,6 @@ import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 import { NguixDashboardMediaTypeFilterPipeModule } from '../../pipes/media-type-filter/media-type-filter.module';
 import { NguixDashboardMediaQueryFilterPipeModule } from '../../pipes/media-query-filter/media-query-filter.module';
 import { NguixDashboardMediaExtractTypesPipeModule } from '../../pipes/media-extract-types/media-extract-types.module';
-import { NguixDashboardMediaListingCounterPipeModule } from '../../pipes/media-listing-counter/media-listing-counter.module';
 
 import { NguixDashboardUploaderComponentModule } from '../../components/uploader/uploader.module';
 
@@ -29,7 +28,6 @@ import { MediaPage } from './media.component';
     NguixDashboardMediaTypeFilterPipeModule,
     NguixDashboardMediaQueryFilterPipeModule,
     NguixDashboardMediaExtractTypesPipeModule,
-    NguixDashboardMediaListingCounterPipeModule,
     NguixDashboardUploaderComponentModule,
     MediaRoutingModule,
   ]

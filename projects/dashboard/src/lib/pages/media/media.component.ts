@@ -28,16 +28,13 @@ export class MediaPage implements OnInit {
     }),
   );
 
-  activeFolder?: string;
   layout: 'list' | 'thumbnail' = 'list';
-  showUploader = false;
-  query = '';  
   type = 'all';
+  query = '';  
   pageNo = 1;
-  counting = {
-    total: 0,
-  };
 
+  showUploader = false;
+  activeFolder?: string;
   detailItem?: StorageItemWithUrlAndMetas;
 
   constructor(
