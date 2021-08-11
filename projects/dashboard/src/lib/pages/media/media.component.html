@@ -1,7 +1,7 @@
-<div class="host dashboard page" *ngIf="page$ | async as page; else loading">
+<div class="host dashboard page" *ngIf="page$ | async as page; else loadingView">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container *ngIf="data.listingItems as listingItems">
+  <ng-container *ngIf="!query ? data.folderItems : (data.searchItems || data.folderItems); let listingItems;">
   <ng-container *ngIf="listingItems | mediaTypeFilter : type | paginate : {itemsPerPage: 30, currentPage: pageNo}; let activeItems;">
 
     <div class="head">
@@ -45,10 +45,11 @@
           <input
             class="form-control"
             type="search"
-            placeholder="Filter items ..."
+            placeholder="Search file by name"
             [(ngModel)]="query"
+            (keyup.enter)="search(data.searchQuery)"
           >
-          <button class="button-primary" (click)="search()" [disabled]="!query">Search</button>
+          <button class="button-primary" (click)="search(data.searchQuery)" [disabled]="!query">Search</button>
         </div>
         <div class="layouts">
           <button [class.active]="layout==='list'" (click)="layout='list'">
@@ -79,8 +80,19 @@
           </thead>
 
           <tbody>
-            <tr *ngIf="!activeFolder"><td colspan="42">Select an folder to view files.</td></tr>
-            <tr *ngIf="isListingLoading"><td colspan="42">Loading ...</td></tr>
+            <tr *ngIf="isListingLoading">
+              <td colspan="42">
+                <div class="loading">
+                  <nguix-dashboard-spinner></nguix-dashboard-spinner>
+                </div>
+              </td>
+            </tr>            
+            <tr *ngIf="!isListingLoading && !activeFolder && !(query && data.searchItems)">
+              <td colspan="42">Select an folder or search to view files.</td>
+            </tr>
+            <tr *ngIf="query && data.searchItems">
+              <td colspan="42">Currently view top search result for query "<strong>{{ data.searchQuery }}</strong>", <a href="#" (click)="query=''; false;">clear search</a>.</td>
+            </tr>
             <tr *ngFor="let listingItem of activeItems">
               <td class="name">
                 <a href="#" (click)="detailItem=listingItem; false;">
@@ -109,11 +121,14 @@
   
         <ng-template #thumbnailLayout>
           <ul class="listing thumbnail">
-            <li style="margin: 0 1rem; width: 100%;" *ngIf="!activeFolder">
-              Select an folder to view files.
+            <li class="loading" *ngIf="isListingLoading">
+              <nguix-dashboard-spinner></nguix-dashboard-spinner>
             </li>
-            <li style="margin: 0 1rem; width: 100%;" *ngIf="isListingLoading">
-              Loading ...
+            <li class="not-item" *ngIf="!isListingLoading && !activeFolder && !(query && data.searchItems)">
+              Select an folder or search to view files.
+            </li>
+            <li class="not-item" *ngIf="query && data.searchItems">
+              Currently view top search result for query "<strong>{{ data.searchQuery }}</strong>", <a href="#" (click)="query=''; false;">clear search</a>.
             </li>
             <li *ngFor="let listingItem of activeItems">
               <a
@@ -189,8 +204,10 @@
 
 </div>
 
-<ng-template #loading>
-  <div class="loading">Loading ...</div>
+<ng-template #loadingView>
+  <div class="loading">
+    <nguix-dashboard-spinner></nguix-dashboard-spinner>
+  </div>
 </ng-template>
 
 <nguix-dashboard-uploader [show]="showUploader" (close)="showUploader=false"></nguix-dashboard-uploader>

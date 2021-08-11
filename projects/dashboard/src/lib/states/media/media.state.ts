@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
-import { StorageService, StorageItem } from '@lamnhan/ngx-useful';
+import { StorageService, StorageItem, StorageSearchingData } from '@lamnhan/ngx-useful';
 
 export class GetFolders {
   static readonly type = '[Media] Get folders';
@@ -12,6 +12,11 @@ export class GetFolders {
 export class GetFiles {
   static readonly type = '[Media] Get files';
   constructor(public folder: string, public refresh = false) {}
+}
+
+export class SearchFiles {
+  static readonly type = '[Media] Search files';
+  constructor(public query: string) {}
 }
 
 export class AddUpload {
@@ -25,9 +30,14 @@ export class DeleteUpload {
 }
 
 export interface MediaStateModel {
+  // listing
   remoteLoaded: boolean;
   folders: string[];
   filesByFolder: Record<string, StorageItem[]>;
+  // search
+  searchingData?: StorageSearchingData;
+  searchQuery?: string;
+  searchResult?: StorageItem[];
 }
 
 @State<MediaStateModel>({
@@ -93,6 +103,38 @@ export class MediaState {
         ),
       );
     }
+  }
+
+  @Action(SearchFiles)
+  searchFiles({ getState, patchState }: StateContext<MediaStateModel>, action: SearchFiles) {
+    const {
+      searchingData: currentSearchingData,
+      searchQuery: currentSearchQuery,
+      searchResult: currentSearchResult
+    } = getState();
+    const { query } = action;
+    return (currentSearchingData ? of(currentSearchingData) : this.storageService.getSearching(false))
+    .pipe(
+      switchMap(searchingData => {
+        if (currentSearchQuery === query && currentSearchResult?.length) {
+          return of(currentSearchResult).pipe(
+            tap(() => patchState({ searchResult: currentSearchResult })),
+          );
+        } else {
+          return this.storageService.searchFiles(searchingData, query, 30, false)
+          .list()
+          .pipe(
+            tap(searchResult =>
+              patchState({
+                searchingData,
+                searchQuery: query,
+                searchResult,
+              })
+            ),
+          );
+        }
+      }),
+    );
   }
 
   @Action(AddUpload)

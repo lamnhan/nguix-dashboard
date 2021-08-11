@@ -55,7 +55,7 @@
         margin-top: 1rem;
 
         .folders {
-          margin-right: .5rem;
+          margin-right: 1rem;
 
           select {
             padding: .25rem .5rem;
@@ -65,9 +65,18 @@
         .search {
           display: none;
           flex: 1;
-          margin-right: .5rem;
+          flex-wrap: nowrap;
+          align-items: center;
+          margin-right: 1rem;
 
           input {
+            flex: 1;
+            padding: .25rem .5rem;
+            margin-right: .5rem;
+          }
+
+          button {
+            display: none;
             padding: .25rem .5rem;
           }
         }
@@ -175,14 +184,19 @@
           display: flex;
           flex-wrap: wrap;
           margin-left: -1rem;
-          padding: 1rem 0;
+          padding: 0;
           margin: 1rem 0;
           border: 1px solid $medium;
 
+          li.loading, li.not-item {
+            width: 100%;
+            margin: 0;
+            padding: 1rem;
+          }
+
           li {
             width: calc(50% - 1.5rem);
-            margin-left: 1rem;
-            margin-bottom: 2rem;
+            margin: 1rem 0 1rem 1rem;
 
             .file-thumbnail {
               display: block;
@@ -330,18 +344,15 @@
 
 }
 
-.loading {}
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 @media screen and (min-width: 480px) {
   
   .host .main .body {
-
-    .headbar, .footbar {
-
-      .search {
-        display: block;
-      }
-    }
 
     .major {
 
@@ -356,6 +367,34 @@
             }
           }
         }
+      }
+    }
+  }
+
+}
+
+@media screen and (min-width: 576px) {
+  
+  .host .main .body {
+
+    .headbar, .footbar {
+
+      .search {
+        display: flex;
+      }
+    }
+  }
+
+}
+
+@media screen and (min-width: 768px) {
+  
+  .host .main .body {
+
+    .headbar, .footbar {
+
+      .search button {
+        display: block;
       }
     }
   }

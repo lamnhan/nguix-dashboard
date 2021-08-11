@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
-import { GetFolders, GetFiles, DeleteUpload } from '../../states/media/media.state';
+import { MediaStateModel, GetFolders, GetFiles, SearchFiles, DeleteUpload } from '../../states/media/media.state';
 
 @Component({
   selector: 'nguix-dashboard-media-page',
@@ -18,15 +18,19 @@ export class MediaPage implements OnInit {
     tap(() => this.store.dispatch(new GetFolders())),
   );
 
-  public readonly data$ = this.store.select(state => state.media).pipe(
+  public readonly data$ = this.store.select<MediaStateModel>(state => state.media).pipe(
     map(mediaState => {
       this.isListingLoading = false;
       // set data
       const folders = (mediaState.folders as string[] || [] as string[]).sort().reverse();
-      const listingItems = mediaState.filesByFolder[this.activeFolder || '$never'] || [];
+      const folderItems = mediaState.filesByFolder[this.activeFolder || '$never'] || [];
+      const searchQuery = mediaState.searchQuery;
+      const searchItems = mediaState.searchResult;
       return {
         folders,
-        listingItems,
+        folderItems,
+        searchQuery,
+        searchItems,
       };
     }),
   );
@@ -56,10 +60,12 @@ export class MediaPage implements OnInit {
     this.store.dispatch(new GetFiles(folder, true));
   }
 
-  search() {
-    this.isListingLoading = true;
-    //
-    console.log(this.query);
+  search(currentQuery = '') {
+    if (this.query && this.query !== currentQuery) {
+      this.isListingLoading = true;
+      // dispatch action
+      this.store.dispatch(new SearchFiles(this.query));
+    }
   }
 
   delete(item: StorageItem) {
