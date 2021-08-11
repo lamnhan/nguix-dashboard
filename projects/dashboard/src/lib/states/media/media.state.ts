@@ -113,7 +113,10 @@ export class MediaState {
       searchResult: currentSearchResult
     } = getState();
     const { query } = action;
-    return (currentSearchingData ? of(currentSearchingData) : this.storageService.getSearching(false))
+    return (currentSearchingData
+      ? of(currentSearchingData)
+      : this.storageService.getSearching({ time: 10080 }) // cache for 1 week
+    )
     .pipe(
       switchMap(searchingData => {
         if (currentSearchQuery === query && currentSearchResult?.length) {
