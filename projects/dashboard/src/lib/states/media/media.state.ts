@@ -1,19 +1,8 @@
 import { Injectable } from '@angular/core';
-import { of, combineLatest } from 'rxjs';
-import { tap, map, switchMap, catchError, take } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { StorageService, StorageItem } from '@lamnhan/ngx-useful';
-
-export interface StorageItemWithUrlAndMetas extends StorageItem {
-  metadata: any;
-  downloadUrl: string;
-}
-
-export interface MediaStateModel {
-  remoteLoaded: boolean;
-  folders: string[];
-  filesByFolder: Record<string, StorageItemWithUrlAndMetas[]>;
-}
 
 export class GetFolders {
   static readonly type = '[Media] Get folders';
@@ -27,12 +16,18 @@ export class GetFiles {
 
 export class AddUpload {
   static readonly type = '[Media] Add new upload';
-  constructor(public item: StorageItemWithUrlAndMetas) {}
+  constructor(public item: StorageItem) {}
 }
 
 export class DeleteUpload {
   static readonly type = '[Media] Delete an upload';
-  constructor(public item: StorageItemWithUrlAndMetas) {}
+  constructor(public item: StorageItem) {}
+}
+
+export interface MediaStateModel {
+  remoteLoaded: boolean;
+  folders: string[];
+  filesByFolder: Record<string, StorageItem[]>;
 }
 
 @State<MediaStateModel>({
@@ -45,7 +40,6 @@ export class DeleteUpload {
 })
 @Injectable()
 export class MediaState {
-  private readonly UPLOAD_PATH = 'app-content/uploads';
 
   constructor(private storageService: StorageService) {}
 
@@ -58,32 +52,18 @@ export class MediaState {
       if (refresh) {
         patchState({ folders: allFolders });
       }
+      return of(allFolders);
     } else {
-      let allFolders = currentFolders;
-      // list deep 
-      const listDeep = (fullPath?: string) =>
-        this.storageService.list(fullPath)
-        .pipe(
-          take(1),
-          map(listResult => {
-            const { items, prefixes } = listResult;
-            if (prefixes.length) {
-              listResult.prefixes.forEach(prefix => listDeep(prefix.fullPath));
-            }
-            return !items.length ? undefined : (fullPath || `${this.UPLOAD_PATH}/root`);
-          }),
-          catchError(() => of(undefined)),
-          map(fullPath => {
-            if (fullPath) {
-              const folder = fullPath.replace(`${this.UPLOAD_PATH}/`, '');
-              allFolders.push(folder);
-            }
-            return allFolders;
-          }),
-        )
-        .subscribe(allFolders => !allFolders ? undefined : patchState({ folders: allFolders }));
-      // start from default folder
-      listDeep();
+      return this.storageService.listDeepFolders(false).pipe(
+        tap(allFolders =>
+          patchState({
+            remoteLoaded: true,
+            folders: allFolders.map(item =>
+              item.replace(`${this.storageService.getUploadFolder()}`, '')
+            ),
+          })
+        ),
+      );
     }
   }
 
@@ -100,28 +80,15 @@ export class MediaState {
       }
       return of(currentFilesByFolder[folder]);
     } else {
-      return this.storageService.list(`${this.UPLOAD_PATH}${folder === 'root' ? '' : `/${folder}`}`)
+      return this.storageService.listFiles(
+        false,
+        `${this.storageService.getUploadFolder()}${folder === '' ? '' : ('/' + folder)}`
+      )
       .pipe(
-        switchMap(listResult =>
-          combineLatest(
-            listResult.items.map(item => {
-              const storageItem = this.storageService.buildStorageItem(item.fullPath);
-              return combineLatest([
-                storageItem.downloadUrl$,
-                storageItem.metadata$,
-              ])
-              .pipe(
-                map(([downloadUrl, metadata]) =>
-                  ({...storageItem, downloadUrl, metadata} as StorageItemWithUrlAndMetas)
-                ),
-              );
-            })
-          )
-        ),
         tap(files =>
           patchState({
-            filesByFolder: { ...currentFilesByFolder, [folder]: files },
             remoteLoaded: true,
+            filesByFolder: { ...currentFilesByFolder, [folder]: files },
           })
         ),
       );
@@ -134,7 +101,7 @@ export class MediaState {
     const { item } = action;
     const folder = item
       .fullPath
-      .replace(`${this.UPLOAD_PATH}/`, '')
+      .replace(this.storageService.getUploadFolder(), '')
       .replace(`/${item.name}`, '');
     // build patch data
     const patchData = {} as any;
@@ -158,7 +125,7 @@ export class MediaState {
     const { name, fullPath } = item;
     const folder = item
       .fullPath
-      .replace(`${this.UPLOAD_PATH}/`, '')
+      .replace(this.storageService.getUploadFolder(), '')
       .replace(`/${item.name}`, '');
     const files = (currentFilesByFolder[folder] || []).filter(file => file.name !== name);
     return this.storageService.delete(fullPath).pipe(

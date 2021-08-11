@@ -14,11 +14,9 @@ import { GetProfiles } from '../../states/user/user.state';
 export class UserPage implements OnInit {
 
   public readonly page$ = this.route.params.pipe(
-    map(params => {
-      return { ok: true };
-    }),
+    map(params => ({ ok: true })),
     tap(() => {
-      this.store.dispatch(new GetProfiles(true));
+      this.store.dispatch(new GetProfiles(this.viewPerPage, true));
     }),
   );
 
@@ -31,12 +29,10 @@ export class UserPage implements OnInit {
     }),
   );
 
-  query = '';
-  role = 'all';
+  viewPerPage = 10;
   pageNo = 1;
-  counting = {
-    total: 0,
-  };
+  role = 'all';
+  query = '';
 
   detailItem?: Profile;
 
@@ -46,5 +42,14 @@ export class UserPage implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  changeViewPerPage(e: any) {
+    const no = +e.target.value;
+    console.log({ no });
+  }
+
+  changePage(page: number) {
+    console.log({ page });
+  }
 
 }

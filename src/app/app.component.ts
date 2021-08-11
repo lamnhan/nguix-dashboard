@@ -19,7 +19,7 @@ import {
   AuthService,
   UserService,
 } from '@lamnhan/ngx-useful';
-import { UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
+import { PostDataService, UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
 
 @Component({
   selector: 'app-root',
@@ -48,6 +48,7 @@ export class AppComponent {
     public authService: AuthService,
     private userService: UserService,
     // data services
+    private postDataService: PostDataService,
     private userDataService: UserDataService,
     private profileDataService: ProfileDataService,
   ) {
@@ -59,18 +60,23 @@ export class AppComponent {
     this.localstorageService.init();
     this.cacheService.init();
     this.fetchService
-      .setOptions({ cacheTime: 1440, /* 24 hours */ })
+      .setOptions({ cacheTime: 1440 })
       .setIntegrations({ cacheService: this.cacheService })
       .init();
     this.databaseService
       .setOptions({
         driver: 'firestore',
-        cacheTime: 1440, // 24 hours
+        cacheTime: 1440,
       })
       .setIntegrations({ cacheService: this.cacheService })
       .init(this.firebaseFirestore);
     this.storageService
-      .setOptions({ dateGrouping: true })
+      .setIntegrations({ cacheService: this.cacheService })
+      .setOptions({
+        dateGrouping: true,
+        listingCacheTime: 1440,
+        listingIgnoreEmptyFolder: true,
+      })
       .init(this.firebaseStorage);
     this.appService.setOptions({ splashScreen: true }).init();
     this.authService.setOptions({driver: 'firestore'}).init(this.firebaseAuth);
@@ -137,5 +143,8 @@ export class AppComponent {
           }
         }
       );
+    this.postDataService
+      .setOptions({ advancedMode: true })
+      .init();
   }
 }

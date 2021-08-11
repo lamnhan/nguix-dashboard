@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { of, combineLatest } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { Profile } from '@lamnhan/schemata';
 import { ProfileDataService } from '@lamnhan/ngx-schemata';
@@ -11,7 +11,7 @@ export interface UserStateModel {
 
 export class GetProfiles {
   static readonly type = '[User] Get all profiles';
-  constructor(public refresh = false) {}
+  constructor(public length = 10, public refresh = false) {}
 }
 
 @State<UserStateModel>({
@@ -30,14 +30,15 @@ export class UserState {
   @Action(GetProfiles)
   getProfiles({ getState, patchState }: StateContext<UserStateModel>, action: GetProfiles) {
     const state = getState();
+    const { length, refresh } = action;
     if (state.profiles.length) {
-      if (action.refresh) {
+      if (refresh) {
         patchState({ profiles: state.profiles });
       }
       return of(state.profiles);
     } else {
       return this.profileDataService.getCollection(
-        ref => ref.where('type', '==', 'default').limit(1000),
+        ref => ref.where('type', '==', 'default').limit(length),
         false
       )
       .pipe(

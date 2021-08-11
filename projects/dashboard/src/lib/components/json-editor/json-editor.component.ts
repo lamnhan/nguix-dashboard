@@ -59,17 +59,13 @@ export class JsonEditorComponent implements OnInit, OnChanges {
   uploadChanges(media: StorageItem) {
     if (this.uploadCallerData) {
       const { uploadRetrieval = 'url' } = this.configService.getConfig();
-      const value$ = uploadRetrieval === 'path'
-        ? of(media.fullPath)
-        : uploadRetrieval === 'url'
-        ? media.downloadUrl$
-        : media.downloadUrl$;
-      value$.subscribe(value => {
-        // set value
-        (this.uploadCallerData?.schemaItem as SchemaItem).value = value;
-        // reset caller data
-        this.uploadCallerData = undefined;
-      });
+      const value = uploadRetrieval === 'path'
+        ? media.fullPath
+        : media.downloadUrl;
+      // set value
+      (this.uploadCallerData?.schemaItem as SchemaItem).value = value;
+      // reset caller data
+      this.uploadCallerData = undefined;
     }
   }
 

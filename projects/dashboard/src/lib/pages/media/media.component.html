@@ -1,8 +1,8 @@
 <div class="host dashboard page" *ngIf="page$ | async as page; else loading">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container *ngIf="data.listingItems | mediaQueryFilter : query; let filteredItems">
-  <ng-container *ngIf="filteredItems | mediaTypeFilter : type | paginate : {itemsPerPage: 30, currentPage: pageNo}; let activeItems;">
+  <ng-container *ngIf="data.listingItems as listingItems">
+  <ng-container *ngIf="listingItems | mediaTypeFilter : type | paginate : {itemsPerPage: 30, currentPage: pageNo}; let activeItems;">
 
     <div class="head">
   
@@ -14,11 +14,11 @@
         >Add New</button>
       </div>
   
-      <ul class="types" *ngIf="filteredItems | mediaExtractTypes as listingTypes">
+      <ul class="types" *ngIf="listingItems | mediaExtractTypes as listingTypes">
         <ng-container *ngFor="let listingType of listingTypes">
           <li *ngIf="listingType.count">
-            <strong *ngIf="listingType.value === type; else inactive">{{ listingType.title }}</strong>
-            <ng-template #inactive>
+            <strong *ngIf="listingType.value === type; else inactiveType">{{ listingType.title }}</strong>
+            <ng-template #inactiveType>
               <a href="#" (click)="type=listingType.value; false">{{ listingType.title }}</a>
             </ng-template>
             <em>({{ listingType.count }})</em>
@@ -38,16 +38,17 @@
               *ngFor="let folder of data.folders"
               [selected]="activeFolder===folder"
               [value]="folder"
-            >{{ folder }}</option>
+            >{{ folder || '/' }}</option>
           </select>
         </div>
-        <div class="filter">
+        <div class="search">
           <input
             class="form-control"
             type="search"
             placeholder="Filter items ..."
             [(ngModel)]="query"
-          > 
+          >
+          <button class="button-primary" (click)="search()" [disabled]="!query">Search</button>
         </div>
         <div class="layouts">
           <button [class.active]="layout==='list'" (click)="layout='list'">

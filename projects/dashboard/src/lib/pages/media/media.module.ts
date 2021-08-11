@@ -6,14 +6,12 @@ import { NgxFilesizeModule } from 'ngx-filesize';
 import { RouterLinkDirectiveModule } from '@lamnhan/ngx-useful';
 
 import { NguixDashboardMediaTypeFilterPipeModule } from '../../pipes/media-type-filter/media-type-filter.module';
-import { NguixDashboardMediaQueryFilterPipeModule } from '../../pipes/media-query-filter/media-query-filter.module';
 import { NguixDashboardMediaExtractTypesPipeModule } from '../../pipes/media-extract-types/media-extract-types.module';
 
 import { NguixDashboardUploaderComponentModule } from '../../components/uploader/uploader.module';
 
 import { MediaRoutingModule } from './media-routing.module';
 import { MediaPage } from './media.component';
-
 
 @NgModule({
   declarations: [
@@ -26,7 +24,6 @@ import { MediaPage } from './media.component';
     NgxFilesizeModule,
     RouterLinkDirectiveModule,
     NguixDashboardMediaTypeFilterPipeModule,
-    NguixDashboardMediaQueryFilterPipeModule,
     NguixDashboardMediaExtractTypesPipeModule,
     NguixDashboardUploaderComponentModule,
     MediaRoutingModule,

@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { StorageItem } from '@lamnhan/ngx-useful';
 
-import { StorageItemWithUrlAndMetas } from '../../states/media/media.state';
 import { DashboardListingMediaType } from '../../services/dashboard/dashboard.service';
 
 @Pipe({
   name: 'mediaExtractTypes'
 })
 export class MediaExtractTypesPipe implements PipeTransform {
-  transform(items: StorageItemWithUrlAndMetas[]): DashboardListingMediaType[] {
+  transform(items: StorageItem[]): DashboardListingMediaType[] {
     const all: DashboardListingMediaType = {
       title: 'All',
       value: 'all',

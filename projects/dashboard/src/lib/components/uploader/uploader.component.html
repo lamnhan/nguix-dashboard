@@ -67,11 +67,11 @@
           <div class="name">File name: {{ uploading.name }}</div>
           <div class="size">File size: {{ uploading.size | filesize }}</div>
           <ng-container *ngIf="uploadResult; else statusShow">
-            <div class="upload-size" *ngIf="uploadResult.metadata$ | async; let metadata;">
+            <div class="upload-size" *ngIf="uploadResult.metadata; let metadata;">
               Upload size: {{ metadata.size | filesize }}
             </div>
             <div class="path">Upload path: <a href="#">{{ uploadResult.fullPath }}</a></div>
-            <div class="url">Download URL: <a [href]="uploadResult.downloadUrl$ | async" target="_blank">Open link</a></div>
+            <div class="url">Download URL: <a [href]="uploadResult.downloadUrl" target="_blank">Open link</a></div>
           </ng-container>
           <ng-template #statusShow>
             <div class="status">

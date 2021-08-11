@@ -3,9 +3,10 @@ import { Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 import { StorageService } from '@lamnhan/ngx-useful';
+import { StorageItem } from '@lamnhan/ngx-useful';
 
 import { ImageCropping } from '../../services/config/config.service';
-import { AddUpload, StorageItemWithUrlAndMetas } from '../../states/media/media.state';
+import { AddUpload } from '../../states/media/media.state';
 
 interface Uploading {
   name: string;
@@ -24,13 +25,13 @@ export class UploaderComponent implements OnInit, OnChanges {
   @Input() withLibrary = false;
   @Input() imageCropping?: ImageCropping;
   @Output() close = new EventEmitter<void>();
-  @Output() done = new EventEmitter<StorageItemWithUrlAndMetas>();
+  @Output() done = new EventEmitter<StorageItem>();
 
   // uploader
   tab: 'library' | 'upload' | 'editor' = this.withLibrary ? 'library' : 'upload';
   selectedFile?: File;
   uploading?: Uploading;
-  uploadResult?: StorageItemWithUrlAndMetas;
+  uploadResult?: StorageItem;
   cropResult?: Blob;
 
   // cropper
@@ -109,18 +110,8 @@ export class UploaderComponent implements OnInit, OnChanges {
     // completed
     task.snapshotChanges().pipe(
       finalize(() => {
-        const uploadResult = this.storageService.buildStorageItem(fullPath);
-        combineLatest([
-          uploadResult.downloadUrl$,
-          uploadResult.metadata$,
-        ])
-        .pipe(
-          map(([downloadUrl, metadata]) =>
-            ({...uploadResult, downloadUrl, metadata} as StorageItemWithUrlAndMetas)
-          ),
-        )
-        .subscribe(finalUploadResult => {
-          this.uploadResult = finalUploadResult;
+        this.storageService.buildStorageItem(fullPath).subscribe(uploadResult => {
+          this.uploadResult = uploadResult;
           // update state
           this.store.dispatch(new AddUpload(this.uploadResult));
           // emit event

@@ -62,7 +62,7 @@
           }
         }
         
-        .filter {
+        .search {
           display: none;
           flex: 1;
           margin-right: .5rem;
@@ -338,7 +338,7 @@
 
     .headbar, .footbar {
 
-      .filter {
+      .search {
         display: block;
       }
     }

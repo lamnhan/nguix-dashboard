@@ -215,25 +215,14 @@ export class EditPage implements OnInit, OnDestroy {
     if (this.uploadCallerData) {
       const {schema, formGroup} = this.uploadCallerData;
       const { uploadRetrieval = 'url' } = this.configService.getConfig();
-      const value$ = uploadRetrieval === 'path'
-        ? of(media.fullPath)
-        : uploadRetrieval === 'url'
-        ? media.downloadUrl$
-        : media.downloadUrl$.pipe(
-          map(url => {
-            // TODO: create hybrid
-            return url;
-          }),
-        );
+      const value = uploadRetrieval === 'path' ? media.fullPath : media.downloadUrl;
       const control = formGroup.get(schema.name);
       if (control) {
-        value$.subscribe(value => {
-          // set value
-          control.setValue(value);
-          control.markAsDirty();
-          // reset data
-          this.uploadCallerData = undefined;
-        });
+        // set value
+        control.setValue(value);
+        control.markAsDirty();
+        // reset data
+        this.uploadCallerData = undefined;
       }
     }
   }

@@ -1,9 +1,8 @@
 <div class="host dashboard page" *ngIf="page$ | async as page; else loading">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container
-    *ngIf="data.listingItems | userQueryFilter : query; let filteredItems"
-  >
+  <ng-container *ngIf="data.listingItems | userQueryFilter : query; let filteredItems">
+  <ng-container *ngIf="filteredItems | userRoleFilter : role | paginate : {itemsPerPage: viewPerPage, currentPage: pageNo}; let activeItems;">
 
     <div class="head">
 
@@ -36,7 +35,7 @@
             [(ngModel)]="query"
           > 
         </div>
-        <div class="counter">{{ counting.total }} items</div>
+        <div class="counter">{{ activeItems.length }} items</div>
       </ng-template>
 
       <div class="headbar">
@@ -56,14 +55,7 @@
           </thead>
 
           <tbody>
-            <tr
-              *ngFor="
-                let listingItem of filteredItems
-                | userRoleFilter : role
-                | paginate : {itemsPerPage: 30, currentPage: pageNo}
-                | userListingCounter : counting
-              "
-            >
+            <tr *ngFor="let listingItem of activeItems">
               <td class="username">
                 <a href="#" (click)="detailItem=listingItem;false">
                   <strong>{{ listingItem.id }}</strong>
@@ -78,7 +70,7 @@
             <tr>
               <td colspan="42">
                 <pagination-controls
-                  (pageChange)="pageNo=$event"
+                  (pageChange)="changePage($event)"
                   [directionLinks]="false"
                 ></pagination-controls>
               </td>
@@ -131,6 +123,7 @@
 
     </div>
 
+  </ng-container>
   </ng-container>
   </ng-container>
   </div>
