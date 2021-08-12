@@ -64,7 +64,7 @@ export class MediaState {
       }
       return of(allFolders);
     } else {
-      return this.storageService.listDeepFolders(false).pipe(
+      return this.storageService.listDeepFolders({ time: 1440 }).pipe(
         tap(allFolders =>
           patchState({
             remoteLoaded: true,
@@ -115,7 +115,7 @@ export class MediaState {
     const { query } = action;
     return (currentSearchingData
       ? of(currentSearchingData)
-      : this.storageService.getSearching({ time: 10080 }) // cache for 1 week
+      : this.storageService.getSearching({ time: 1440 })
     )
     .pipe(
       switchMap(searchingData => {
