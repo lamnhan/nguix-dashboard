@@ -19,7 +19,7 @@ import {
   AuthService,
   UserService,
 } from '@lamnhan/ngx-useful';
-import { PostDataService, UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
+import { PostDataService, ProfileDataService, UserDataService } from '@lamnhan/ngx-schemata';
 
 @Component({
   selector: 'app-root',
@@ -49,13 +49,14 @@ export class AppComponent {
     private userService: UserService,
     // data services
     private postDataService: PostDataService,
-    private userDataService: UserDataService,
     private profileDataService: ProfileDataService,
+    private userDataService: UserDataService,
   ) {
     this.initialize();
   }
 
   private initialize() {
+    // normal services
     this.networkService.init();
     this.localstorageService.init();
     this.cacheService.init();
@@ -68,7 +69,11 @@ export class AppComponent {
         driver: 'firestore',
         cacheTime: 1440,
       })
-      .setIntegrations({ cacheService: this.cacheService })
+      .setIntegrations({
+        cacheService: this.cacheService,
+        userService: this.userService,
+        settingService: this.settingService,
+      })
       .init(this.firebaseFirestore);
     this.storageService
       .setIntegrations({ cacheService: this.cacheService })
@@ -143,8 +148,12 @@ export class AppComponent {
           }
         }
       );
-    this.postDataService
+    // data services
+    this.profileDataService
       .setOptions({ advancedMode: true })
       .init();
+    // this.postDataService
+    //   .setOptions({ advancedMode: true })
+    //   .init();
   }
 }

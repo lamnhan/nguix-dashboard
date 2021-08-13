@@ -68,8 +68,8 @@ import { FooterComponentModule } from './components/footer/footer.module';
     // schemata data services
     PageDataService,
     PostDataService,
-    UserDataService,
     ProfileDataService,
+    UserDataService,
   ],
   bootstrap: [AppComponent]
 })

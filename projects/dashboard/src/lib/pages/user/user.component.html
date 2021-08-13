@@ -1,8 +1,8 @@
-<div class="host dashboard page" *ngIf="page$ | async as page; else loading">
+<div class="host dashboard page" *ngIf="page$ | async as page; else loadingView">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container *ngIf="data.listingItems | userQueryFilter : query; let filteredItems">
-  <ng-container *ngIf="filteredItems | userRoleFilter : role | paginate : {itemsPerPage: viewPerPage, currentPage: pageNo}; let activeItems;">
+  <ng-container *ngIf="data.pageItems; let listingItems">
+  <ng-container *ngIf="listingItems | userRoleFilter : role | paginate : {itemsPerPage: 1, currentPage: pageNo, totalItems: data.totalCount}; let activeItems;">
 
     <div class="head">
 
@@ -10,7 +10,7 @@
         <h1>Users</h1>
       </div>
 
-      <ul class="roles" *ngIf="filteredItems | userExtractRoles as listingRoles">
+      <ul class="roles" *ngIf="listingItems | userExtractRoles as listingRoles">
         <ng-container *ngFor="let listingRole of listingRoles">
           <li *ngIf="listingRole.count">
             <strong *ngIf="listingRole.value === role; else inactive">{{ listingRole.title }}</strong>
@@ -27,13 +27,15 @@
     <div class="body">
       
       <ng-template #listingBar>
-        <div class="filter">
+        <div class="search">
           <input
             class="form-control"
             type="search"
-            placeholder="Filter items ..."
+            placeholder="Search user"
             [(ngModel)]="query"
-          > 
+            (keyup.enter)="search(data.searchQuery)"
+          >
+          <button class="button-primary" (click)="search(data.searchQuery)" [disabled]="!query">Search</button>
         </div>
         <div class="counter">{{ activeItems.length }} items</div>
       </ng-template>
@@ -55,6 +57,13 @@
           </thead>
 
           <tbody>
+            <tr *ngIf="isListingLoading">
+              <td colspan="42">
+                <div class="loading">
+                  <nguix-dashboard-spinner></nguix-dashboard-spinner>
+                </div>
+              </td>
+            </tr>  
             <tr *ngFor="let listingItem of activeItems">
               <td class="username">
                 <a href="#" (click)="detailItem=listingItem;false">
@@ -69,10 +78,16 @@
           <tfoot>
             <tr>
               <td colspan="42">
-                <pagination-controls
-                  (pageChange)="changePage($event)"
-                  [directionLinks]="false"
-                ></pagination-controls>
+                <div class="tfoot">
+                  <div class="left">
+                    <div class="paginator">
+                      <button (click)="previousPage()" [disabled]="pageNo==1"><-</button>
+                      <button (click)="nextPage()" [disabled]="data.totalPages==1||pageNo===data.totalPage">-></button>
+                    </div>
+                    <div class="paging">{{ pageNo }}/{{ data.totalPages }}</div>
+                  </div>
+                  <div class="right">{{ data.totalCount }} total</div>
+                </div>
               </td>
             </tr>
           </tfoot>
@@ -134,6 +149,6 @@
 
 </div>
 
-<ng-template #loading>
+<ng-template #loadingView>
   <div class="loading">Loading ...</div>
 </ng-template>
