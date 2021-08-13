@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { Profile } from '@lamnhan/schemata';
 import { ProfileDataService } from '@lamnhan/ngx-schemata';
 
 export class GetProfiles {
   static readonly type = '[User] Get profiles';
-  constructor(public pageNo = 1, public refresh = false) {}
+  constructor(public pageNo: number, public limit: number, public refresh = false) {}
 }
 
 export class SearchProfiles {
   static readonly type = '[User] Search profiles';
-  constructor(public query: string) {}
+  constructor(public query: string, public limit: number) {}
 }
 
 export interface UserStateModel {
-  profiles: Profile[];
+  profilesByPage: Record<string, Profile[]>;
+  // search
   searchQuery?: string;
   searchResult?: Profile[];
 }
@@ -24,7 +25,7 @@ export interface UserStateModel {
 @State<UserStateModel>({
   name: 'user',
   defaults: {
-    profiles: [],
+    profilesByPage: {},
   },
 })
 @Injectable()
@@ -36,23 +37,38 @@ export class UserState {
 
   @Action(GetProfiles)
   getProfiles({ getState, patchState }: StateContext<UserStateModel>, action: GetProfiles) {
-    const { profiles: currentProfiles } = getState();
-    const { pageNo, refresh } = action;
-    if (currentProfiles.length) {
+    const { profilesByPage: currentProfilesByPage } = getState();
+    const { limit, pageNo, refresh } = action;
+    if (currentProfilesByPage[pageNo]?.length) {
       if (refresh) {
-        patchState({ profiles: currentProfiles });
+        const profiles = currentProfilesByPage[pageNo];
+        patchState({
+          profilesByPage: { ...currentProfilesByPage, [pageNo]: profiles },
+        });
       }
-      return of(currentProfiles);
+      return of(currentProfilesByPage[pageNo]);
     } else {
       return this.profileDataService.getCollection(
-        ref => ref
-          .where('type', '==', 'default')
-          .orderBy('createdAt', 'desc')
-          .limit(1),
+        ref => {
+          let query = ref
+            .where('type', '==', 'default')
+            .orderBy('createdAt', 'desc');
+          if (pageNo > 1) {
+            const prevPageNo = pageNo - 1;
+            const prevItems = currentProfilesByPage[prevPageNo];
+            const lastItem = prevItems[prevItems.length - 1];
+            query = query.startAfter(lastItem.createdAt);
+          }
+          return query.limit(limit);
+        },
         false
       )
       .pipe(
-        tap(profiles => patchState({ profiles }))
+        tap(profiles =>
+          patchState({
+            profilesByPage: { ...currentProfilesByPage, [pageNo]: profiles },
+          })
+        )
       );
     }
   }
@@ -63,7 +79,27 @@ export class UserState {
       searchQuery: currentSearchQuery,
       searchResult: currentSearchResult
     } = getState();
-    const { query } = action;
+    const { limit, query } = action;
+    if (currentSearchQuery === query && currentSearchResult?.length) {
+      return of(currentSearchResult).pipe(
+        tap(() => patchState({ searchResult: currentSearchResult })),
+      );
+    } else {
+      return this.profileDataService.setupSearching().pipe(
+        switchMap(data =>
+          this.profileDataService.search(query, limit)
+            .list()
+            .pipe(
+              tap(searchResult =>
+                patchState({
+                  searchQuery: query,
+                  searchResult: searchResult as Profile[],
+                })
+              ),
+            )
+        ),
+      );
+    }
   }
 
 }

@@ -17,7 +17,7 @@ export class UserPage implements OnInit {
   public readonly page$ = this.route.params.pipe(
     map(params => ({ ok: true })),
     tap(() => {
-      this.store.dispatch(new GetProfiles(this.pageNo, true));
+      this.loadProfiles();
     }),
   );
 
@@ -26,8 +26,8 @@ export class UserPage implements OnInit {
       this.isListingLoading = false;
       // set data
       const totalCount = this.profileDataService.count('default');
-      const totalPages = Math.round(totalCount/this.pagePerView);
-      const pageItems = userState.profiles || [];
+      const totalPages = Math.ceil(totalCount/this.pagePerView);
+      const pageItems = userState.profilesByPage[this.pageNo] || [];
       const searchQuery = userState.searchQuery;
       const searchItems = userState.searchResult;
       return {
@@ -44,7 +44,7 @@ export class UserPage implements OnInit {
   role = 'all';
   query = '';
   pageNo = 1;
-  pagePerView = 1;
+  pagePerView = 30;
 
   detailItem?: Profile;
 
@@ -60,15 +60,22 @@ export class UserPage implements OnInit {
     if (this.query && this.query !== currentQuery) {
       this.isListingLoading = true;
       // dispatch action
-      this.store.dispatch(new SearchProfiles(this.query));
+      this.store.dispatch(new SearchProfiles(this.query, this.pagePerView));
     }
   }
 
   previousPage() {
-    console.log(this.pageNo);
+    --this.pageNo;
+    this.loadProfiles();
   }
   
   nextPage() {
-    console.log(this.pageNo);
+    ++this.pageNo;
+    this.loadProfiles();
+  }
+  
+  private loadProfiles() {
+    this.isListingLoading = true;
+    this.store.dispatch(new GetProfiles(this.pageNo, this.pagePerView, true));
   }
 }

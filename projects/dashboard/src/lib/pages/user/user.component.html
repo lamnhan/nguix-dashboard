@@ -1,8 +1,8 @@
 <div class="host dashboard page" *ngIf="page$ | async as page; else loadingView">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container *ngIf="data.pageItems; let listingItems">
-  <ng-container *ngIf="listingItems | userRoleFilter : role | paginate : {itemsPerPage: 1, currentPage: pageNo, totalItems: data.totalCount}; let activeItems;">
+  <ng-container *ngIf="!query ? data.pageItems : (data.searchItems || data.pageItems); let listingItems">
+  <ng-container *ngIf="listingItems | userRoleFilter : role; let activeItems;">
 
     <div class="head">
 
@@ -17,7 +17,7 @@
             <ng-template #inactive>
               <a href="#" (click)="role=listingRole.value; false">{{ listingRole.title }}</a>
             </ng-template>
-            <em>({{ listingRole.count }})</em>
+            <em>({{ listingRole.count }}{{ listingRole.value !== 'all' ? '' : ('/' + data.totalCount) }})</em>
           </li>
         </ng-container>
       </ul>
@@ -63,7 +63,10 @@
                   <nguix-dashboard-spinner></nguix-dashboard-spinner>
                 </div>
               </td>
-            </tr>  
+            </tr>
+            <tr *ngIf="query && data.searchItems">
+              <td colspan="42">Currently view top search result for query "<strong>{{ data.searchQuery }}</strong>", <a href="#" (click)="query=''; false;">clear search</a>.</td>
+            </tr>
             <tr *ngFor="let listingItem of activeItems">
               <td class="username">
                 <a href="#" (click)="detailItem=listingItem;false">
@@ -80,13 +83,16 @@
               <td colspan="42">
                 <div class="tfoot">
                   <div class="left">
-                    <div class="paginator">
-                      <button (click)="previousPage()" [disabled]="pageNo==1"><-</button>
-                      <button (click)="nextPage()" [disabled]="data.totalPages==1||pageNo===data.totalPage">-></button>
-                    </div>
-                    <div class="paging">{{ pageNo }}/{{ data.totalPages }}</div>
+                    <button class="button-outline-medium-sm" (click)="previousPage()" [disabled]="(query && data.searchItems) || pageNo === 1">
+                      <i class="icon-medium-tint icon-dashboard-left"></i>
+                    </button>
+                    <button class="button-outline-medium-sm" (click)="nextPage()" [disabled]="(query && data.searchItems) || data.totalPages === 1 || pageNo === data.totalPages">
+                      <i class="icon-medium-tint icon-dashboard-right"></i>
+                    </button>
                   </div>
-                  <div class="right">{{ data.totalCount }} total</div>
+                  <div class="right">
+                    {{ (query && data.searchItems) ? '-/-' : (pageNo + '/' + data.totalPages) }} pages
+                  </div>
                 </div>
               </td>
             </tr>
@@ -99,7 +105,7 @@
             <div class="title">
               <strong>{{ detailItem.id }}</strong>
             </div>
-            <a href="#" (click)="detailItem=undefined;false">X</a>
+            <a href="#" (click)="detailItem=undefined;false;">X</a>
           </div>
           <div class="content">
             <div class="image">
@@ -110,6 +116,10 @@
               <strong>
                 <a href="#" target="_blank">{{ detailItem.id }}</a>
               </strong>
+            </div>
+            <div class="name">
+              <span>Name</span>
+              <strong>{{ detailItem.title }}</strong>
             </div>
             <div class="role">
               <span>Role</span>

@@ -97,6 +97,35 @@
     color: $dark-shade;
     border-color: $dark-shade;
   }
+
+  &:disabled, &.disabled {
+    cursor: default;
+    opacity: 1;
+    border: 1px solid rgba($dark, .5);
+    color: rgba($dark, .5);
+    box-shadow: none;
+    background: none;
+  }
+}
+
+@mixin _outline_medium_base {
+  @include _outline_primary_base();
+  color: $medium;
+  border-color: $medium;
+  
+  &:hover, &:focus, &:active, &.active {
+    color: $medium-shade;
+    border-color: $medium-shade;
+  }
+
+  &:disabled, &.disabled {
+    cursor: default;
+    opacity: 1;
+    border: 1px solid rgba($medium, .5);
+    color: rgba($medium, .5);
+    box-shadow: none;
+    background: none;
+  }
 }
 
 @mixin _outline_danger_base {
@@ -163,6 +192,21 @@
 
   &-lg {
     @include _outline_dark_base();
+    padding: .5rem 1.5rem;
+  }
+}
+
+.button-outline-medium {
+  @include _outline_medium_base();
+
+  &-sm {
+    @include _outline_medium_base();
+    padding: .25rem .5rem;
+    font-size: 11px;
+  }
+
+  &-lg {
+    @include _outline_medium_base();
     padding: .5rem 1.5rem;
   }
 }

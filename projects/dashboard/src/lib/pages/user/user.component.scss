@@ -116,6 +116,23 @@
 
             .left {
               flex: 1;
+
+              &, button {
+                display: flex;
+                flex-wrap: nowrap;
+              }
+
+              button {
+                margin-right: .5rem;
+                padding: 0;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                  width: 1.5rem;
+                  height: 1.5rem;
+                }
+              }
             }
           }
         }
