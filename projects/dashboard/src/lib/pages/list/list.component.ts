@@ -8,7 +8,7 @@ import { DatabaseItem, DashboardPart } from '../../services/config/config.servic
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
-import { DatabaseStateModel, GetItems } from '../../states/database/database.state';
+import { DatabaseStateModel, GetItems, GetTranslations } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-list-page',
@@ -23,7 +23,7 @@ export class ListPage implements OnInit {
   status = 'all';
   query = '';
   pageNo = 1;
-  private readonly viewPerPage = 30;
+  private readonly viewPerPage = 2;
 
   detail = '';
 
@@ -62,10 +62,10 @@ export class ListPage implements OnInit {
           {} as Record<string, BuiltinListingItem>
         );
         const totalCount = (part.dataService as DatabaseData<any>).count(this.type);
-        const statusCounting = (part.dataService as DatabaseData<any>).getCounting(this.type, defaultLocale);
+        const statusCounting = (part.dataService as DatabaseData<any>).getCounting(this.type, defaultLocale) as Record<string, number>;
         const totalPages = !totalCount ? 1 : Math.ceil(totalCount/this.viewPerPage);
         const pageItems = databaseState[part.name]?.itemsByType[this.type][this.pageNo] || [];
-        const localizedItemsByOrigin = databaseState[part.name]?.localizedItemsByOrigin || {};
+        const fullItemsByOrigin = databaseState[part.name]?.fullItemsByOrigin || {};
         const searchQuery = databaseState[part.name]?.searchQuery;
         const searchItems = databaseState[part.name]?.searchResult;
         return {
@@ -76,7 +76,7 @@ export class ListPage implements OnInit {
           statusCounting,
           totalPages,
           pageItems,
-          localizedItemsByOrigin,
+          fullItemsByOrigin,
           searchQuery,
           searchItems,
         };
@@ -117,6 +117,12 @@ export class ListPage implements OnInit {
     if (this.part) {
       this.isListingLoading = true;
       this.store.dispatch(new GetItems(this.part, this.type, this.pageNo, this.viewPerPage, true));
+    }
+  }
+
+  loadItemTranslations(databaseItem: DatabaseItem) {
+    if (this.part) {
+      this.store.dispatch(new GetTranslations(this.part, databaseItem));
     }
   }
 

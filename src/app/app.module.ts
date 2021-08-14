@@ -23,6 +23,7 @@ import {
   NetworkService,
 } from '@lamnhan/ngx-useful';
 import {
+  CategoryDataService,
   TagDataService,
   PageDataService,
   PostDataService,
@@ -72,6 +73,7 @@ import { FooterComponentModule } from './components/footer/footer.module';
     UserService,
     NetworkService,
     // schemata data services
+    CategoryDataService,
     TagDataService,
     // PageDataService,
     // PostDataService,

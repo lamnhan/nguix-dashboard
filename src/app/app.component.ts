@@ -20,6 +20,7 @@ import {
   UserService,
 } from '@lamnhan/ngx-useful';
 import {
+  CategoryDataService,
   TagDataService,
   UserDataService,
   ProfileDataService,
@@ -52,6 +53,7 @@ export class AppComponent {
     public authService: AuthService,
     private userService: UserService,
     // data services
+    private categoryDataService: CategoryDataService,
     private tagDataService: TagDataService,
     private userDataService: UserDataService,
     private profileDataService: ProfileDataService,
@@ -153,6 +155,9 @@ export class AppComponent {
         }
       );
     // data services
+    this.categoryDataService
+      .setOptions({ advancedMode: true })
+      .init();
     this.tagDataService
       .setOptions({ advancedMode: true })
       .init();

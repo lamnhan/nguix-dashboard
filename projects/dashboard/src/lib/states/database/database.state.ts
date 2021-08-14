@@ -17,6 +17,14 @@ export class GetItems {
   ) {}
 }
 
+export class GetTranslations {
+  static readonly type = '[Database] Get translations';
+  constructor(
+    public part: DashboardPart,
+    public item: DatabaseItem,
+  ) {}
+}
+
 // export class ChangeStatus {
 //   static readonly type = '[Database] Change status by origin';
 //   constructor(public part: DashboardPart, public databaseItem: DatabaseItem, public status: string) {}
@@ -55,7 +63,7 @@ export interface DatabaseStatePartData {
   // listing
   remoteLoaded: boolean;
   itemsByType: Record<string, Record<string, DatabaseItem[]>>;
-  localizedItemsByOrigin: Record<string, DatabaseItem[]>;
+  fullItemsByOrigin?: Record<string, DatabaseFullItem>;
   // search
   searchQuery?: string;
   searchResult?: DatabaseItem[];
@@ -63,6 +71,11 @@ export interface DatabaseStatePartData {
 
 export interface DatabaseStateModel {
   [part: string]: DatabaseStatePartData;
+}
+
+export interface DatabaseFullItem {
+  all: DatabaseItem[];
+  missingTranslations?: string[];
 }
 
 @State<DatabaseStateModel>({
@@ -90,7 +103,7 @@ export class DatabaseState {
     } else {
       return (
         !part.dataService
-          ? of([] as any[])
+          ? of([] as DatabaseItem[])
           : part.dataService.getCollection(
             ref => {
               let query = ref
@@ -123,10 +136,54 @@ export class DatabaseState {
                   [pageNo]: items,
                 }
               },
-              localizedItemsByOrigin: {},
             }
           })
         )
+      );
+    }
+  }
+
+  @Action(GetTranslations)
+  getTranslations({ getState, patchState }: StateContext<DatabaseStateModel>, action: GetTranslations) {
+    const state = getState();
+    const { part, item } = action;
+    const partName = part.name;
+    const id = item.id;
+    const origin = item.origin;
+    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    if (currentPartData?.fullItemsByOrigin?.[origin]) {
+      return of(currentPartData?.fullItemsByOrigin?.[origin]);
+    } else {
+      return (
+        !part.dataService
+          ? of([] as DatabaseItem[])
+          : part.dataService.getCollection(
+            ref => ref.where('origin', '==', origin),
+            false,
+          )
+      )
+      .pipe(
+        tap((localizedItems: DatabaseItem[]) => {
+          const existingsTranslations = localizedItems.map(x => x.locale) as string[];
+          const missingTranslations = this.settingService.locales
+            .filter(x => !existingsTranslations.includes(x.value))
+            .map(x => x.value);
+          patchState({
+            [partName]: {
+              ...(currentPartData as DatabaseStatePartData || {}),
+              fullItemsByOrigin: {
+                ...((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin || {}),
+                [origin]: {
+                  all: [
+                    item,
+                    ...localizedItems.filter(x => x.id !== id)
+                  ],
+                  missingTranslations,
+                },
+              },
+            }
+          })
+        }),
       );
     }
   }
@@ -177,11 +234,34 @@ export class DatabaseState {
               ...((currentPartData as DatabaseStatePartData)?.itemsByType || {}),
               [type]: {
                 ...((currentPartData as DatabaseStatePartData)?.itemsByType?.[type] || {}),
-                '1':
-                  [data].concat((currentPartData as DatabaseStatePartData)?.itemsByType?.[type]?.['1'] || []),
+                // add main item to the first page
+                ...(
+                  part.noI18n || data.locale === this.settingService.locale
+                  ? {
+                    '1':
+                    [data].concat((currentPartData as DatabaseStatePartData)?.itemsByType?.[type]?.['1'] || []),
+                  }
+                  : {}
+                )
               }
             },
-            localizedItemsByOrigin: {},
+            // add localized item to its group (if other loaded)
+            ...(
+              data.origin && (currentPartData as DatabaseStatePartData)?.fullItemsByOrigin?.[data.origin]
+              ? {
+                fullItemsByOrigin: {
+                  ...((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin || {}),
+                  [data.origin]: {
+                    all: [
+                      ...((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin?.[data.origin]?.all || []),
+                      data,
+                    ],
+                    missingTranslations: ((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin?.[data.origin]?.missingTranslations || []).filter(locale => locale !== data.locale),
+                  }
+                }
+              }
+              : {}
+            ),
           }
         })
       ),
