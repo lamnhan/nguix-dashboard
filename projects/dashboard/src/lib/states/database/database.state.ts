@@ -22,10 +22,15 @@ export class GetItems {
 //   constructor(public part: DashboardPart, public databaseItem: DatabaseItem, public status: string) {}
 // }
 
-// export class AddItem {
-//   static readonly type = '[Database] Add item';
-//   constructor(public part: DashboardPart, public id: string, public data: any) {}
-// }
+export class AddItem {
+  static readonly type = '[Database] Add item';
+  constructor(
+    public part: DashboardPart,
+    public type: string,
+    public id: string,
+    public data: any,
+  ) {}
+}
 
 // export class UpdateItem {
 //   static readonly type = '[Database] Update item';
@@ -75,7 +80,7 @@ export class DatabaseState {
     const { part, type, pageNo, limit, refresh } = action;
     const partName = part.name;
     const currentPartData = state[partName] as undefined | DatabaseStatePartData;
-    if (currentPartData?.itemsByType?.[type]?.[pageNo]) {
+    if (currentPartData?.itemsByType?.[type]?.[pageNo] && currentPartData?.remoteLoaded) {
       if (refresh) {
         patchState({
           [partName]: currentPartData,
@@ -110,6 +115,7 @@ export class DatabaseState {
           patchState({
             [partName]: {
               ...(currentPartData as DatabaseStatePartData || {}),
+              remoteLoaded: true,
               itemsByType: {
                 ...((currentPartData as DatabaseStatePartData)?.itemsByType || {}),
                 [type]: {
@@ -117,6 +123,7 @@ export class DatabaseState {
                   [pageNo]: items,
                 }
               },
+              localizedItemsByOrigin: {},
             }
           })
         )
@@ -151,21 +158,35 @@ export class DatabaseState {
   //   );
   // }
 
-  // @Action(AddItem)
-  // addItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: AddItem) {
-  //   const state = getState();
-  //   const {part, id, data} = action;
-  //   if (!part.dataService) {
-  //     throw new Error('No data service for this part.');
-  //   }
-  //   return (part.dataService as DatabaseData<any>).add(id, data).pipe(
-  //     tap(() =>
-  //       patchState({
-  //         [part.name]: ([data] as any[]).concat(state[part.name]),
-  //       })
-  //     ),
-  //   );
-  // }
+  @Action(AddItem)
+  addItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: AddItem) {
+    const state = getState();
+    const { part, type, id, data } = action;
+    const partName = part.name;
+    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    if (!part.dataService) {
+      throw new Error('No data service for this part.');
+    }
+    return (part.dataService as DatabaseData<any>).add(id, data).pipe(
+      tap(() =>
+        patchState({
+          [partName]: {
+            ...(currentPartData as DatabaseStatePartData || {}),
+            remoteLoaded: false,
+            itemsByType: {
+              ...((currentPartData as DatabaseStatePartData)?.itemsByType || {}),
+              [type]: {
+                ...((currentPartData as DatabaseStatePartData)?.itemsByType?.[type] || {}),
+                '1':
+                  [data].concat((currentPartData as DatabaseStatePartData)?.itemsByType?.[type]?.['1'] || []),
+              }
+            },
+            localizedItemsByOrigin: {},
+          }
+        })
+      ),
+    );
+  }
 
   // @Action(UpdateItem)
   // updateItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateItem) {

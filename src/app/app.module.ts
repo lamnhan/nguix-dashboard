@@ -22,7 +22,13 @@ import {
   UserService,
   NetworkService,
 } from '@lamnhan/ngx-useful';
-import { PageDataService, PostDataService, UserDataService, ProfileDataService } from '@lamnhan/ngx-schemata';
+import {
+  TagDataService,
+  PageDataService,
+  PostDataService,
+  UserDataService,
+  ProfileDataService,
+} from '@lamnhan/ngx-schemata';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppTranslationModule } from './app-translation.module';
@@ -66,10 +72,11 @@ import { FooterComponentModule } from './components/footer/footer.module';
     UserService,
     NetworkService,
     // schemata data services
-    PageDataService,
-    PostDataService,
-    ProfileDataService,
+    TagDataService,
+    // PageDataService,
+    // PostDataService,
     UserDataService,
+    ProfileDataService,
   ],
   bootstrap: [AppComponent]
 })

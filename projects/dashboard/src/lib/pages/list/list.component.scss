@@ -54,8 +54,22 @@
         align-items: center;
         margin-top: 1rem;
 
-        .filter {
+        .search {
+          display: flex;
           flex: 1;
+          flex-wrap: nowrap;
+          align-items: center;
+          margin-right: 1rem;
+
+          input {
+            flex: 1;
+            padding: .25rem .5rem;
+            margin-right: .5rem;
+          }
+
+          button {
+            padding: .25rem .5rem;
+          }
         }
 
         .counter {
@@ -252,7 +266,32 @@
           td.date {}
         }
 
-        tfoot {}
+        tfoot tr td .tfoot {
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: center;
+
+          .left {
+            flex: 1;
+
+            &, button {
+              display: flex;
+              flex-wrap: nowrap;
+            }
+
+            button {
+              margin-right: .5rem;
+              padding: 0;
+              align-items: center;
+              justify-content: center;
+
+              i {
+                width: 1.5rem;
+                height: 1.5rem;
+              }
+            }
+          }
+        }
 
       }
 
@@ -266,4 +305,8 @@
 
 }
 
-.loading {}
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

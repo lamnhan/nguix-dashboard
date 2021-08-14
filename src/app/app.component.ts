@@ -19,7 +19,11 @@ import {
   AuthService,
   UserService,
 } from '@lamnhan/ngx-useful';
-import { PostDataService, ProfileDataService, UserDataService } from '@lamnhan/ngx-schemata';
+import {
+  TagDataService,
+  UserDataService,
+  ProfileDataService,
+} from '@lamnhan/ngx-schemata';
 
 @Component({
   selector: 'app-root',
@@ -48,9 +52,9 @@ export class AppComponent {
     public authService: AuthService,
     private userService: UserService,
     // data services
-    private postDataService: PostDataService,
-    private profileDataService: ProfileDataService,
+    private tagDataService: TagDataService,
     private userDataService: UserDataService,
+    private profileDataService: ProfileDataService,
   ) {
     this.initialize();
   }
@@ -149,11 +153,11 @@ export class AppComponent {
         }
       );
     // data services
+    this.tagDataService
+      .setOptions({ advancedMode: true })
+      .init();
     this.profileDataService
       .setOptions({ advancedMode: true })
       .init();
-    // this.postDataService
-    //   .setOptions({ advancedMode: true })
-    //   .init();
   }
 }

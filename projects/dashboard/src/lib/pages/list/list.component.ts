@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
-import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
+import { DatabaseData, SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
 import { DatabaseItem, DashboardPart } from '../../services/config/config.service';
 import { DataService } from '../../services/data/data.service';
@@ -18,11 +18,12 @@ import { DatabaseStateModel, GetItems } from '../../states/database/database.sta
 export class ListPage implements OnInit {
   private part?: DashboardPart;
 
+  isListingLoading = false;
   type = 'default';
   status = 'all';
   query = '';
   pageNo = 1;
-  viewPerPage = 30;
+  private readonly viewPerPage = 30;
 
   detail = '';
 
@@ -30,23 +31,19 @@ export class ListPage implements OnInit {
     map(params => {
       // reset filter
       this.type = 'default';
-      this.query = '';
       this.status = 'all';
+      this.query = '';
       this.pageNo = 1;
-      this.detail = '';
-      // get part
+      // set data
       this.part = this.dashboardService.getPart(params.part);
+      if (this.part && this.part.contentTypes && this.part.contentTypes.length > 1) {
+        this.type = this.part.contentTypes[0].value || '';
+      }
+      // ...
       return !this.part?.dataService ? {} : {part: this.part};
     }),
     tap(() => {
-      if (this.part) {
-        // get items
-        this.store.dispatch(new GetItems(this.part, this.type, this.pageNo, this.viewPerPage, true));
-        // set type
-        if (this.part.contentTypes && this.part.contentTypes.length > 1) {
-          this.type = this.part.contentTypes[0].value || '';
-        }
-      }
+      this.loadItems();
     }),
   );
 
@@ -55,19 +52,33 @@ export class ListPage implements OnInit {
     .pipe(
       map(databaseState => {
         console.log({ databaseState });
+        // reset loading
+        this.isListingLoading = false;
+        // get data
         const part = this.part as DashboardPart;
         const defaultLocale = this.settingService.defaultLocale;
         const recordLocales = this.settingService.locales.reduce(
           (result, item) => { result[item.value] = item; return result; },
           {} as Record<string, BuiltinListingItem>
         );
-        // const listingItems = this.buildListingItems(database[part.name] || [], defaultLocale);
+        const totalCount = (part.dataService as DatabaseData<any>).count(this.type);
+        const statusCounting = (part.dataService as DatabaseData<any>).getCounting(this.type, defaultLocale);
+        const totalPages = !totalCount ? 1 : Math.ceil(totalCount/this.viewPerPage);
         const pageItems = databaseState[part.name]?.itemsByType[this.type][this.pageNo] || [];
+        const localizedItemsByOrigin = databaseState[part.name]?.localizedItemsByOrigin || {};
+        const searchQuery = databaseState[part.name]?.searchQuery;
+        const searchItems = databaseState[part.name]?.searchResult;
         return {
           part,
           defaultLocale,
           recordLocales,
+          totalCount,
+          statusCounting,
+          totalPages,
           pageItems,
+          localizedItemsByOrigin,
+          searchQuery,
+          searchItems,
         };
       }),
     );
@@ -82,6 +93,32 @@ export class ListPage implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  
+  search(currentQuery = '') {
+    if (this.query && this.query !== currentQuery) {
+      this.isListingLoading = true;
+      // dispatch action
+      // this.store.dispatch(new SearchProfiles(this.query, this.viewPerPage));
+    }
+  }
+
+  previousPage() {
+    --this.pageNo;
+    this.loadItems();
+  }
+  
+  nextPage() {
+    ++this.pageNo;
+    this.loadItems();
+  }
+  
+  private loadItems() {
+    if (this.part) {
+      this.isListingLoading = true;
+      this.store.dispatch(new GetItems(this.part, this.type, this.pageNo, this.viewPerPage, true));
+    }
+  }
 
   // private buildListingItems(
   //   databaseItems: DatabaseItem[],

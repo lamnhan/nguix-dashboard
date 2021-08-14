@@ -22,7 +22,7 @@
             <ng-template #inactive>
               <a href="#" (click)="status=listingStatus.value; false">{{ listingStatus.title }}</a>
             </ng-template>
-            <em>({{ listingStatus.count }})</em>
+            <em>({{ listingStatus.count }}{{ listingStatus.value !== 'all' ? '' : ('/' + data.totalCount) }})</em>
           </li>
         </ng-container>
       </ul>
@@ -32,13 +32,15 @@
     <div class="body">
 
       <ng-template #listingBar>
-        <div class="filter">    
+        <div class="search">
           <input
             class="form-control"
             type="search"
-            placeholder="Filter items ..."
+            placeholder="Search user"
             [(ngModel)]="query"
-          >    
+            (keyup.enter)="search(data.searchQuery)"
+          >
+          <button class="button-primary" (click)="search(data.searchQuery)" [disabled]="!query">Search</button>
         </div>
         <div class="counter">{{ activeItems.length }} items</div>
       </ng-template>
@@ -69,9 +71,106 @@
           </tr>
         </thead>  
         <tbody>
-          <tr
-            *ngFor="let listingItem of activeItems"
-          >
+          <tr *ngFor="let listingItem of activeItems">
+
+            <td class="title">  
+              <ul *ngIf="[listingItem]; let items;">
+                <li *ngFor="let item of items">
+
+                  <div class="locale" *ngIf="item.locale">{{ data.recordLocales[item.locale].text }}</div>
+
+                  <div class="major">
+                    <span class="label" [class]="item.status" *ngIf="item.status!=='publish'">{{ item.status }}</span>
+                    <!-- draft / publish -->
+                    <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
+                      <a [usefulRouterLink]="['app-admin', 'edit', part.name, item.id]">{{ item.title }}</a>
+                    </ng-container>
+                    <!-- archive -->
+                    <ng-container *ngIf="item.status==='archive'">
+                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item)">{{ item.title }}</a>
+                    </ng-container>
+                    <!-- trash -->
+                    <ng-container *ngIf="item.status==='trash'">
+                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item)">{{ item.title }}</a>
+                    </ng-container>
+                  </div>  
+  
+                  <ul class="actions">
+
+                    <!-- draft / publish -->
+                    <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
+                    <li class="edit">
+                      <a [usefulRouterLink]="['app-admin', 'edit', part.name, item.id]">Edit</a>
+                    </li>
+                    <li class="copy">
+                      <a [usefulRouterLink]="['app-admin', 'copy', part.name, item.id]">Copy</a>
+                    </li>
+                    <li class="archive">
+                      <a href="javascript:void(0)" (click)="dataService.archiveItem(part, item)">Archive</a>
+                    </li>
+                    <li class="trash">
+                      <a href="javascript:void(0)" (click)="dataService.removeItem(part, item)">Trash</a>
+                    </li>
+                    <li class="preview">
+                      <a href="javascript:void(0)" (click)="dataService.previewItem(part)">Preview</a>
+                    </li>
+                    </ng-container>
+
+                    <!-- archive -->
+                    <ng-container *ngIf="item.status==='archive'">
+                    <li class="unarchive">
+                      <a href="javascript:void(0)" (click)="dataService.unarchiveItem(part, item)">Unarchive</a>
+                    </li>
+                    </ng-container>
+
+                    <!-- trash -->
+                    <ng-container *ngIf="item.status==='trash'">
+                    <li class="restore">
+                      <a href="javascript:void(0)" (click)="dataService.restoreItem(part, item)">Restore</a>
+                    </li>
+                    </ng-container>
+
+                    <li class="detail">
+                      <a href="javascript:void(0)" (click)="detail=detail&&detail===item.id?'':item.id">Detail</a>
+                    </li>
+
+                  </ul>  
+  
+                  <ul class="mobile-detail" [class.show]="item.id===detail">
+                    <li class="author" *ngIf="item.authors | o1i; let author">
+                      <span>Author</span>
+                      <a href="#">{{ author.title }}</a>
+                    </li>
+                    <li class="comment" *ngIf="item.commentCount">
+                      <span>Comment</span>
+                      <em>{{ item.commentCount }}</em>
+                    </li>
+                    <li class="date">
+                      <span>Date</span>
+                      <em>{{ item.updatedAt === item.createdAt ? 'Published' : 'Modified' }} — {{ item.updatedAt | date }}</em>
+                    </li>
+                  </ul>
+
+                </li>
+
+                <ng-container *ngIf="!part.noI18n">
+                <ng-container *ngFor="let missingTranslation of listingItem.missingTranslations">
+                  <li class="missing-item">
+                    <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
+                    <div class="major">
+                      <a
+                        [usefulRouterLink]="['app-admin', 'copy', part.name, listingItem.origin.id]"
+                        [usefulRouteExtras]="{queryParams: {locale: missingTranslation}}"
+                      >Add the translation</a>
+                    </div>
+                  </li>
+                </ng-container>
+                </ng-container>
+
+              </ul>
+            </td>
+
+
           <ng-container *ngIf="listingItem.all as items">
   
             <td class="title">  
@@ -154,7 +253,7 @@
 
                 </li>
 
-                <!-- <ng-container *ngIf="!part.noI18n">
+                <ng-container *ngIf="!part.noI18n">
                 <ng-container *ngFor="let missingTranslation of listingItem.missingTranslations">
                   <li class="missing-item">
                     <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
@@ -166,7 +265,7 @@
                     </div>
                   </li>
                 </ng-container>
-                </ng-container> -->
+                </ng-container>
 
               </ul>
             </td>
@@ -206,10 +305,19 @@
         <tfoot>
           <tr>
             <td colspan="42">
-              <!-- <pagination-controls
-                (pageChange)="pageNo=$event"
-                [directionLinks]="false"
-              ></pagination-controls> -->
+              <div class="tfoot">
+                <div class="left">
+                  <button class="button-outline-medium-sm" (click)="previousPage()" [disabled]="(query && data.searchItems) || pageNo === 1">
+                    <i class="icon-medium-tint icon-dashboard-left"></i>
+                  </button>
+                  <button class="button-outline-medium-sm" (click)="nextPage()" [disabled]="(query && data.searchItems) || data.totalPages === 1 || pageNo === data.totalPages">
+                    <i class="icon-medium-tint icon-dashboard-right"></i>
+                  </button>
+                </div>
+                <div class="right">
+                  {{ (query && data.searchItems) ? '-/-' : (pageNo + '/' + data.totalPages) }} pages
+                </div>
+              </div>
             </td>
           </tr>
         </tfoot>  

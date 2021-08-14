@@ -7,7 +7,7 @@ import { DashboardPart, DatabaseItem, UpdateEffect } from '../config/config.serv
 import { DashboardService } from '../dashboard/dashboard.service';
 
 // import { GetPart, ChangeStatus, AddItem, UpdateItem, UpdateBatch, DeleteItem } from '../../states/database/database.state';
-import { GetItems } from '../../states/database/database.state';
+import { AddItem } from '../../states/database/database.state';
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +25,22 @@ export class DataService {
 
   addItem(
     part: DashboardPart,
+    type: string,
     id: string,
     data: any,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    console.log('// TODO: Add item ...');
+    (!part.dataService ? of(false) : part.dataService.exists(id))
+    .pipe(
+      switchMap(exists => {
+        if (exists) {
+          throw new Error('Item exists with the id: ' + id);
+        }
+        return this.store.dispatch(new AddItem(part, type, id, data));
+      }),
+    )
+    .subscribe(onSuccess, onError);
   }
 
   updateItem(

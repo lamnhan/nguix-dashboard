@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Subscription, combineLatest, of } from 'rxjs';
-import { tap, map, take } from 'rxjs/operators';
+import { tap, map, switchMap, take } from 'rxjs/operators';
 import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
@@ -20,8 +20,6 @@ import {
 import { Schemas } from '../../services/schema/schema.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
-
-import { GetItems } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-edit-page',
@@ -48,50 +46,73 @@ export class EditPage implements OnInit, OnDestroy {
     imageCropping?: ImageCropping;
   };
 
-  public readonly page$ = combineLatest([
-    this.route.params,
-    this.route.data,
-    this.route.queryParams,
-  ])
-  .pipe(
-    map(([params, data, queryParams]) => {
-      // reset
-      this.lockdown = false;      
-      // set data
-      this.itemId = params.id;
-      this.isCopy = data.copy;
-      this.prioritizedData = queryParams;
-      this.isNew = !this.itemId || this.isCopy;
-      // get part
-      this.part = this.dashboardService.getPart(params.part);
-      return !this.part?.dataService ? {} : {part: this.part};
-    }),
-    tap(() => {
-      if (this.part) {
-        this.store.dispatch(new GetItems(this.part, 'default', 1, 30))
-      }
-    }),
-  );
+  // public readonly page$ = combineLatest([
+  //   this.route.params,
+  //   this.route.data,
+  //   this.route.queryParams,
+  // ])
+  // .pipe(
+  //   switchMap(([params, data, queryParams]) => {
+  //     // reset
+  //     this.lockdown = false;      
+  //     // set data
+  //     this.itemId = params.id;
+  //     this.isCopy = data.copy;
+  //     this.prioritizedData = queryParams;
+  //     this.isNew = !this.itemId || this.isCopy;
+  //     // get part
+  //     this.part = this.dashboardService.getPart(params.part);
+  //     return !this.part?.dataService ? {} : {part: this.part};
+  //   }),
+  // );
 
-  public readonly data$ = this.store
-    .select(state => state.database)
+  public readonly page$ = combineLatest([
+      this.route.params,
+      this.route.data,
+      this.route.queryParams,
+    ])
     .pipe(
-      take(1),
-      map(database => {
-        const part = this.part as DashboardPart;
-        const itemId = this.itemId as string;
-        this.databaseItem = (database[part.name] || [])
-          .filter((item: any) => item.id === itemId)
-          .shift() as DatabaseItem;
-        const formSchema = this.getFormSchema(part);
-        const formGroup = this.getFormGroup(formSchema, this.databaseItem);
-        return {
-          part,
-          formSchema,
-          formGroup,
-        };
+      switchMap(([params, data, queryParams]) => {
+        // reset
+        this.lockdown = false;      
+        // set data
+        this.itemId = params.id;
+        this.isCopy = data.copy;
+        this.prioritizedData = queryParams;
+        this.isNew = !this.itemId || this.isCopy;
+        this.part = this.dashboardService.getPart(params.part);
+        // not a proper data part
+        if (!this.part?.dataService) {
+          return of({ data: undefined });
+        }
+        // continue processing
+        else {
+          return (
+            !this.itemId
+              ? of(undefined) // new item
+              : this.part.dataService.getDoc(this.itemId, false) // get current data
+          )
+          .pipe(
+            map((databaseItem: undefined | DatabaseItem) => {
+              this.databaseItem = databaseItem;
+              const part = this.part as DashboardPart;
+              const formSchema = this.getFormSchema(part);
+              const formGroup = this.getFormGroup(formSchema, this.databaseItem);
+              return {
+                data: {
+                  part,
+                  formSchema,
+                  formGroup,
+                },
+              };
+            }),
+          );
+        }
       }),
-      tap(data => {
+      tap(({ data }) => {
+        if (!data) {
+          return;
+        }
         // submit text
         this.submitText = this.getSubmitText(
           this.isCopy || !this.databaseItem?.status
@@ -294,6 +315,7 @@ export class EditPage implements OnInit, OnDestroy {
       if (mode === 'new') {
         return this.dataService.addItem(
           part,
+          data.type,
           data.id,
           data,
           () => {
@@ -540,11 +562,12 @@ export class EditPage implements OnInit, OnDestroy {
       const part = this.dashboardService.getPart(schema.meta.source as string);
       if (part) {
         schema.meta.part = part;
-        schema.meta.items$ = this.store
-          .dispatch(new GetItems(part, 'default', 1, 30)) 
-          .pipe(
-            map(state => state.database[part.name]),
-          );
+        schema.meta.items$ = of([]);
+        // schema.meta.items$ = this.store
+        //   .dispatch(new GetItems(part, 'default', 1, 30)) 
+        //   .pipe(
+        //     map(state => state.database[part.name]),
+        //   );
         schema.meta.currentData = value;
       }
     }
