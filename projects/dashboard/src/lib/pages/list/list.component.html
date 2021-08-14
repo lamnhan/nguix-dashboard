@@ -1,8 +1,9 @@
-<div class="host dashboard page" *ngIf="page$ | async as page; else loading">
+<div class="host dashboard page" *ngIf="page$ | async as page; else loadingView">
 
   <div class="main" *ngIf="page.part as part; else notFound">
   <ng-container *ngIf="data$ | async; let data">
-  <ng-container *ngIf="data.listingItems | typeFilter: type | queryFilter : query; let filteredItems">
+  <ng-container *ngIf="data.pageItems; let listingItems">
+  <ng-container *ngIf="listingItems | statusFilter : status; let activeItems">
 
     <div class="head">
 
@@ -14,7 +15,7 @@
         >Add New</a>
       </div>
 
-      <ul class="statuses" *ngIf="filteredItems | extractStatuses as listingStatuses">
+      <ul class="statuses" *ngIf="listingItems | extractStatuses as listingStatuses">
         <ng-container *ngFor="let listingStatus of listingStatuses">
           <li *ngIf="listingStatus.count">
             <strong *ngIf="listingStatus.value === status; else inactive">{{ listingStatus.title }}</strong>
@@ -39,7 +40,7 @@
             [(ngModel)]="query"
           >    
         </div>
-        <div class="counter">{{ counting.total }} items</div>
+        <div class="counter">{{ activeItems.length }} items</div>
       </ng-template>
 
       <div class="headbar">
@@ -69,12 +70,7 @@
         </thead>  
         <tbody>
           <tr
-            *ngFor="
-              let listingItem of filteredItems
-              | statusFilter : status
-              | paginate: {itemsPerPage: 30, currentPage: pageNo}
-              | listingCounter : counting
-            "
+            *ngFor="let listingItem of activeItems"
           >
           <ng-container *ngIf="listingItem.all as items">
   
@@ -158,7 +154,7 @@
 
                 </li>
 
-                <ng-container *ngIf="!part.noI18n">
+                <!-- <ng-container *ngIf="!part.noI18n">
                 <ng-container *ngFor="let missingTranslation of listingItem.missingTranslations">
                   <li class="missing-item">
                     <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
@@ -170,7 +166,7 @@
                     </div>
                   </li>
                 </ng-container>
-                </ng-container>
+                </ng-container> -->
 
               </ul>
             </td>
@@ -210,10 +206,10 @@
         <tfoot>
           <tr>
             <td colspan="42">
-              <pagination-controls
+              <!-- <pagination-controls
                 (pageChange)="pageNo=$event"
                 [directionLinks]="false"
-              ></pagination-controls>
+              ></pagination-controls> -->
             </td>
           </tr>
         </tfoot>  
@@ -227,6 +223,7 @@
 
   </ng-container>
   </ng-container>
+  </ng-container>
   </div>
 
   <ng-template #notFound>
@@ -235,6 +232,6 @@
 
 </div>
 
-<ng-template #loading>
+<ng-template #loadingView>
   <div class="loading">Loading ...</div>
 </ng-template>

@@ -1,44 +1,44 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
-import { DashboardListingMediaType } from '../../services/dashboard/dashboard.service';
+import { ListingGrouping } from '../../services/config/config.service';
 
 @Pipe({
   name: 'mediaExtractTypes'
 })
 export class MediaExtractTypesPipe implements PipeTransform {
-  transform(items: StorageItem[]): DashboardListingMediaType[] {
-    const all: DashboardListingMediaType = {
+  transform(items: StorageItem[]): ListingGrouping[] {
+    const all: ListingGrouping = {
       title: 'All',
       value: 'all',
       count: 0
     };
-    const image: DashboardListingMediaType = {
+    const image: ListingGrouping = {
       title: 'Image',
       value: 'image',
       count: 0
     };
-    const audio: DashboardListingMediaType = {
+    const audio: ListingGrouping = {
       title: 'Audio',
       value: 'audio',
       count: 0
     };
-    const video: DashboardListingMediaType = {
+    const video: ListingGrouping = {
       title: 'Video',
       value: 'video',
       count: 0
     };
-    const document: DashboardListingMediaType = {
+    const document: ListingGrouping = {
       title: 'Document',
       value: 'document',
       count: 0
     };
-    const archive: DashboardListingMediaType = {
+    const archive: ListingGrouping = {
       title: 'Archive',
       value: 'archive',
       count: 0
     };
-    const unknown: DashboardListingMediaType = {
+    const unknown: ListingGrouping = {
       title: 'Unknown',
       value: 'unknown',
       count: 0

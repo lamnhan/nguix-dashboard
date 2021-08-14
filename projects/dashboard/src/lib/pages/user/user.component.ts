@@ -26,7 +26,7 @@ export class UserPage implements OnInit {
       this.isListingLoading = false;
       // set data
       const totalCount = this.profileDataService.count('default');
-      const totalPages = Math.ceil(totalCount/this.pagePerView);
+      const totalPages = Math.ceil(totalCount/this.viewPerPage);
       const pageItems = userState.profilesByPage[this.pageNo] || [];
       const searchQuery = userState.searchQuery;
       const searchItems = userState.searchResult;
@@ -44,7 +44,7 @@ export class UserPage implements OnInit {
   role = 'all';
   query = '';
   pageNo = 1;
-  pagePerView = 30;
+  viewPerPage = 30;
 
   detailItem?: Profile;
 
@@ -60,7 +60,7 @@ export class UserPage implements OnInit {
     if (this.query && this.query !== currentQuery) {
       this.isListingLoading = true;
       // dispatch action
-      this.store.dispatch(new SearchProfiles(this.query, this.pagePerView));
+      this.store.dispatch(new SearchProfiles(this.query, this.viewPerPage));
     }
   }
 
@@ -76,6 +76,6 @@ export class UserPage implements OnInit {
   
   private loadProfiles() {
     this.isListingLoading = true;
-    this.store.dispatch(new GetProfiles(this.pageNo, this.pagePerView, true));
+    this.store.dispatch(new GetProfiles(this.pageNo, this.viewPerPage, true));
   }
 }

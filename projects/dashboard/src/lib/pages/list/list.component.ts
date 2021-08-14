@@ -6,9 +6,9 @@ import { SettingService, HelperService, BuiltinListingItem } from '@lamnhan/ngx-
 
 import { DatabaseItem, DashboardPart } from '../../services/config/config.service';
 import { DataService } from '../../services/data/data.service';
-import { DashboardService, DashboardListingItem } from '../../services/dashboard/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 
-import { GetPart } from '../../states/database/database.state';
+import { DatabaseStateModel, GetItems } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-list-page',
@@ -18,19 +18,18 @@ import { GetPart } from '../../states/database/database.state';
 export class ListPage implements OnInit {
   private part?: DashboardPart;
 
-  type = '';
-  query = '';
+  type = 'default';
   status = 'all';
-  detail = '';
+  query = '';
   pageNo = 1;
-  counting = {
-    total: 0,
-  };
+  viewPerPage = 30;
+
+  detail = '';
 
   public readonly page$ = this.route.params.pipe(
     map(params => {
       // reset filter
-      this.type = '';
+      this.type = 'default';
       this.query = '';
       this.status = 'all';
       this.pageNo = 1;
@@ -42,7 +41,7 @@ export class ListPage implements OnInit {
     tap(() => {
       if (this.part) {
         // get items
-        this.store.dispatch(new GetPart(this.part, true));
+        this.store.dispatch(new GetItems(this.part, this.type, this.pageNo, this.viewPerPage, true));
         // set type
         if (this.part.contentTypes && this.part.contentTypes.length > 1) {
           this.type = this.part.contentTypes[0].value || '';
@@ -52,21 +51,23 @@ export class ListPage implements OnInit {
   );
 
   public readonly data$ = this.store
-    .select(state => state.database)
+    .select<DatabaseStateModel>(state => state.database)
     .pipe(
-      map(database => {
+      map(databaseState => {
+        console.log({ databaseState });
         const part = this.part as DashboardPart;
         const defaultLocale = this.settingService.defaultLocale;
         const recordLocales = this.settingService.locales.reduce(
           (result, item) => { result[item.value] = item; return result; },
           {} as Record<string, BuiltinListingItem>
         );
-        const listingItems = this.buildListingItems(database[part.name] || [], defaultLocale);
+        // const listingItems = this.buildListingItems(database[part.name] || [], defaultLocale);
+        const pageItems = databaseState[part.name]?.itemsByType[this.type][this.pageNo] || [];
         return {
           part,
           defaultLocale,
           recordLocales,
-          listingItems,
+          pageItems,
         };
       }),
     );
@@ -82,60 +83,60 @@ export class ListPage implements OnInit {
 
   ngOnInit(): void {}
 
-  private buildListingItems(
-    databaseItems: DatabaseItem[],
-    defaultLocale: string,
-  ): DashboardListingItem[] {
-    const items: DatabaseItem[] = [];
-    const missingTranlationRecord: Record<string, string[]> = {};
-    const localizedRecord: Record<string, DatabaseItem[]> = {};
-    // extract items
-    const allTranslations = this.settingService.locales.map(item => item.value);
-    databaseItems.forEach(dbItem => {
-      // origin item
-      if (!dbItem?.locale || dbItem?.locale === defaultLocale) {
-        items.push(dbItem);
-        // util recording
-        missingTranlationRecord[dbItem.id] = [...allTranslations];
-      }
-      // localized items
-      else {
-        const origin = dbItem.origin as string;
-        if (!localizedRecord[origin]) {
-          localizedRecord[origin] = [];
-        }
-        localizedRecord[origin].push(dbItem);
-      }
-    });
-    return items.map(origin => {
-      const id = origin.id as string;
-      const EOL = ' | ';
-      // all items
-      const all: DatabaseItem[] = [origin].concat(localizedRecord[id] || []);
-      // missing translations
-      all.forEach(item => {
-        const index = !item.locale ? -1 : missingTranlationRecord[id].indexOf(item.locale);
-        if(index !== -1) {
-          missingTranlationRecord[id].splice(index, 1);
-        }
-      });
-      const missingTranslations = missingTranlationRecord[id];
-      // search text
-      const searchText = all
-        .map(item => {
-          const { id, title, description, keywords, locale } = item;
-          const text =
-            (id + EOL + id.replace(/\-|\_/g, ' ') + EOL) +
-            (!title ? '' : (title + EOL)) +
-            (!description ? '' : (description + EOL)) +
-            (!keywords ? '' : keywords);
-          return text +
-            (EOL + text.toLowerCase()) +
-            (locale && locale !== 'vi-VN' ? '' : EOL + this.helperService.cleanupStr(text));
-        })
-        .join(EOL);
-      // final
-      return { origin, all, missingTranslations, searchText };
-    });
-  }
+  // private buildListingItems(
+  //   databaseItems: DatabaseItem[],
+  //   defaultLocale: string,
+  // ): DashboardListingItem[] {
+  //   const items: DatabaseItem[] = [];
+  //   const missingTranlationRecord: Record<string, string[]> = {};
+  //   const localizedRecord: Record<string, DatabaseItem[]> = {};
+  //   // extract items
+  //   const allTranslations = this.settingService.locales.map(item => item.value);
+  //   databaseItems.forEach(dbItem => {
+  //     // origin item
+  //     if (!dbItem?.locale || dbItem?.locale === defaultLocale) {
+  //       items.push(dbItem);
+  //       // util recording
+  //       missingTranlationRecord[dbItem.id] = [...allTranslations];
+  //     }
+  //     // localized items
+  //     else {
+  //       const origin = dbItem.origin as string;
+  //       if (!localizedRecord[origin]) {
+  //         localizedRecord[origin] = [];
+  //       }
+  //       localizedRecord[origin].push(dbItem);
+  //     }
+  //   });
+  //   return items.map(origin => {
+  //     const id = origin.id as string;
+  //     const EOL = ' | ';
+  //     // all items
+  //     const all: DatabaseItem[] = [origin].concat(localizedRecord[id] || []);
+  //     // missing translations
+  //     all.forEach(item => {
+  //       const index = !item.locale ? -1 : missingTranlationRecord[id].indexOf(item.locale);
+  //       if(index !== -1) {
+  //         missingTranlationRecord[id].splice(index, 1);
+  //       }
+  //     });
+  //     const missingTranslations = missingTranlationRecord[id];
+  //     // search text
+  //     const searchText = all
+  //       .map(item => {
+  //         const { id, title, description, keywords, locale } = item;
+  //         const text =
+  //           (id + EOL + id.replace(/\-|\_/g, ' ') + EOL) +
+  //           (!title ? '' : (title + EOL)) +
+  //           (!description ? '' : (description + EOL)) +
+  //           (!keywords ? '' : keywords);
+  //         return text +
+  //           (EOL + text.toLowerCase()) +
+  //           (locale && locale !== 'vi-VN' ? '' : EOL + this.helperService.cleanupStr(text));
+  //       })
+  //       .join(EOL);
+  //     // final
+  //     return { origin, all, missingTranslations, searchText };
+  //   });
+  // }
 }

@@ -1,47 +1,47 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { DashboardListingItem, DashboardListingStatus } from '../../services/dashboard/dashboard.service';
+import { DatabaseItem, ListingGrouping } from '../../services/config/config.service';
 
 @Pipe({
   name: 'extractStatuses'
 })
 export class ExtractStatusesPipe implements PipeTransform {
-  transform(items: DashboardListingItem[]): DashboardListingStatus[] {
-    const all: DashboardListingStatus = {
+  transform(items: DatabaseItem[]): ListingGrouping[] {
+    const all: ListingGrouping = {
       title: 'All',
       value: 'all',
       count: 0
     };
-    const published: DashboardListingStatus = {
+    const published: ListingGrouping = {
       title: 'Published',
       value: 'publish',
       count: 0
     };
-    const draft: DashboardListingStatus = {
+    const draft: ListingGrouping = {
       title: 'Draft',
       value: 'draft',
       count: 0
     };
-    const archive: DashboardListingStatus = {
+    const archive: ListingGrouping = {
       title: 'Archive',
       value: 'archive',
       count: 0
     };
-    const trash: DashboardListingStatus = {
+    const trash: ListingGrouping = {
       title: 'Trash',
       value: 'trash',
       count: 0
     };
     // counting
     items.forEach(item => {
-      const { origin } = item;
-      if (origin.status === 'publish') {
+      const { status } = item;
+      if (status === 'publish') {
         published.count++;
-      } else if (origin.status === 'draft') {
+      } else if (status === 'draft') {
         draft.count++;
-      } else if (origin.status === 'archive') {
+      } else if (status === 'archive') {
         archive.count++;
-      } else if (origin.status === 'trash') {
+      } else if (status === 'trash') {
         trash.count++;
       }
       all.count++;

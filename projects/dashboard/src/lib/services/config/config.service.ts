@@ -40,6 +40,12 @@ export type DatabaseItem = Record<string, any>;
 export type GetAllResult = Observable<DatabaseItem[]>;
 export type GetItemResult = Observable<DatabaseItem>;
 
+export interface ListingGrouping {
+  title: string;
+  value: string;
+  count: number;
+}
+
 export interface FormSchemaItem {
   label: string;
   name: string;

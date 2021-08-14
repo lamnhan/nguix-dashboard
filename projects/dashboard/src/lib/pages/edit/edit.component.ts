@@ -21,7 +21,7 @@ import { Schemas } from '../../services/schema/schema.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
-import { GetPart } from '../../states/database/database.state';
+import { GetItems } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-edit-page',
@@ -68,7 +68,7 @@ export class EditPage implements OnInit, OnDestroy {
     }),
     tap(() => {
       if (this.part) {
-        this.store.dispatch(new GetPart(this.part))
+        this.store.dispatch(new GetItems(this.part, 'default', 1, 30))
       }
     }),
   );
@@ -541,7 +541,7 @@ export class EditPage implements OnInit, OnDestroy {
       if (part) {
         schema.meta.part = part;
         schema.meta.items$ = this.store
-          .dispatch(new GetPart(part)) 
+          .dispatch(new GetItems(part, 'default', 1, 30)) 
           .pipe(
             map(state => state.database[part.name]),
           );

@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { DashboardListingItem } from '../../services/dashboard/dashboard.service';
+import { DatabaseItem } from '../../services/config/config.service';
 
 @Pipe({
   name: 'statusFilter'
 })
 export class StatusFilterPipe implements PipeTransform {
-  transform(items: DashboardListingItem[], status?: string): DashboardListingItem[] {
+  transform(items: DatabaseItem[], status?: string): DatabaseItem[] {
     return !status || status === 'all'
       ? items
-      : items.filter(item => !item.origin.status || item.origin.status === status);
+      : items.filter(item => item.status === status);
   }
 }

@@ -1,44 +1,44 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Profile } from '@lamnhan/schemata';
 
-import { DashboardListingUserRole } from '../../services/dashboard/dashboard.service';
+import { ListingGrouping } from '../../services/config/config.service';
 
 @Pipe({
   name: 'userExtractRoles'
 })
 export class UserExtractRolesPipe implements PipeTransform {
-  transform(items: Profile[]): DashboardListingUserRole[] {
-    const all: DashboardListingUserRole = {
+  transform(items: Profile[]): ListingGrouping[] {
+    const all: ListingGrouping = {
       title: 'All',
       value: 'all',
       count: 0
     };
-    const sadmin: DashboardListingUserRole = {
+    const sadmin: ListingGrouping = {
       title: 'Super Admin',
       value: 'sadmin',
       count: 0
     };
-    const admin: DashboardListingUserRole = {
+    const admin: ListingGrouping = {
       title: 'Admin',
       value: 'admin',
       count: 0
     };
-    const editor: DashboardListingUserRole = {
+    const editor: ListingGrouping = {
       title: 'Editor',
       value: 'editor',
       count: 0
     };
-    const author: DashboardListingUserRole = {
+    const author: ListingGrouping = {
       title: 'Author',
       value: 'author',
       count: 0
     };
-    const contributor: DashboardListingUserRole = {
+    const contributor: ListingGrouping = {
       title: 'Contributor',
       value: 'contributor',
       count: 0
     };
-    const subscriber: DashboardListingUserRole = {
+    const subscriber: ListingGrouping = {
       title: 'Subscriber',
       value: 'subscriber',
       count: 0

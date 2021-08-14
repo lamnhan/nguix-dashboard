@@ -15,23 +15,6 @@ import { AudioPartService } from '../../parts/audio/audio.service';
 import { VideoPartService } from '../../parts/video/video.service';
 import { BundlePartService } from '../../parts/bundle/bundle.service';
 
-export interface DashboardListingStatus {
-  title: string;
-  value: string;
-  count: number;
-}
-
-export interface DashboardListingMediaType extends DashboardListingStatus {}
-
-export interface DashboardListingUserRole extends DashboardListingStatus {}
-
-export interface DashboardListingItem {
-  origin: DatabaseItem;
-  all: DatabaseItem[];
-  missingTranslations: string[];
-  searchText: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
