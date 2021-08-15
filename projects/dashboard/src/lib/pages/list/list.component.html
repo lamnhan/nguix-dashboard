@@ -22,7 +22,7 @@
             <ng-template #inactive>
               <a href="#" (click)="status=listingStatus.value; false">{{ listingStatus.title }}</a>
             </ng-template>
-            <em>({{ listingStatus.count }}{{ listingStatus.value !== 'all' ? ('/' + data.statusCounting[listingStatus.value]) : ('/' + data.totalCount) }})</em>
+            <em>({{ listingStatus.count }})</em>
           </li>
         </ng-container>
       </ul>
@@ -53,7 +53,7 @@
         <li *ngFor="let contentType of part.contentTypes" [class.active]="type===contentType.value">
           <a
             href="javascript:void(0)"
-            (click)="type===contentType.value?false:type=contentType.value"
+            (click)="changeType(contentType.value)"
           >
             <i *ngIf="contentType.icon" class="icon-medium-tint" [class]="contentType.icon"></i>
             <span>{{ contentType.text }}</span>
@@ -78,6 +78,9 @@
               </div>
             </td>
           </tr>
+          <tr *ngIf="query && data.searchItems">
+            <td colspan="42">Currently view top search result for query "<strong>{{ data.searchQuery }}</strong>", <a href="#" (click)="query=''; false;">clear search</a>.</td>
+          </tr>
           <tr *ngFor="let listingItem of activeItems">
           <ng-container
             *ngIf="part.noI18n || !data.fullItemsByOrigin[listingItem.id] ? [listingItem] : data.fullItemsByOrigin[listingItem.id].all; let items;"
@@ -87,7 +90,7 @@
               <ul>
                 <li *ngFor="let item of items">
 
-                  <div class="locale" *ngIf="item.locale">{{ data.recordLocales[item.locale].text }}</div>
+                  <div class="locale" *ngIf="item.locale">{{ data.allLocales[item.locale].text }}</div>
 
                   <div class="major">
                     <span class="label" [class]="item.status" *ngIf="item.status!=='publish'">{{ item.status }}</span>
@@ -171,7 +174,7 @@
                   
                   <ng-template #missingTranslations>
                     <li class="missing-item" *ngFor="let missingTranslation of (data.fullItemsByOrigin[listingItem.origin].missingTranslations || [])">
-                      <div class="locale">{{ data.recordLocales[missingTranslation].text }}</div>
+                      <div class="locale">{{ data.allLocales[missingTranslation].text }}</div>
                       <div class="major">
                         <a
                           [usefulRouterLink]="['app-admin', 'copy', part.name, listingItem.id]"

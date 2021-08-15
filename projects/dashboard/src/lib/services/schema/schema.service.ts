@@ -49,13 +49,6 @@ export const Schemas = {
     required: true,
     validators: [Validators.required],
   },
-  only: {
-    label: 'Only',
-    name: 'only',
-    type: 'only',
-    required: true,
-    validators: [Validators.required],
-  },
   description: { label: 'Description', name: 'description', type: 'textarea' },
   thumbnails: {
     label: 'Thumbnails',

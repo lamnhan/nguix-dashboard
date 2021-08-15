@@ -25,6 +25,11 @@ export class GetTranslations {
   ) {}
 }
 
+export class SearchItems {
+  static readonly type = '[User] Search items';
+  constructor(public part: DashboardPart, public query: string, public limit: number) {}
+}
+
 // export class ChangeStatus {
 //   static readonly type = '[Database] Change status by origin';
 //   constructor(public part: DashboardPart, public databaseItem: DatabaseItem, public status: string) {}
@@ -167,9 +172,9 @@ export class DatabaseState {
     const state = getState();
     const { part, item } = action;
     const partName = part.name;
+    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
     const id = item.id;
     const origin = item.origin;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
     // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
@@ -225,6 +230,34 @@ export class DatabaseState {
         }),
       );
     }
+  }
+
+  @Action(SearchItems)
+  searchProfiles({ getState, patchState }: StateContext<DatabaseStateModel>, action: SearchItems) {
+    const state = getState();
+    const { part, limit, query } = action;
+    const partName = part.name;
+    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    // if (currentSearchQuery === query && currentSearchResult?.length) {
+    //   return of(currentSearchResult).pipe(
+    //     tap(() => patchState({ searchResult: currentSearchResult })),
+    //   );
+    // } else {
+    //   return this.profileDataService.setupSearching().pipe(
+    //     switchMap(data =>
+    //       this.profileDataService.search(query, limit)
+    //         .list()
+    //         .pipe(
+    //           tap(searchResult =>
+    //             patchState({
+    //               searchQuery: query,
+    //               searchResult: searchResult as Profile[],
+    //             })
+    //           ),
+    //         )
+    //     ),
+    //   );
+    // }
   }
 
   // @Action(ChangeStatus)
@@ -506,12 +539,11 @@ export class DatabaseState {
     const thisItemsByType = (partData?.itemsByType?.[type] || {});
     Object.keys(thisItemsByType).forEach(page => {
       if (data !== null) {
-        thisItemsByType[page].forEach(item => {
+        thisItemsByType[page].forEach((item, i) => {
           if (item.id !== id) {
             return;
           }
-          item = {...item, ...data};
-          console.log({ item, data });
+          thisItemsByType[page][i] = {...item, ...data};
         });
       } else {
         thisItemsByType[page] = thisItemsByType[page].filter(item => item.id !== id);
@@ -521,11 +553,11 @@ export class DatabaseState {
     const fullItemsByOrigin = (partData?.fullItemsByOrigin || {});
     Object.keys(fullItemsByOrigin).forEach(origin => {
       if (data !== null) {
-        fullItemsByOrigin[origin].all.forEach(item => {
+        fullItemsByOrigin[origin].all.forEach((item, i) => {
           if (item.id !== id) {
             return;
           }
-          item = {...item, ...data};
+          fullItemsByOrigin[origin].all[i] = {...item, ...data};
         })
       } else {
         fullItemsByOrigin[origin].all = fullItemsByOrigin[origin].all.filter(item => item.id !== id);
@@ -546,7 +578,6 @@ export class DatabaseState {
       }
     }
     // result
-    console.log({ data, thisItemsByType });
     return {
       itemsByType: {
         [type]: thisItemsByType,

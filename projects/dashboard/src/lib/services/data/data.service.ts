@@ -61,6 +61,10 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
+    const yes = confirm('Archive item?');
+    if (!yes) {
+      return;
+    }
     this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'archive' }))
       .subscribe(onSuccess, onError);
   }
@@ -71,6 +75,10 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
+    const yes = confirm('Unarchive item?');
+    if (!yes) {
+      return;
+    }
     this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'draft' }))
       .subscribe(onSuccess, onError);
   }
@@ -81,6 +89,10 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
+    const yes = confirm('Trash item?');
+    if (!yes) {
+      return;
+    }
     this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'trash' }))
       .subscribe(onSuccess, onError);
   }
@@ -91,6 +103,10 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
+    const yes = confirm('Restore item?');
+    if (!yes) {
+      return;
+    }
     this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'draft' }))
       .subscribe(onSuccess, onError);
   }
@@ -101,6 +117,10 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
+    const yes = confirm('Delete permanently?');
+    if (!yes) {
+      return;
+    }
     this.store.dispatch(new RemoveItem(part, databaseItem))
       .subscribe(onSuccess, onError);
   }

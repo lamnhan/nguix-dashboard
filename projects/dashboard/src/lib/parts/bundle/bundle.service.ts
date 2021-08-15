@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { BundleDataService } from '@lamnhan/ngx-schemata';
 
@@ -30,7 +31,18 @@ export class BundlePartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.only,
+    {
+      label: 'Only',
+      name: 'only',
+      type: 'radio',
+      required: true,
+      validators: [Validators.required],
+      selections: [
+        { text: 'posts:default', name: 'posts:default', selected: false },
+        { text: 'audios:default', name: 'audios:default', selected: false },
+        { text: 'videos:default', name: 'videos:default', selected: false }
+      ],
+    },
     Schemas.description,
     Schemas.thumbnails,
     Schemas.images,
@@ -43,28 +55,28 @@ export class BundlePartService {
     Schemas.relatedBundles,
   ];
 
-  public readonly updateEffects: UpdateEffect[] = [
-    {
-      ...Effects.relatedBundles,
-      part: 'bundle',
-      collection: 'bundles',
-    },
-    {
-      ...Effects.parents,
-      part: 'post',
-      collection: 'posts',
-    },
-    {
-      ...Effects.parents,
-      part: 'audio',
-      collection: 'audios',
-    },
-    {
-      ...Effects.parents,
-      part: 'video',
-      collection: 'videos',
-    }
-  ];
+  // public readonly updateEffects: UpdateEffect[] = [
+  //   {
+  //     ...Effects.relatedBundles,
+  //     part: 'bundle',
+  //     collection: 'bundles',
+  //   },
+  //   {
+  //     ...Effects.parents,
+  //     part: 'post',
+  //     collection: 'posts',
+  //   },
+  //   {
+  //     ...Effects.parents,
+  //     part: 'audio',
+  //     collection: 'audios',
+  //   },
+  //   {
+  //     ...Effects.parents,
+  //     part: 'video',
+  //     collection: 'videos',
+  //   }
+  // ];
 
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },

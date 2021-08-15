@@ -70,12 +70,7 @@
           </div>
           </ng-container>
 
-          <ng-container
-            *ngIf="
-              schema.type==='radio' ||
-              schema.type==='only'
-            "
-          >
+          <ng-container *ngIf="schema.type==='radio'">
           <div class="radios">
             <label class="form-radio" *ngFor="let radioItem of schema.selections || []">
               <input

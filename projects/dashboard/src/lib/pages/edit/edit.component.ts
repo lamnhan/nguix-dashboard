@@ -125,6 +125,17 @@ export class EditPage implements OnInit, OnDestroy {
             this.submitText = this.getSubmitText(status);
           });
         }
+        // set id
+        const titleControl = data.formGroup?.get('title');
+        if (titleControl) {
+          this.titleChangesSubscription = titleControl.valueChanges.subscribe(title => {
+            const idControl = data.formGroup?.get('id');
+            if (idControl) {
+              idControl.setValue(this.slugify(title));
+              idControl.markAsDirty();
+            }
+          });
+        }
         // set origin for default locale
         const idControl = data.formGroup?.get('id');
         if (idControl) {
@@ -149,6 +160,7 @@ export class EditPage implements OnInit, OnDestroy {
     );
 
   private idChangesSubscription?: Subscription;
+  private titleChangesSubscription?: Subscription;
   private statusChangesSubscription?: Subscription;
   private localeChangesSubscription?: Subscription;
 
@@ -169,6 +181,9 @@ export class EditPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.idChangesSubscription) {
       this.idChangesSubscription.unsubscribe();
+    }
+    if (this.titleChangesSubscription) {
+      this.titleChangesSubscription.unsubscribe();
     }
     if (this.statusChangesSubscription) {
       this.statusChangesSubscription.unsubscribe();
@@ -391,10 +406,10 @@ export class EditPage implements OnInit, OnDestroy {
         ...Schemas.type,
         disabled: !this.isNew || (this.part?.contentTypes && this.part?.contentTypes.length <= 1)
       });
-      // title
-      schema.unshift(Schemas.title);      
       // id (new only)
       schema.unshift({ ...Schemas.id, disabled: !this.isNew });
+      // title
+      schema.unshift(Schemas.title);      
       // status
       if (this.isNew || (this.databaseItem?.status === 'draft')) {
         schema.push(Schemas.status);
@@ -499,29 +514,29 @@ export class EditPage implements OnInit, OnDestroy {
   private processSchema(schema: FormSchemaItem) {
     const item = {...schema};
     const { type } = schema;
-    // 1. only
-    if (type === 'only' && this.part?.updateEffects) {
-      item.selections = this.part?.updateEffects
-        .map(item => {
-          const part = this.dashboardService.getPart(item.part);
-          if (!part) {
-            return null;
-          }
-          return (part.contentTypes || []).map(type => ({
-            text: `${item.collection}:${type.value}`,
-            name: `${item.collection}:${type.value}`,
-            selected: false,
-          })) as RadioAlikeChild[];
-        })
-        .filter(item => !!item)
-        .reduce(
-          (result, item) => {
-            result = (result as any[]).concat(item as RadioAlikeChild[]);
-            return result;
-          },
-          [] as any[],
-        ) as RadioAlikeChild[];
-    }
+    // // 1. only
+    // if (type === 'only' && this.part?.updateEffects) {
+    //   item.selections = this.part?.updateEffects
+    //     .map(item => {
+    //       const part = this.dashboardService.getPart(item.part);
+    //       if (!part) {
+    //         return null;
+    //       }
+    //       return (part.contentTypes || []).map(type => ({
+    //         text: `${item.collection}:${type.value}`,
+    //         name: `${item.collection}:${type.value}`,
+    //         selected: false,
+    //       })) as RadioAlikeChild[];
+    //     })
+    //     .filter(item => !!item)
+    //     .reduce(
+    //       (result, item) => {
+    //         result = (result as any[]).concat(item as RadioAlikeChild[]);
+    //         return result;
+    //       },
+    //       [] as any[],
+    //     ) as RadioAlikeChild[];
+    // }
     // result
     return item;
   }
@@ -534,7 +549,7 @@ export class EditPage implements OnInit, OnDestroy {
         (value as string[]).indexOf(child.name) === -1 ? false : child.checked = true);
     }
     // 2. radio alike
-    if ((type === 'radio' || type === 'only') && value &&  selections) {
+    if (type === 'radio' && value &&  selections) {
       selections.forEach(child =>
         (value as string) !== child.name ? false : child.selected = true);
     }
@@ -572,5 +587,17 @@ export class EditPage implements OnInit, OnDestroy {
         schema.meta.currentData = value;
       }
     }
+  }
+
+  private slugify(text: string) {
+    return text
+      .toString()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]+/g, '')
+      .replace(/--+/g, '-')
   }
 }

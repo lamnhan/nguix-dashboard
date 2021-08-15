@@ -8,7 +8,7 @@ import { DatabaseItem, DashboardPart } from '../../services/config/config.servic
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
-import { DatabaseStateModel, GetItems, GetTranslations } from '../../states/database/database.state';
+import { DatabaseStateModel, GetItems, GetTranslations, SearchItems } from '../../states/database/database.state';
 
 @Component({
   selector: 'nguix-dashboard-list-page',
@@ -51,13 +51,12 @@ export class ListPage implements OnInit {
     .select<DatabaseStateModel>(state => state.database)
     .pipe(
       map(databaseState => {
-        console.log({ databaseState });
         // reset loading
         this.isListingLoading = false;
         // get data
         const part = this.part as DashboardPart;
         const defaultLocale = this.settingService.defaultLocale;
-        const recordLocales = this.settingService.locales.reduce(
+        const allLocales = this.settingService.locales.reduce(
           (result, item) => { result[item.value] = item; return result; },
           {} as Record<string, BuiltinListingItem>
         );
@@ -72,7 +71,7 @@ export class ListPage implements OnInit {
         return {
           part,
           defaultLocale,
-          recordLocales,
+          allLocales,
           totalCount,
           statusCounting,
           totalPages,
@@ -95,12 +94,21 @@ export class ListPage implements OnInit {
 
   ngOnInit(): void {}
 
+  changeType(value: string) {
+    if (this.type === value) {
+      return;
+    }
+    this.type = value;
+    this.pageNo = 1;
+    this.loadItems();
+  }
+
   
   search(currentQuery = '') {
-    if (this.query && this.query !== currentQuery) {
+    if (this.part && this.query && this.query !== currentQuery) {
       this.isListingLoading = true;
       // dispatch action
-      // this.store.dispatch(new SearchProfiles(this.query, this.viewPerPage));
+      this.store.dispatch(new SearchItems(this.part, this.query, this.viewPerPage));
     }
   }
 

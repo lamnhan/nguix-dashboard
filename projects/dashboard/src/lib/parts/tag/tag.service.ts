@@ -35,28 +35,28 @@ export class TagPartService {
     Schemas.count,
   ];
 
-  public readonly updateEffects: UpdateEffect[] = [
-    {
-      ...Effects.tags,
-      part: 'post',
-      collection: 'posts',
-    },
-    {
-      ...Effects.tags,
-      part: 'audio',
-      collection: 'audios',
-    },
-    {
-      ...Effects.tags,
-      part: 'video',
-      collection: 'videos',
-    },
-    {
-      ...Effects.tags,
-      part: 'profile',
-      collection: 'profiles',
-    },
-  ];
+  // public readonly updateEffects: UpdateEffect[] = [
+  //   {
+  //     ...Effects.tags,
+  //     part: 'post',
+  //     collection: 'posts',
+  //   },
+  //   {
+  //     ...Effects.tags,
+  //     part: 'audio',
+  //     collection: 'audios',
+  //   },
+  //   {
+  //     ...Effects.tags,
+  //     part: 'video',
+  //     collection: 'videos',
+  //   },
+  //   {
+  //     ...Effects.tags,
+  //     part: 'profile',
+  //     collection: 'profiles',
+  //   },
+  // ];
 
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
