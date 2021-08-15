@@ -61,7 +61,8 @@ export class ListPage implements OnInit {
           (result, item) => { result[item.value] = item; return result; },
           {} as Record<string, BuiltinListingItem>
         );
-        const totalCount = (part.dataService as DatabaseData<any>).count(this.type);
+        const totalCount = (part.dataService as DatabaseData<any>)
+          .count(this.type, part.noI18n ? undefined : defaultLocale);
         const statusCounting = (part.dataService as DatabaseData<any>).getCounting(this.type, defaultLocale) as Record<string, number>;
         const totalPages = !totalCount ? 1 : Math.ceil(totalCount/this.viewPerPage);
         const pageItems = databaseState[part.name]?.itemsByType[this.type][this.pageNo] || [];

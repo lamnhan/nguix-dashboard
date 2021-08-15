@@ -330,6 +330,7 @@ export class EditPage implements OnInit, OnDestroy {
       } else if(mode === 'update' && this.databaseItem) {
         return this.dataService.updateItem(
           part,
+          this.databaseItem.type,
           this.databaseItem.id,
           data,
           result => {
@@ -350,8 +351,8 @@ export class EditPage implements OnInit, OnDestroy {
     }
   }
 
-  delete(part: DashboardPart, databaseItem: DatabaseItem) {
-    return this.dataService.deletePermanently(
+  remove(part: DashboardPart, databaseItem: DatabaseItem) {
+    return this.dataService.removePermanently(
       part,
       databaseItem,
       result => {

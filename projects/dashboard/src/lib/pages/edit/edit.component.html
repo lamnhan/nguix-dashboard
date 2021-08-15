@@ -267,12 +267,12 @@
                 <a
                   class="delete button-outline-danger"
                   href="javascript:void(0)"
-                  (click)="delete(part, databaseItem)"
-                >Delete forever</a>
+                  (click)="remove(part, databaseItem)"
+                >Delete</a>
                 <a
                   class="trash button-danger"
                   href="javascript:void(0)"
-                  (click)="dataService.removeItem(part, databaseItem)"
+                  (click)="dataService.trashItem(part, databaseItem)"
                 >Trash</a>
               </div>
             </ng-container>

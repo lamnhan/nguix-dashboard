@@ -7,7 +7,7 @@ import { DashboardPart, DatabaseItem, UpdateEffect } from '../config/config.serv
 import { DashboardService } from '../dashboard/dashboard.service';
 
 // import { GetPart, ChangeStatus, AddItem, UpdateItem, UpdateBatch, DeleteItem } from '../../states/database/database.state';
-import { AddItem } from '../../states/database/database.state';
+import { AddItem, UpdateItem, RemoveItem } from '../../states/database/database.state';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    (!part.dataService ? of(false) : part.dataService.exists(id))
+    (!part.dataService ? of(true) : part.dataService.exists(id))
     .pipe(
       switchMap(exists => {
         if (exists) {
@@ -45,12 +45,14 @@ export class DataService {
 
   updateItem(
     part: DashboardPart,
+    type: string,
     id: string,
     data: any,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    console.log('// TODO: Update item ...');
+    this.store.dispatch(new UpdateItem(part, type, id, data))
+      .subscribe(onSuccess, onError);
   }
 
   archiveItem(
@@ -59,7 +61,8 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    console.log('// TODO: Archive item ...');
+    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'archive' }))
+      .subscribe(onSuccess, onError);
   }
 
   unarchiveItem(
@@ -68,16 +71,18 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    console.log('// TODO: Unarchive item ...');
+    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'draft' }))
+      .subscribe(onSuccess, onError);
   }
 
-  removeItem(
+  trashItem(
     part: DashboardPart,
     databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    console.log('// TODO: Remove item ...');
+    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'trash' }))
+      .subscribe(onSuccess, onError);
   }
 
   restoreItem(
@@ -86,16 +91,18 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    console.log('// TODO: Restore item ...');
+    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'draft' }))
+      .subscribe(onSuccess, onError);
   }
 
-  deletePermanently(
+  removePermanently(
     part: DashboardPart,
     databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    console.log('// TODO: Delete permanently item ...');
+    this.store.dispatch(new RemoveItem(part, databaseItem))
+      .subscribe(onSuccess, onError);
   }
 
   // addItem(
@@ -207,7 +214,7 @@ export class DataService {
   //   .subscribe(onSuccess, onError);
   // }
 
-  // removeItem(
+  // trashItem(
   //   part: DashboardPart,
   //   databaseItem: DatabaseItem,
   //   onSuccess?: (data: any) => void,
@@ -250,7 +257,7 @@ export class DataService {
   //   .subscribe(onSuccess, onError);
   // }
 
-  // deletePermanently(
+  // removePermanently(
   //   part: DashboardPart,
   //   databaseItem: DatabaseItem,
   //   onSuccess?: (data: any) => void,
