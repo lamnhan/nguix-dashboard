@@ -11,6 +11,16 @@
           class="button-outline-primary"
           [usefulRouterLink]="['app-admin', 'list', part.name]"
         >All {{ part.menuItem.text || 'Items' }}</a>
+        <a
+          *ngIf="!isNew"
+          class="button-outline-primary"
+          [usefulRouterLink]="['app-admin', 'new', part.name]"
+        >Add another</a>
+        <a
+          *ngIf="!isNew && databaseItem"
+          class="button-outline-primary"
+          [usefulRouterLink]="['app-admin', 'copy', part.name, databaseItem.id]"
+        >Add similar</a>
       </div>
   
     </div>

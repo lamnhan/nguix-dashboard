@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { ProfileDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, ContentType, UpdateEffect } from '../../services/config/config.service';
-import { Schemas, Effects } from '../../services/schema/schema.service';
+import { FormSchemaItem, ContentType } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -46,28 +46,28 @@ export class ProfilePartService {
     Schemas.relatedProfiles,
   ];
 
-  public readonly updateEffects: UpdateEffect[] = [
-    {
-      ...Effects.relatedProfiles,
-      part: 'profile',
-      collection: 'profiles',
-    },
-    {
-      ...Effects.authors,
-      part: 'post',
-      collection: 'posts',
-    },
-    {
-      ...Effects.authors,
-      part: 'audio',
-      collection: 'audios',
-    },
-    {
-      ...Effects.authors,
-      part: 'video',
-      collection: 'videos',
-    }
-  ];
+  // public readonly updateEffects: UpdateEffect[] = [
+  //   {
+  //     ...Effects.relatedProfiles,
+  //     part: 'profile',
+  //     collection: 'profiles',
+  //   },
+  //   {
+  //     ...Effects.authors,
+  //     part: 'post',
+  //     collection: 'posts',
+  //   },
+  //   {
+  //     ...Effects.authors,
+  //     part: 'audio',
+  //     collection: 'audios',
+  //   },
+  //   {
+  //     ...Effects.authors,
+  //     part: 'video',
+  //     collection: 'videos',
+  //   }
+  // ];
 
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },

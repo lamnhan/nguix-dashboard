@@ -327,19 +327,19 @@ export class DatabaseState {
             partName,
             (partData || {}),
             {
-              remoteLoaded: !(part.noI18n || data.locale === this.settingService.locale),
-              // itemsByType: {
-              //   [type]: {
-              //     // add main item to the first page (check for locale first)
-              //     ...(
-              //       part.noI18n || data.locale === this.settingService.locale
-              //       ? {
-              //         '1': [data].concat(partData?.itemsByType?.[type]?.['1'] || []),
-              //       }
-              //       : {}
-              //     )
-              //   }
-              // },
+              // remoteLoaded: !(part.noI18n || data.locale === this.settingService.locale),
+              itemsByType: {
+                [type]: {
+                  // add main item to the first page (check for locale first)
+                  ...(
+                    part.noI18n || data.locale === this.settingService.locale
+                    ? {
+                      '1': [data].concat(partData?.itemsByType?.[type]?.['1'] || []),
+                    }
+                    : {}
+                  )
+                }
+              },
               // add localized item to its group (if data loaded)
               ...(
                 data.origin && partData?.fullItemsByOrigin?.[data.origin]

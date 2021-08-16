@@ -130,7 +130,7 @@ export class EditPage implements OnInit, OnDestroy {
         if (titleControl) {
           this.titleChangesSubscription = titleControl.valueChanges.subscribe(title => {
             const idControl = data.formGroup?.get('id');
-            if (idControl) {
+            if (idControl && this.isNew) {
               idControl.setValue(this.slugify(title));
               idControl.markAsDirty();
             }

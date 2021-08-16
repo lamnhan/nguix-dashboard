@@ -295,49 +295,48 @@ export const Schemas = {
   },
 };
 
-
-export const Effects = {
-  authors: {
-    key: Schemas.authors.name,
-    props: Schemas.authors.meta.fields,
-  },
-  parents: {
-    key: Schemas.parents.name,
-    props: Schemas.parents.meta.fields,
-  },
-  categories: {
-    key: Schemas.categories.name,
-    props: Schemas.categories.meta.fields,
-  },
-  tags: {
-    key: Schemas.tags.name,
-    props: Schemas.tags.meta.fields,
-  },
-  relatedPosts: {
-    key: Schemas.relatedPosts.name,
-    props: Schemas.relatedPosts.meta.fields,
-  },
-  relatedAudios: {
-    key: Schemas.relatedAudios.name,
-    props: Schemas.relatedAudios.meta.fields,
-  },
-  relatedVideos: {
-    key: Schemas.relatedVideos.name,
-    props: Schemas.relatedVideos.meta.fields,
-  },
-  relatedBundles: {
-    key: Schemas.relatedBundles.name,
-    props: Schemas.relatedBundles.meta.fields,
-  },
-  relatedProfiles: {
-    key: Schemas.relatedProfiles.name,
-    props: Schemas.relatedProfiles.meta.fields,
-  },
-  relatedProducts: {
-    key: Schemas.relatedProducts.name,
-    props: Schemas.relatedProducts.meta.fields,
-  },
-};
+// export const Effects = {
+//   authors: {
+//     key: Schemas.authors.name,
+//     props: Schemas.authors.meta.fields,
+//   },
+//   parents: {
+//     key: Schemas.parents.name,
+//     props: Schemas.parents.meta.fields,
+//   },
+//   categories: {
+//     key: Schemas.categories.name,
+//     props: Schemas.categories.meta.fields,
+//   },
+//   tags: {
+//     key: Schemas.tags.name,
+//     props: Schemas.tags.meta.fields,
+//   },
+//   relatedPosts: {
+//     key: Schemas.relatedPosts.name,
+//     props: Schemas.relatedPosts.meta.fields,
+//   },
+//   relatedAudios: {
+//     key: Schemas.relatedAudios.name,
+//     props: Schemas.relatedAudios.meta.fields,
+//   },
+//   relatedVideos: {
+//     key: Schemas.relatedVideos.name,
+//     props: Schemas.relatedVideos.meta.fields,
+//   },
+//   relatedBundles: {
+//     key: Schemas.relatedBundles.name,
+//     props: Schemas.relatedBundles.meta.fields,
+//   },
+//   relatedProfiles: {
+//     key: Schemas.relatedProfiles.name,
+//     props: Schemas.relatedProfiles.meta.fields,
+//   },
+//   relatedProducts: {
+//     key: Schemas.relatedProducts.name,
+//     props: Schemas.relatedProducts.meta.fields,
+//   },
+// };
 
 @Injectable({
   providedIn: 'root'

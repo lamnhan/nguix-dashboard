@@ -3,8 +3,8 @@ import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { BundleDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, ContentType, UpdateEffect } from '../../services/config/config.service';
-import { Schemas, Effects } from '../../services/schema/schema.service';
+import { FormSchemaItem, ContentType } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'

@@ -3,7 +3,7 @@ import { Store } from '@ngxs/store';
 import { of, combineLatest, Observable } from 'rxjs';
 import { switchMap, take, catchError, map, tap } from 'rxjs/operators';
 
-import { DashboardPart, DatabaseItem, UpdateEffect } from '../config/config.service';
+import { DashboardPart, DatabaseItem } from '../config/config.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 
 // import { GetPart, ChangeStatus, AddItem, UpdateItem, UpdateBatch, DeleteItem } from '../../states/database/database.state';

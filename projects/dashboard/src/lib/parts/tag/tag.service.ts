@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { TagDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, UpdateEffect, ContentType } from '../../services/config/config.service';
-import { Schemas, Effects } from '../../services/schema/schema.service';
+import { FormSchemaItem, ContentType } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'

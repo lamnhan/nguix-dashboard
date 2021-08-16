@@ -3,8 +3,8 @@ import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { VideoDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, ContentType, UpdateEffect } from '../../services/config/config.service';
-import { Schemas, Effects } from '../../services/schema/schema.service';
+import { FormSchemaItem, ContentType } from '../../services/config/config.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -63,13 +63,13 @@ export class VideoPartService {
     Schemas.relatedVideos,
   ];
 
-  public readonly updateEffects: UpdateEffect[] = [
-    {
-      ...Effects.relatedVideos,
-      part: 'video',
-      collection: 'videos',
-    },
-  ];
+  // public readonly updateEffects: UpdateEffect[] = [
+  //   {
+  //     ...Effects.relatedVideos,
+  //     part: 'video',
+  //     collection: 'videos',
+  //   },
+  // ];
 
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
