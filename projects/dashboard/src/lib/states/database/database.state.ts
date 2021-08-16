@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, combineLatest, ObjectUnsubscribedError } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
+import { tap, switchMap, map, catchError } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { DatabaseData, SettingService } from '@lamnhan/ngx-useful';
 
@@ -27,7 +27,7 @@ export class GetTranslations {
 
 export class SearchItems {
   static readonly type = '[User] Search items';
-  constructor(public part: DashboardPart, public query: string, public limit: number) {}
+  constructor(public part: DashboardPart, public type: string, public query: string, public limit: number) {}
 }
 
 // export class ChangeStatus {
@@ -47,7 +47,7 @@ export class AddItem {
 
 export class UpdateItem {
   static readonly type = '[Database] Update item';
-  constructor(public part: DashboardPart, public type: string, public id: string, public data: any) {}
+  constructor(public part: DashboardPart, public type: string, public id: string, public data: any, public currentData: any) {}
 }
 
 // export class UpdateBatch {
@@ -233,31 +233,51 @@ export class DatabaseState {
   }
 
   @Action(SearchItems)
-  searchProfiles({ getState, patchState }: StateContext<DatabaseStateModel>, action: SearchItems) {
+  searchItems({ getState, patchState }: StateContext<DatabaseStateModel>, action: SearchItems) {
     const state = getState();
-    const { part, limit, query } = action;
+    const { part, type, limit, query } = action;
     const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
-    // if (currentSearchQuery === query && currentSearchResult?.length) {
-    //   return of(currentSearchResult).pipe(
-    //     tap(() => patchState({ searchResult: currentSearchResult })),
-    //   );
-    // } else {
-    //   return this.profileDataService.setupSearching().pipe(
-    //     switchMap(data =>
-    //       this.profileDataService.search(query, limit)
-    //         .list()
-    //         .pipe(
-    //           tap(searchResult =>
-    //             patchState({
-    //               searchQuery: query,
-    //               searchResult: searchResult as Profile[],
-    //             })
-    //           ),
-    //         )
-    //     ),
-    //   );
-    // }
+    const currentPartData = state[partName] as undefined | DatabaseStatePartData;// no data service
+    if (!part.dataService) {
+      throw new Error('No data service for this part.');
+    }
+    // already loaded
+    if (currentPartData?.searchQuery === query && currentPartData?.searchResult?.length) {
+      return of(currentPartData?.searchResult).pipe(
+        tap(() =>
+          patchState(
+            this.getPatchingData(
+              partName,
+              currentPartData,
+              { searchResult: currentPartData?.searchResult }
+            ),
+          )
+        ),
+      );
+    }
+    // load data
+    else {
+      return part.dataService.setupSearching(true).pipe(
+        switchMap(() =>
+          (part.dataService as DatabaseData<any>).search(query, limit, type)
+            .list()
+            .pipe(
+              tap(searchResult =>
+                patchState(
+                  this.getPatchingData(
+                    partName,
+                    currentPartData as DatabaseStatePartData,
+                    {
+                      searchQuery: query,
+                      searchResult: searchResult as any[],
+                    }
+                  )
+                )
+              ),
+            )
+        ),
+      );
+    }
   }
 
   // @Action(ChangeStatus)
@@ -307,18 +327,19 @@ export class DatabaseState {
             partName,
             (partData || {}),
             {
-              itemsByType: {
-                [type]: {
-                  // add main item to the first page (check for locale first)
-                  ...(
-                    part.noI18n || data.locale === this.settingService.locale
-                    ? {
-                      '1': [data].concat(partData?.itemsByType?.[type]?.['1'] || []),
-                    }
-                    : {}
-                  )
-                }
-              },
+              remoteLoaded: !(part.noI18n || data.locale === this.settingService.locale),
+              // itemsByType: {
+              //   [type]: {
+              //     // add main item to the first page (check for locale first)
+              //     ...(
+              //       part.noI18n || data.locale === this.settingService.locale
+              //       ? {
+              //         '1': [data].concat(partData?.itemsByType?.[type]?.['1'] || []),
+              //       }
+              //       : {}
+              //     )
+              //   }
+              // },
               // add localized item to its group (if data loaded)
               ...(
                 data.origin && partData?.fullItemsByOrigin?.[data.origin]
@@ -386,13 +407,13 @@ export class DatabaseState {
   @Action(UpdateItem)
   updateItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateItem) {
     const state = getState();
-    const {part, type, id, data} = action;
+    const {part, type, id, data, currentData} = action;
     const partName = part.name;
     const currentPartData = state[partName] as undefined | DatabaseStatePartData;
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
-    return part.dataService.update(id, data)
+    return part.dataService.update(id, data, currentData)
     .pipe(
       tap(() => 
         patchState(

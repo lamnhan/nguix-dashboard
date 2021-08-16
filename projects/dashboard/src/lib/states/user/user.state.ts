@@ -86,7 +86,7 @@ export class UserState {
       );
     } else {
       return this.profileDataService.setupSearching().pipe(
-        switchMap(data =>
+        switchMap(() =>
           this.profileDataService.search(query, limit)
             .list()
             .pipe(

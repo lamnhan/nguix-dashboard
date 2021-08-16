@@ -156,7 +156,13 @@ export class AppComponent {
       );
     // data services
     this.categoryDataService
-      .setOptions({ advancedMode: true })
+      .setOptions({
+        advancedMode: true,
+        predefinedContextuals: [
+          { name: 'default', picker: item => item?.type === 'default' },
+          { name: 'genre', picker: item => item?.type === 'genre' },
+        ],
+      })
       .init();
     this.tagDataService
       .setOptions({ advancedMode: true })

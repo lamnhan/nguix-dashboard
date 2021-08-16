@@ -25,12 +25,12 @@ export class DataService {
 
   addItem(
     part: DashboardPart,
-    type: string,
-    id: string,
+    databaseItem: DatabaseItem,
     data: any,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
+    const { id, type } = databaseItem;
     (!part.dataService ? of(true) : part.dataService.exists(id))
     .pipe(
       switchMap(exists => {
@@ -45,14 +45,16 @@ export class DataService {
 
   updateItem(
     part: DashboardPart,
-    type: string,
-    id: string,
+    databaseItem: DatabaseItem,
     data: any,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    this.store.dispatch(new UpdateItem(part, type, id, data))
-      .subscribe(onSuccess, onError);
+    const { id, type } = databaseItem;
+    this.store.dispatch(
+      new UpdateItem(part, type, id, data, databaseItem)
+    )
+    .subscribe(onSuccess, onError);
   }
 
   archiveItem(
@@ -65,8 +67,11 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'archive' }))
-      .subscribe(onSuccess, onError);
+    const { id, type } = databaseItem;
+    this.store.dispatch(
+      new UpdateItem(part, type, id, { status: 'archive' }, databaseItem)
+    )
+    .subscribe(onSuccess, onError);
   }
 
   unarchiveItem(
@@ -79,8 +84,11 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'draft' }))
-      .subscribe(onSuccess, onError);
+    const { id, type } = databaseItem;
+    this.store.dispatch(
+      new UpdateItem(part, type, id, { status: 'draft' }, databaseItem)
+    )
+    .subscribe(onSuccess, onError);
   }
 
   trashItem(
@@ -93,8 +101,11 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'trash' }))
-      .subscribe(onSuccess, onError);
+    const { id, type } = databaseItem;
+    this.store.dispatch(
+      new UpdateItem(part, type, id, { status: 'trash' }, databaseItem)
+    )
+    .subscribe(onSuccess, onError);
   }
 
   restoreItem(
@@ -107,8 +118,11 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(new UpdateItem(part, databaseItem.type, databaseItem.id, { status: 'draft' }))
-      .subscribe(onSuccess, onError);
+    const { id, type } = databaseItem;
+    this.store.dispatch(
+      new UpdateItem(part, type, id, { status: 'draft' }, databaseItem)
+    )
+    .subscribe(onSuccess, onError);
   }
 
   removePermanently(

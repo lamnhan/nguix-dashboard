@@ -108,7 +108,7 @@ export class ListPage implements OnInit {
     if (this.part && this.query && this.query !== currentQuery) {
       this.isListingLoading = true;
       // dispatch action
-      this.store.dispatch(new SearchItems(this.part, this.query, this.viewPerPage));
+      this.store.dispatch(new SearchItems(this.part, this.type, this.query, this.viewPerPage));
     }
   }
 

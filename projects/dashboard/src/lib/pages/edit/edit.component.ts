@@ -330,8 +330,7 @@ export class EditPage implements OnInit, OnDestroy {
       if (mode === 'new') {
         return this.dataService.addItem(
           part,
-          data.type,
-          data.id,
+          data, // as DatabaseItem
           data,
           () => {
             this.lockdown = false;
@@ -345,8 +344,7 @@ export class EditPage implements OnInit, OnDestroy {
       } else if(mode === 'update' && this.databaseItem) {
         return this.dataService.updateItem(
           part,
-          this.databaseItem.type,
-          this.databaseItem.id,
+          this.databaseItem,
           data,
           result => {
             this.lockdown = false;
