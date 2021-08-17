@@ -19,28 +19,47 @@
   
       <div class="edit">
   
-        <div class="search">
-          <input
-            class="form-control"
-            type="search"
-            [(ngModel)]="query"
-            placeholder="Search items ..."
-            (keyup.enter)="search()"
-          >
+        <div class="selected">
+          <div class="title">Selected</div>
+          <ul class="items">
+            <li *ngFor="let item of selectedData | o2a">
+              <input
+                type="checkbox"
+                [value]="item.id"
+                (change)="toggleItem(item, $event)"
+                checked="true"
+              >
+              <a href="#" (click)="false;">{{ item.title }}</a>
+            </li>
+          </ul>
+
         </div>
-  
-        <ul class="items">
-          <li *ngFor="let item of items">
+
+        <div class="available">
+          <div class="search">
             <input
-              type="checkbox"
-              [value]="item.id"
-              (change)="toggleItem(item, $event)"
-              [checked]="currentData && currentData[item.id]"
+              class="form-control"
+              type="search"
+              [(ngModel)]="query"
+              placeholder="Search items ..."
+              (keyup.enter)="search()"
             >
-            <em *ngIf="item.status!=='publish'" [class]="item.status">{{ item.status }}</em>
-            <a href="#">{{ item.title }}</a>
-          </li>
-        </ul>
+          </div>
+          <ul class="items">
+            <li class="loading" *ngIf="isLoading">
+              <nguix-dashboard-spinner></nguix-dashboard-spinner>
+            </li>
+            <li *ngFor="let item of items">
+              <input
+                type="checkbox"
+                [value]="item.id"
+                (change)="toggleItem(item, $event)"
+                [checked]="currentData && currentData[item.id]"
+              >
+              <a href="#" (click)="false;">{{ item.title }}</a>
+            </li>
+          </ul>
+        </div>
   
       </div>
   

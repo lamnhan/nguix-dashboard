@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@ngneat/transloco';
 import { RouterLinkDirectiveModule, O2aPipeModule } from '@lamnhan/ngx-useful';
 
+import { NguixDashboardSpinnerComponentModule } from '../spinner/spinner.module';
+
 import { LinkEditorComponent } from './link-editor.component';
 
 @NgModule({
@@ -14,6 +16,7 @@ import { LinkEditorComponent } from './link-editor.component';
     TranslocoModule,
     RouterLinkDirectiveModule,
     O2aPipeModule,
+    NguixDashboardSpinnerComponentModule,
   ],
   exports: [LinkEditorComponent]
 })

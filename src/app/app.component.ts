@@ -174,7 +174,6 @@ export class AppComponent {
       .setOptions({
         advancedMode: true,
         predefinedContextuals: [
-          { name: 'default', picker: item => item?.status === 'publish' && item?.type === 'default' },
           { name: 'genre', picker: item => item?.status === 'publish' && item?.type === 'genre' },
         ],
       })

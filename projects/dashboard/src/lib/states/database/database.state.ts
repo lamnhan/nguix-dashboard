@@ -257,9 +257,10 @@ export class DatabaseState {
     }
     // load data
     else {
-      return part.dataService.setupSearching(true).pipe(
+      return part.dataService.setupSearching().pipe(
         switchMap(() =>
-          (part.dataService as DatabaseData<any>).search(query, limit, type)
+          (part.dataService as DatabaseData<any>)
+          .search(query, limit, type === 'default' ? undefined : type)
             .list()
             .pipe(
               tap(searchResult =>

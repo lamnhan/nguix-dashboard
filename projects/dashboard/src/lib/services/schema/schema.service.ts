@@ -161,7 +161,10 @@ export const Schemas = {
     label: 'Categories',
     name: 'categories',
     type: 'link',
-    meta: { source: 'category' } as LinkingSchemaMeta,
+    meta: {
+      source: 'category',
+      preload: 12,
+    } as LinkingSchemaMeta,
   },
   tags: {
     label: 'Tags',

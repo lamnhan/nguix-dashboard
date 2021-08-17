@@ -125,6 +125,7 @@ export interface JsonSchemaMetaSchemaItem {
 export interface LinkingSchemaMeta {
   source: string;
   contentType?: string;
+  preload?: number;
   // auto-generated from source
   part?: DashboardPart;
   fields?: string[];

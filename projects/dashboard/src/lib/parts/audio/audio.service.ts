@@ -76,7 +76,8 @@ export class AudioPartService {
       type: 'link',
       meta: {
         source: 'category',
-        contentType: 'genre'
+        contentType: 'genre',
+        preload: 12,
       } as LinkingSchemaMeta,
     },
     Schemas.tags,
