@@ -574,14 +574,10 @@ export class EditPage implements OnInit, OnDestroy {
     // 6. link
     if (type === 'link' && schema.meta && schema.meta.source) {
       const part = this.dashboardService.getPart(schema.meta.source as string);
-      if (part) {
+      if (part?.dataService) {
         schema.meta.part = part;
-        schema.meta.items$ = of([]);
-        // schema.meta.items$ = this.store
-        //   .dispatch(new GetItems(part, 'default', 1, 30)) 
-        //   .pipe(
-        //     map(state => state.database[part.name]),
-        //   );
+        schema.meta.contentType = schema.meta.contentType || 'default';
+        schema.meta.fields = part.dataService.getLinkingFields();
         schema.meta.currentData = value;
       }
     }

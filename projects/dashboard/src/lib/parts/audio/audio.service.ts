@@ -4,7 +4,7 @@ import { MenuItem } from '@lamnhan/ngx-useful';
 import { AudioDataService } from '@lamnhan/ngx-schemata';
 
 import { FormSchemaItem, ContentType, LinkingSchemaMeta } from '../../services/config/config.service';
-import { Schemas, minimumLinkingFields } from '../../services/schema/schema.service';
+import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -76,13 +76,7 @@ export class AudioPartService {
       type: 'link',
       meta: {
         source: 'category',
-        contentType: 'genre',
-        fields: [
-          ...minimumLinkingFields,
-          'thumbnails',
-          'description',
-          'count'
-        ],
+        contentType: 'genre'
       } as LinkingSchemaMeta,
     },
     Schemas.tags,

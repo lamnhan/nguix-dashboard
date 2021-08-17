@@ -22,14 +22,18 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
           'bundle',
         ],
         plugins: [
+          // register genre type of category part
+          dashboardService => {
+            dashboardService.categoryPart.contentTypes.push(
+              { text: 'Genre', value: 'genre', icon: `icon-dashboard-part-category` },
+            );
+          },
+          // test
           dashboardService => {
             dashboardService.frontPart.menuItem.subItems?.push({
               text: 'Test menu',
               routerLink: []
             });
-          },
-          dashboardService => {
-            dashboardService.pagePart.contentTypes.push({text: 'Test', value: 'test'});
           },
         ],
         allowDirectContent: true,

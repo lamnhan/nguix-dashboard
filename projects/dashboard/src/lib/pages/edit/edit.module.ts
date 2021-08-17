@@ -7,6 +7,7 @@ import { NguixDashboardJsonEditorComponentModule } from '../../components/json-e
 import { NguixDashboardLinkEditorComponentModule } from '../../components/link-editor/link-editor.module';
 import { NguixDashboardHtmlEditorComponentModule } from '../../components/html-editor/html-editor.module';
 
+import { NguixDashboardSpinnerComponentModule } from '../../components/spinner/spinner.module';
 import { NguixDashboardUploaderComponentModule } from '../../components/uploader/uploader.module';
 
 import { EditRoutingModule } from './edit-routing.module';
@@ -23,6 +24,7 @@ import { EditPage } from './edit.component';
     NguixDashboardJsonEditorComponentModule,
     NguixDashboardLinkEditorComponentModule,
     NguixDashboardHtmlEditorComponentModule,
+    NguixDashboardSpinnerComponentModule,
     NguixDashboardUploaderComponentModule,
     EditRoutingModule
   ]

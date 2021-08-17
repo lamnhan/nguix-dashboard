@@ -10,23 +10,19 @@ import { DashboardPart } from '../../services/config/config.service';
 })
 export class LinkEditorComponent implements OnInit, OnChanges {
   @Input() part!: DashboardPart;
-  @Input() items$!: Observable<any[]>;
-  @Input() fields?: string[];
+  @Input() fields!: string[];
+  @Input() contentType!: string;
+  @Input() contentLocale!: string;
   @Input() currentData?: Record<string, any>;
-  @Input() contentType?: string;
-  @Input() contentLocale?: string;
 
   @Output() save = new EventEmitter<any>();
-  
+
   isEdit = false;
   hasData = false;
   selectedData: Record<string, any> = {};
 
   query = '';
-  isAnyType = false;
-  isAnyLocale = false;
-  isAnyStatus = false;
-  pageNo = 1;
+  items: any[] = [];
 
   constructor() {}
 
@@ -34,6 +30,10 @@ export class LinkEditorComponent implements OnInit, OnChanges {
   
   ngOnChanges(): void {
     this.buildData();
+  }
+
+  search() {
+    console.log({ query: this.query });
   }
 
   toggleItem(item: any, e: any) {

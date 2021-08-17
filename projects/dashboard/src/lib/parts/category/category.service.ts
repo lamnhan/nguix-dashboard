@@ -81,7 +81,6 @@ export class CategoryPartService {
 
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
-    { text: 'Genre', value: 'genre', icon: `icon-dashboard-part-${this.name}` },
   ];
 
   constructor(public readonly dataService: CategoryDataService) {}

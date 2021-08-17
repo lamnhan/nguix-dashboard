@@ -124,11 +124,10 @@ export interface JsonSchemaMetaSchemaItem {
 
 export interface LinkingSchemaMeta {
   source: string;
-  fields: string[];
   contentType?: string;
   // auto-generated from source
   part?: DashboardPart;
-  items$?: Observable<DatabaseItem[]>;
+  fields?: string[];
   currentData?: Record<string, any>;
 }
 

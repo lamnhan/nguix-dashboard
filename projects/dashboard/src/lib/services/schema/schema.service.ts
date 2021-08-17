@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 
 import { FormSchemaItem, JsonSchemaMeta, LinkingSchemaMeta, ImageCropping } from '../config/config.service';
 
-export const minimumLinkingFields = ['id', 'title', 'type'];
+// export const minimumLinkingFields = ['id', 'title', 'type'];
 
 export const Schemas = {
   id: {
@@ -149,149 +149,61 @@ export const Schemas = {
     label: 'Authors',
     name: 'authors',
     type: 'link',
-    meta: {
-      source: 'profile',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'badges',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'profile' } as LinkingSchemaMeta,
   },
   parents: {
     label: 'Parents',
     name: 'parents',
     type: 'link',
-    meta: {
-      source: 'bundle',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'count',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'bundle' } as LinkingSchemaMeta,
   },
   categories: {
     label: 'Categories',
     name: 'categories',
     type: 'link',
-    meta: {
-      source: 'category',
-      fields: [
-        ...minimumLinkingFields,
-        'thumbnails',
-        'description',
-        'count'
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'category' } as LinkingSchemaMeta,
   },
   tags: {
     label: 'Tags',
     name: 'tags',
     type: 'link',
-    meta: {
-      source: 'tag',
-      fields: [
-        ...minimumLinkingFields,
-        'count'
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'tag' } as LinkingSchemaMeta,
   },
   relatedPosts: {
     label: 'Related posts',
     name: 'relatedPosts',
     type: 'link',
-    meta: {
-      source: 'post',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'duration',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'post' } as LinkingSchemaMeta,
   },
   relatedAudios: {
     label: 'Related audios',
     name: 'relatedAudios',
     type: 'link',
-    meta: {
-      source: 'audio',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'duration',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'audio' } as LinkingSchemaMeta,
   },
   relatedVideos: {
     label: 'Related videos',
     name: 'relatedVideos',
     type: 'link',
-    meta: {
-      source: 'video',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'duration',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'video' } as LinkingSchemaMeta,
   },
   relatedBundles: {
     label: 'Related bundles',
     name: 'relatedBundles',
     type: 'link',
-    meta: {
-      source: 'bundle',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'count',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'bundle' } as LinkingSchemaMeta,
   },
   relatedProfiles: {
     label: 'Related profiles',
     name: 'relatedProfiles',
     type: 'link',
-    meta: {
-      source: 'profile',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'badges',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'profile' } as LinkingSchemaMeta,
   },
   relatedProducts: {
     label: 'Related products',
     name: 'relatedProducts',
     type: 'link',
-    meta: {
-      source: 'product',
-      fields: [
-        ...minimumLinkingFields,
-        'createdAt',
-        'thumbnails',
-        'description',
-        'sku',
-        'unit',
-        'price',
-      ],
-    } as LinkingSchemaMeta,
+    meta: { source: 'product' } as LinkingSchemaMeta,
   },
 };
 

@@ -20,8 +20,14 @@ import {
   UserService,
 } from '@lamnhan/ngx-useful';
 import {
+  OptionDataService,
   CategoryDataService,
   TagDataService,
+  PageDataService,
+  PostDataService,
+  AudioDataService,
+  VideoDataService,
+  BundleDataService,
   UserDataService,
   ProfileDataService,
 } from '@lamnhan/ngx-schemata';
@@ -53,8 +59,14 @@ export class AppComponent {
     public authService: AuthService,
     private userService: UserService,
     // data services
+    private optionDataService: OptionDataService,
     private categoryDataService: CategoryDataService,
     private tagDataService: TagDataService,
+    private pageDataService: PageDataService,
+    private postDataService: PostDataService,
+    private audioDataService: AudioDataService,
+    private videoDataService: VideoDataService,
+    private bundleDataService: BundleDataService,
     private userDataService: UserDataService,
     private profileDataService: ProfileDataService,
   ) {
@@ -155,16 +167,34 @@ export class AppComponent {
         }
       );
     // data services
+    this.optionDataService
+      .setOptions({ advancedMode: true })
+      .init();
     this.categoryDataService
       .setOptions({
         advancedMode: true,
         predefinedContextuals: [
-          { name: 'default', picker: item => item?.type === 'default' },
-          { name: 'genre', picker: item => item?.type === 'genre' },
+          { name: 'default', picker: item => item?.status === 'publish' && item?.type === 'default' },
+          { name: 'genre', picker: item => item?.status === 'publish' && item?.type === 'genre' },
         ],
       })
       .init();
     this.tagDataService
+      .setOptions({ advancedMode: true })
+      .init();
+    this.pageDataService
+      .setOptions({ advancedMode: true })
+      .init();
+    this.postDataService
+      .setOptions({ advancedMode: true })
+      .init();
+    this.audioDataService
+      .setOptions({ advancedMode: true })
+      .init();
+    this.videoDataService
+      .setOptions({ advancedMode: true })
+      .init();
+    this.bundleDataService
       .setOptions({ advancedMode: true })
       .init();
     this.profileDataService
