@@ -56,14 +56,6 @@ export class PostPartService {
     Schemas.relatedPosts,
   ];
 
-  // public readonly updateEffects: UpdateEffect[] = [
-  //   {
-  //     ...Effects.relatedPosts,
-  //     part: 'post',
-  //     collection: 'posts',
-  //   },
-  // ];
-
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];

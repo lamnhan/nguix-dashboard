@@ -55,29 +55,6 @@ export class BundlePartService {
     Schemas.relatedBundles,
   ];
 
-  // public readonly updateEffects: UpdateEffect[] = [
-  //   {
-  //     ...Effects.relatedBundles,
-  //     part: 'bundle',
-  //     collection: 'bundles',
-  //   },
-  //   {
-  //     ...Effects.parents,
-  //     part: 'post',
-  //     collection: 'posts',
-  //   },
-  //   {
-  //     ...Effects.parents,
-  //     part: 'audio',
-  //     collection: 'audios',
-  //   },
-  //   {
-  //     ...Effects.parents,
-  //     part: 'video',
-  //     collection: 'videos',
-  //   }
-  // ];
-
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];

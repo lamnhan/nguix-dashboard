@@ -27,7 +27,6 @@ export interface DashboardPart {
   contentTypes?: ContentType[];
   dataService?: DatabaseData<any>;
   formSchema?: FormSchemaItem[];
-  // updateEffects?: UpdateEffect[];
   formHandler?: (result: FormResult, formGroup: FormGroup) => void;
 }
 
@@ -79,14 +78,6 @@ export interface ContentType {
   value: string;
   icon?: string;
 }
-
-// export interface UpdateEffect {
-//   part: string;
-//   collection: string;
-//   key: string;
-//   props: string[];
-//   idBuilder?: (id: string) => string;
-// }
 
 export interface ContentSchemaMeta {
   // auto-generated from current value

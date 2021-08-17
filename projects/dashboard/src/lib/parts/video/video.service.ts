@@ -63,14 +63,6 @@ export class VideoPartService {
     Schemas.relatedVideos,
   ];
 
-  // public readonly updateEffects: UpdateEffect[] = [
-  //   {
-  //     ...Effects.relatedVideos,
-  //     part: 'video',
-  //     collection: 'videos',
-  //   },
-  // ];
-
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];

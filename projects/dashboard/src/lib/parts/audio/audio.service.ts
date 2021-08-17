@@ -85,14 +85,6 @@ export class AudioPartService {
     Schemas.relatedAudios,
   ];
 
-  // public readonly updateEffects: UpdateEffect[] = [
-  //   {
-  //     ...Effects.relatedAudios,
-  //     part: 'audio',
-  //     collection: 'audios',
-  //   },
-  // ];
-
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];

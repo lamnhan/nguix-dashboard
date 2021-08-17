@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { of, combineLatest, ObjectUnsubscribedError } from 'rxjs';
-import { tap, switchMap, map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { DatabaseData, SettingService } from '@lamnhan/ngx-useful';
 
@@ -30,11 +30,6 @@ export class SearchItems {
   constructor(public part: DashboardPart, public type: string, public query: string, public limit: number) {}
 }
 
-// export class ChangeStatus {
-//   static readonly type = '[Database] Change status by origin';
-//   constructor(public part: DashboardPart, public databaseItem: DatabaseItem, public status: string) {}
-// }
-
 export class AddItem {
   static readonly type = '[Database] Add item';
   constructor(
@@ -49,15 +44,6 @@ export class UpdateItem {
   static readonly type = '[Database] Update item';
   constructor(public part: DashboardPart, public type: string, public id: string, public data: any, public currentData: any) {}
 }
-
-// export class UpdateBatch {
-//   static readonly type = '[Database] Update batch';
-//   constructor(
-//     public part: DashboardPart,
-//     public batch: Array<{id: string; data: any}>,
-//     public result: any[] = [],
-//   ) {}
-// }
 
 export class RemoveItem {
   static readonly type = '[Database] Remove item';
@@ -149,19 +135,6 @@ export class DatabaseState {
               },
             )
           )
-          // patchState({
-          //   [partName]: {
-          //     ...(currentPartData as DatabaseStatePartData || {}),
-          //     remoteLoaded: true,
-          //     itemsByType: {
-          //       ...((currentPartData as DatabaseStatePartData)?.itemsByType || {}),
-          //       [type]: {
-          //         ...((currentPartData as DatabaseStatePartData)?.itemsByType?.[type] || {}),
-          //         [pageNo]: items,
-          //       }
-          //     },
-          //   }
-          // })
         )
       );
     }
@@ -212,21 +185,6 @@ export class DatabaseState {
               },
             )
           )
-          // patchState({
-          //   [partName]: {
-          //     ...(currentPartData as DatabaseStatePartData || {}),
-          //     fullItemsByOrigin: {
-          //       ...((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin || {}),
-          //       [origin]: {
-          //         all: [
-          //           item,
-          //           ...localizedItems.filter(x => x.id !== id)
-          //         ],
-          //         missingTranslations,
-          //       },
-          //     },
-          //   }
-          // })
         }),
       );
     }
@@ -280,33 +238,6 @@ export class DatabaseState {
       );
     }
   }
-
-  // @Action(ChangeStatus)
-  // changeStatus({ getState, patchState }: StateContext<DatabaseStateModel>, action: ChangeStatus) {
-  //   const state = getState();
-  //   const {part, databaseItem, status} = action;
-  //   const originOrId = databaseItem.origin || databaseItem.id;
-  //   if (!part.dataService) {
-  //     throw new Error('No data service for this part.');
-  //   }
-  //   return combineLatest(
-  //     state[part.name]
-  //       .filter(item => item.id === originOrId || item.origin === originOrId)
-  //       .map(item => (part.dataService as DatabaseData<any>).update(item.id, {status}))
-  //   )
-  //   .pipe(
-  //     tap(() =>
-  //       patchState({
-  //         [part.name]: state[part.name].map(item => {
-  //           if (item.id === originOrId || item.origin === originOrId) {
-  //             item.status = status;
-  //           }
-  //           return item;
-  //         }),
-  //       })
-  //     ),
-  //   );
-  // }
 
   @Action(AddItem)
   addItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: AddItem) {
@@ -362,46 +293,7 @@ export class DatabaseState {
             },
           )
         )
-      }
-        // patchState({
-        //   [partName]: {
-        //     ...(currentPartData as DatabaseStatePartData || {}),
-        //     remoteLoaded: false,
-        //     itemsByType: {
-        //       ...((currentPartData as DatabaseStatePartData)?.itemsByType || {}),
-        //       [type]: {
-        //         ...((currentPartData as DatabaseStatePartData)?.itemsByType?.[type] || {}),
-        //         // add main item to the first page
-        //         ...(
-        //           part.noI18n || data.locale === this.settingService.locale
-        //           ? {
-        //             '1':
-        //             [data].concat((currentPartData as DatabaseStatePartData)?.itemsByType?.[type]?.['1'] || []),
-        //           }
-        //           : {}
-        //         )
-        //       }
-        //     },
-        //     // add localized item to its group (if other loaded)
-        //     ...(
-        //       data.origin && (currentPartData as DatabaseStatePartData)?.fullItemsByOrigin?.[data.origin]
-        //       ? {
-        //         fullItemsByOrigin: {
-        //           ...((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin || {}),
-        //           [data.origin]: {
-        //             all: [
-        //               ...((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin?.[data.origin]?.all || []),
-        //               data,
-        //             ],
-        //             missingTranslations: ((currentPartData as DatabaseStatePartData)?.fullItemsByOrigin?.[data.origin]?.missingTranslations || []).filter(locale => locale !== data.locale),
-        //           }
-        //         }
-        //       }
-        //       : {}
-        //     ),
-        //   }
-        // })
-      ),
+      }),
     );
   }
 
@@ -432,56 +324,6 @@ export class DatabaseState {
       )
     );
   }
-
-  // @Action(UpdateBatch)
-  // updateBatch({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateBatch) {
-  //   const state = getState();
-  //   const {part, batch, result} = action;
-  //   if (!part.dataService) {
-  //     throw new Error('No data service for this part.');
-  //   }
-  //   // no items
-  //   if (!batch || !batch.length) {
-  //     return of([]);
-  //   }
-  //   // update remote
-  //   return combineLatest(
-  //     batch.map(item =>
-  //       (part.dataService as DatabaseData<any>).update(item.id, item.data).pipe(
-  //         map(() => ({ error: false, item })),
-  //         catchError(() => of({ error: true, item })),
-  //       )
-  //     )
-  //   )
-  //   // patch state
-  //   .pipe(
-  //     tap(latestResults => {
-  //       // [] -> {}
-  //       const recordItems = state[part.name].reduce(
-  //         (result, item) => {
-  //           result[item.id] = item;
-  //           return result;
-  //         },
-  //         {} as Record<string, any>
-  //       );
-  //       // update items
-  //       latestResults.forEach(latestResult => {
-  //         const {id, data} = latestResult.item;
-  //         if (!latestResult.error && recordItems[id]) {
-  //           recordItems[id] = { ...recordItems[id], ...data };
-  //         }
-  //         result.push({
-  //           error: latestResult.error,
-  //           item: recordItems[id]
-  //         });
-  //       });
-  //       // patch database
-  //       return patchState({
-  //         [part.name]: Object.keys(recordItems).map(id => recordItems[id]),
-  //       });
-  //     }),
-  //   );    
-  // }
 
   @Action(RemoveItem)
   removeItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: RemoveItem) {

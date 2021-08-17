@@ -50,35 +50,6 @@ export class CategoryPartService {
     Schemas.count,
   ];
 
-  // public readonly updateEffects: UpdateEffect[] = [
-  //   {
-  //     ...Effects.categories,
-  //     part: 'post',
-  //     collection: 'posts',
-  //   },
-  //   {
-  //     ...Effects.categories,
-  //     part: 'audio',
-  //     collection: 'audios',
-  //   },
-  //   {
-  //     part: 'audio',
-  //     collection: 'audios',
-  //     key: 'genres',
-  //     props: Schemas.categories.meta.fields,
-  //   },
-  //   {
-  //     ...Effects.categories,
-  //     part: 'video',
-  //     collection: 'videos',
-  //   },
-  //   {
-  //     ...Effects.categories,
-  //     part: 'profile',
-  //     collection: 'profiles',
-  //   },
-  // ];
-
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];

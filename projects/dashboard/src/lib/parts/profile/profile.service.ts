@@ -46,29 +46,6 @@ export class ProfilePartService {
     Schemas.relatedProfiles,
   ];
 
-  // public readonly updateEffects: UpdateEffect[] = [
-  //   {
-  //     ...Effects.relatedProfiles,
-  //     part: 'profile',
-  //     collection: 'profiles',
-  //   },
-  //   {
-  //     ...Effects.authors,
-  //     part: 'post',
-  //     collection: 'posts',
-  //   },
-  //   {
-  //     ...Effects.authors,
-  //     part: 'audio',
-  //     collection: 'audios',
-  //   },
-  //   {
-  //     ...Effects.authors,
-  //     part: 'video',
-  //     collection: 'videos',
-  //   }
-  // ];
-
   public readonly contentTypes: ContentType[]  = [
     { text: 'Default', value: 'default', icon: `icon-dashboard-part-${this.name}` },
   ];

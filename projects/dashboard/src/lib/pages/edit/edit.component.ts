@@ -46,26 +46,6 @@ export class EditPage implements OnInit, OnDestroy {
     imageCropping?: ImageCropping;
   };
 
-  // public readonly page$ = combineLatest([
-  //   this.route.params,
-  //   this.route.data,
-  //   this.route.queryParams,
-  // ])
-  // .pipe(
-  //   switchMap(([params, data, queryParams]) => {
-  //     // reset
-  //     this.lockdown = false;      
-  //     // set data
-  //     this.itemId = params.id;
-  //     this.isCopy = data.copy;
-  //     this.prioritizedData = queryParams;
-  //     this.isNew = !this.itemId || this.isCopy;
-  //     // get part
-  //     this.part = this.dashboardService.getPart(params.part);
-  //     return !this.part?.dataService ? {} : {part: this.part};
-  //   }),
-  // );
-
   public readonly page$ = combineLatest([
       this.route.params,
       this.route.data,
@@ -512,29 +492,7 @@ export class EditPage implements OnInit, OnDestroy {
   private processSchema(schema: FormSchemaItem) {
     const item = {...schema};
     const { type } = schema;
-    // // 1. only
-    // if (type === 'only' && this.part?.updateEffects) {
-    //   item.selections = this.part?.updateEffects
-    //     .map(item => {
-    //       const part = this.dashboardService.getPart(item.part);
-    //       if (!part) {
-    //         return null;
-    //       }
-    //       return (part.contentTypes || []).map(type => ({
-    //         text: `${item.collection}:${type.value}`,
-    //         name: `${item.collection}:${type.value}`,
-    //         selected: false,
-    //       })) as RadioAlikeChild[];
-    //     })
-    //     .filter(item => !!item)
-    //     .reduce(
-    //       (result, item) => {
-    //         result = (result as any[]).concat(item as RadioAlikeChild[]);
-    //         return result;
-    //       },
-    //       [] as any[],
-    //     ) as RadioAlikeChild[];
-    // }
+    // 1. ...
     // result
     return item;
   }
