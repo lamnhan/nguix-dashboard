@@ -1,10 +1,20 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { tap, switchMap } from 'rxjs/operators';
+import { tap, map, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
+import { Meta } from '@lamnhan/schemata';
 import { DatabaseData, SettingService } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem } from '../../services/config/config.service';
+
+export class GetCounting {
+  static readonly type = '[Database] Get counting';
+  constructor(
+    public part: DashboardPart,
+    public type: string,
+    public locale: string,
+  ) {}
+}
 
 export class GetItems {
   static readonly type = '[Database] Get items';
@@ -51,6 +61,9 @@ export class RemoveItem {
 }
 
 export interface DatabaseStatePartData extends Record<string, any> {
+  // counting
+  count: number;
+  statusCounting: Record<string, number>;
   // listing
   remoteLoaded: boolean;
   itemsByType: Record<string, Record<string, DatabaseItem[]>>;
@@ -77,6 +90,52 @@ export interface DatabaseFullItem {
 export class DatabaseState {
 
   constructor(private settingService: SettingService) {}
+
+  @Action(GetCounting)
+  getCounting({ getState, patchState }: StateContext<DatabaseStateModel>, action: GetCounting) {
+    const state = getState();
+    const { part, type, locale } = action;
+    const partName = part.name;
+    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    // no data service
+    if (!part.dataService) {
+      throw new Error('No data service for this part.');
+    }
+    // already loaded
+    if (currentPartData?.count && currentPartData?.statusCounting) {
+      return of(currentPartData);
+    } else {
+      return part.dataService.databaseService.getDoc<Meta>(`metas/$${partName}`, undefined, false)
+      .pipe(
+        map(metaDoc => {
+          const { documentCounting } = metaDoc?.value;
+          if (!documentCounting) {
+            return {
+              count: 0,
+              statusCounting: {
+                draft: 0,
+                publish: 0,
+                trash: 0,
+                archive: 0,
+              },
+            };
+          }
+          const statusCounting = documentCounting[type][locale];
+          const count = Object.keys(statusCounting).reduce((acc, key) => acc + statusCounting[key], 0);
+          return { count, statusCounting };
+        }),
+        tap(countingData =>
+          patchState(
+            this.getPatchingData(
+              partName,
+              (currentPartData || {} as DatabaseStatePartData),
+              countingData,
+            )
+          ),
+        ),
+      );
+    }
+  }
 
   @Action(GetItems)
   getItems({ getState, patchState }: StateContext<DatabaseStateModel>, action: GetItems) {

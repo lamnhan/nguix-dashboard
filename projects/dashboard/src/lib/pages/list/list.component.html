@@ -144,12 +144,12 @@
                     </ng-container>
 
                     <li class="detail">
-                      <a href="javascript:void(0)" (click)="detail=detail&&detail===item.id?'':item.id">Detail</a>
+                      <a href="javascript:void(0)" (click)="detailId = detailId && detailId === item.id ? '' : item.id">Detail</a>
                     </li>
 
                   </ul>  
   
-                  <ul class="mobile-detail" [class.show]="item.id===detail">
+                  <ul class="mobile-detail" [class.show]="item.id===detailId">
                     <li class="author" *ngIf="item.authors | o1i; let author">
                       <span>Author</span>
                       <a href="#">{{ author.title }}</a>
