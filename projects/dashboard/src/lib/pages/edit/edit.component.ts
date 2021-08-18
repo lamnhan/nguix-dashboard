@@ -292,7 +292,7 @@ export class EditPage implements OnInit, OnDestroy {
         }
         return result;
       },
-      {} as Record<string, any>
+      {} as DatabaseItem
     );
     // default data
     if (this.isNew) {
@@ -310,7 +310,6 @@ export class EditPage implements OnInit, OnDestroy {
       if (mode === 'new') {
         return this.dataService.addItem(
           part,
-          data, // as DatabaseItem
           data,
           () => {
             this.lockdown = false;

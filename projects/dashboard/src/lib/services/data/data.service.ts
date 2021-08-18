@@ -25,18 +25,17 @@ export class DataService {
   addItem(
     part: DashboardPart,
     databaseItem: DatabaseItem,
-    data: any,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    const { id, type } = databaseItem;
+    const { id } = databaseItem;
     (!part.dataService ? of(true) : part.dataService.exists(id))
     .pipe(
       switchMap(exists => {
         if (exists) {
           throw new Error('Item exists with the id: ' + id);
         }
-        return this.store.dispatch(new AddItem(part, type, id, data));
+        return this.store.dispatch(new AddItem(part, databaseItem));
       }),
     )
     .subscribe(onSuccess, onError);
@@ -44,14 +43,13 @@ export class DataService {
 
   updateItem(
     part: DashboardPart,
+    currentDatabaseItem: DatabaseItem,
     databaseItem: DatabaseItem,
-    data: any,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    const { id, type } = databaseItem;
     this.store.dispatch(
-      new UpdateItem(part, type, id, data, databaseItem)
+      new UpdateItem(part, databaseItem, currentDatabaseItem)
     )
     .subscribe(onSuccess, onError);
   }
@@ -66,9 +64,8 @@ export class DataService {
     if (!yes) {
       return;
     }
-    const { id, type } = databaseItem;
     this.store.dispatch(
-      new UpdateItem(part, type, id, { status: 'archive' }, databaseItem)
+      new UpdateItem(part, { status: 'archive' }, databaseItem)
     )
     .subscribe(onSuccess, onError);
   }
@@ -83,9 +80,8 @@ export class DataService {
     if (!yes) {
       return;
     }
-    const { id, type } = databaseItem;
     this.store.dispatch(
-      new UpdateItem(part, type, id, { status: 'draft' }, databaseItem)
+      new UpdateItem(part, { status: 'draft' }, databaseItem)
     )
     .subscribe(onSuccess, onError);
   }
@@ -100,9 +96,8 @@ export class DataService {
     if (!yes) {
       return;
     }
-    const { id, type } = databaseItem;
     this.store.dispatch(
-      new UpdateItem(part, type, id, { status: 'trash' }, databaseItem)
+      new UpdateItem(part, { status: 'trash' }, databaseItem)
     )
     .subscribe(onSuccess, onError);
   }
@@ -117,9 +112,8 @@ export class DataService {
     if (!yes) {
       return;
     }
-    const { id, type } = databaseItem;
     this.store.dispatch(
-      new UpdateItem(part, type, id, { status: 'draft' }, databaseItem)
+      new UpdateItem(part, { status: 'draft' }, databaseItem)
     )
     .subscribe(onSuccess, onError);
   }

@@ -21,6 +21,7 @@ export class GetItems {
   constructor(
     public part: DashboardPart,
     public type: string,
+    public status: string,
     public pageNo: number,
     public limit: number,
     public refresh = false,
@@ -31,28 +32,35 @@ export class GetTranslations {
   static readonly type = '[Database] Get translations';
   constructor(
     public part: DashboardPart,
-    public item: DatabaseItem,
+    public databaseItem: DatabaseItem,
   ) {}
 }
 
 export class SearchItems {
   static readonly type = '[User] Search items';
-  constructor(public part: DashboardPart, public type: string, public query: string, public limit: number) {}
+  constructor(
+    public part: DashboardPart,
+    public type: string,
+    public searchQuery: string,
+    public limit: number,
+  ) {}
 }
 
 export class AddItem {
   static readonly type = '[Database] Add item';
   constructor(
     public part: DashboardPart,
-    public type: string,
-    public id: string,
-    public data: any,
+    public databaseItem: DatabaseItem,
   ) {}
 }
 
 export class UpdateItem {
   static readonly type = '[Database] Update item';
-  constructor(public part: DashboardPart, public type: string, public id: string, public data: any, public currentData: any) {}
+  constructor(
+    public part: DashboardPart,
+    public databaseItem: DatabaseItem,
+    public currentDatabaseItem: DatabaseItem,
+  ) {}
 }
 
 export class RemoveItem {
@@ -62,11 +70,11 @@ export class RemoveItem {
 
 export interface DatabaseStatePartData extends Record<string, any> {
   // counting
-  count: number;
+  totalCount: number;
   statusCounting: Record<string, number>;
   // listing
   remoteLoaded: boolean;
-  itemsByType: Record<string, Record<string, DatabaseItem[]>>;
+  itemsByGroup: Record<string, DatabaseItem[]>;
   fullItemsByOrigin?: Record<string, DatabaseFullItem>;
   // search
   searchQuery?: string;
@@ -96,43 +104,35 @@ export class DatabaseState {
     const state = getState();
     const { part, type, locale } = action;
     const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    const currentPartData = state[partName] || {} as DatabaseStatePartData;
     // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
     // already loaded
-    if (currentPartData?.count && currentPartData?.statusCounting) {
+    if (currentPartData?.totalCount && currentPartData?.statusCounting) {
       return of(currentPartData);
     } else {
-      return part.dataService.databaseService.getDoc<Meta>(`metas/$${partName}`, undefined, false)
+      return part.dataService.databaseService
+      .getDoc<Meta>(`metas/$${part.dataService.name}`, undefined, false)
       .pipe(
-        map(metaDoc => {
-          const { documentCounting } = metaDoc?.value;
-          if (!documentCounting) {
-            return {
-              count: 0,
-              statusCounting: {
-                draft: 0,
-                publish: 0,
-                trash: 0,
-                archive: 0,
-              },
-            };
-          }
-          const statusCounting = documentCounting[type][locale];
-          const count = Object.keys(statusCounting).reduce((acc, key) => acc + statusCounting[key], 0);
-          return { count, statusCounting };
-        }),
-        tap(countingData =>
-          patchState(
+        tap(metaDoc => {
+          const statusCounting = metaDoc?.value?.documentCounting?.[type]?.[locale] || {
+            draft: 0,
+            publish: 0,
+            trash: 0,
+            archive: 0,
+          };
+          const totalCount = Object.keys(statusCounting)
+            .reduce((result, key) => result + statusCounting[key], 0);
+          return patchState(
             this.getPatchingData(
               partName,
-              (currentPartData || {} as DatabaseStatePartData),
-              countingData,
+              currentPartData,
+              { totalCount, statusCounting },
             )
-          ),
-        ),
+          );
+        }),
       );
     }
   }
@@ -140,21 +140,20 @@ export class DatabaseState {
   @Action(GetItems)
   getItems({ getState, patchState }: StateContext<DatabaseStateModel>, action: GetItems) {
     const state = getState();
-    const { part, type, pageNo, limit, refresh } = action;
+    const { part, type, status, pageNo, limit, refresh } = action;
+    const groupName = `${type}:${status}:${pageNo}`;
     const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    const currentPartData = state[partName] || {} as DatabaseStatePartData;
     // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
-    // alraady loaded
-    if (currentPartData?.itemsByType?.[type]?.[pageNo] && currentPartData?.remoteLoaded) {
+    // already loaded
+    if (currentPartData.itemsByGroup?.[groupName] && currentPartData.remoteLoaded) {
       if (refresh) {
-        patchState({
-          [partName]: currentPartData,
-        });
+        patchState({[partName]: currentPartData});
       }
-      return of(currentPartData.itemsByType[type][pageNo]);
+      return of(currentPartData);
     }
     // load data
     else {
@@ -162,14 +161,15 @@ export class DatabaseState {
         ref => {
           let query = ref
             .where('type', '==', type)
+            .where('status', '==', status)
             .orderBy('createdAt', 'desc');
           if (!part.noI18n) {
             query = query.where('locale', '==', this.settingService.locale);
           }
           if (pageNo > 1) {
             const prevPageNo = pageNo - 1;
-            const prevItems = (currentPartData as DatabaseStatePartData).itemsByType[type][prevPageNo];
-            const lastItem = prevItems[prevItems.length - 1];
+            const prevGroupName = `${type}:${status}:${prevPageNo}`;
+            const lastItem = (currentPartData as DatabaseStatePartData).itemsByGroup[prevGroupName].pop();
             if (lastItem) {
               query = query.startAfter(lastItem.createdAt as string);
             }
@@ -183,13 +183,11 @@ export class DatabaseState {
           patchState(
             this.getPatchingData(
               partName,
-              (currentPartData as DatabaseStatePartData || {}),
+              currentPartData,
               {
                 remoteLoaded: true,
-                itemsByType: {
-                  [type]: {
-                    [pageNo]: items,
-                  },
+                itemsByGroup: {
+                  [groupName]: items,
                 },
               },
             )
@@ -202,18 +200,18 @@ export class DatabaseState {
   @Action(GetTranslations)
   getTranslations({ getState, patchState }: StateContext<DatabaseStateModel>, action: GetTranslations) {
     const state = getState();
-    const { part, item } = action;
+    const { part, databaseItem } = action;
+    const id = databaseItem.id;
+    const origin = databaseItem.origin;
     const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
-    const id = item.id;
-    const origin = item.origin;
+    const currentPartData = state[partName] || {} as DatabaseStatePartData;
     // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
     // already loaded
-    if (currentPartData?.fullItemsByOrigin?.[origin]) {
-      return of(currentPartData?.fullItemsByOrigin?.[origin]);
+    if (currentPartData.fullItemsByOrigin?.[origin]) {
+      return of(currentPartData);
     }
     // load data
     else {
@@ -223,19 +221,19 @@ export class DatabaseState {
       )
       .pipe(
         tap((localizedItems: DatabaseItem[]) => {
-          const existingsTranslations = localizedItems.map(x => x.locale) as string[];
+          const existingsTranslations = localizedItems.map(item => item.locale) as string[];
           const missingTranslations = this.settingService.locales
-            .filter(x => !existingsTranslations.includes(x.value))
-            .map(x => x.value);
-          patchState(
+            .filter(item => !existingsTranslations.includes(item.value))
+            .map(item => item.value);
+          return patchState(
             this.getPatchingData(
               partName,
-              (currentPartData as DatabaseStatePartData || {}),
+              currentPartData,
               {
                 fullItemsByOrigin: {
                   [origin]: {
                     all: [
-                      item,
+                      databaseItem,
                       ...localizedItems.filter(x => x.id !== id)
                     ],
                     missingTranslations,
@@ -252,21 +250,23 @@ export class DatabaseState {
   @Action(SearchItems)
   searchItems({ getState, patchState }: StateContext<DatabaseStateModel>, action: SearchItems) {
     const state = getState();
-    const { part, type, limit, query } = action;
+    const { part, type, limit, searchQuery } = action;
     const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;// no data service
+    const currentPartData = state[partName] || {} as DatabaseStatePartData;
+    // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
     // already loaded
-    if (currentPartData?.searchQuery === query && currentPartData?.searchResult?.length) {
-      return of(currentPartData?.searchResult).pipe(
+    if (currentPartData.searchQuery === searchQuery && currentPartData.searchResult?.length) {
+      return of(currentPartData)
+      .pipe(
         tap(() =>
           patchState(
             this.getPatchingData(
               partName,
               currentPartData,
-              { searchResult: currentPartData?.searchResult }
+              { searchResult: currentPartData.searchResult }
             ),
           )
         ),
@@ -275,19 +275,18 @@ export class DatabaseState {
     // load data
     else {
       return part.dataService.setupSearching().pipe(
-        switchMap(() =>
-          (part.dataService as DatabaseData<any>)
-          .search(query, limit, type === 'default' ? undefined : type)
+        switchMap(() => (part.dataService as DatabaseData<any>)
+          .search(searchQuery, limit, type === 'default' ? undefined : type)
             .list()
             .pipe(
-              tap(searchResult =>
+              tap((searchResult: DatabaseItem[]) =>
                 patchState(
                   this.getPatchingData(
                     partName,
-                    currentPartData as DatabaseStatePartData,
+                    currentPartData,
                     {
-                      searchQuery: query,
-                      searchResult: searchResult as any[],
+                      searchQuery,
+                      searchResult,
                     }
                   )
                 )
@@ -301,49 +300,51 @@ export class DatabaseState {
   @Action(AddItem)
   addItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: AddItem) {
     const state = getState();
-    const { part, type, id, data } = action;
+    const { part, databaseItem } = action;
+    const { id, type, status, locale, origin } = databaseItem;
+    const groupName = `${type}:${status}:1`;
     const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    const currentPartData = state[partName] || {} as DatabaseStatePartData;
     // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
     // add item
-    return part.dataService.add(id, data)
+    return part.dataService.add(id, databaseItem)
     .pipe(
       tap(() => {
-        const partData = currentPartData as DatabaseStatePartData;
         patchState(
           this.getPatchingData(
             partName,
-            (partData || {}),
+            currentPartData,
             {
-              // remoteLoaded: !(part.noI18n || data.locale === this.settingService.locale),
-              itemsByType: {
-                [type]: {
-                  // add main item to the first page (check for locale first)
-                  ...(
-                    part.noI18n || data.locale === this.settingService.locale
-                    ? {
-                      '1': [data].concat(partData?.itemsByType?.[type]?.['1'] || []),
-                    }
-                    : {}
-                  )
-                }
+              totalCount: (currentPartData.totalCount || 0) + 1,
+              statusCounting: {
+                [status]: (currentPartData.statusCounting?.[status] || 0) + 1,
+              },
+              itemsByGroup: {
+                // add main item to the first page (check for locale first)
+                ...(
+                  part.noI18n || locale === this.settingService.locale
+                  ? {
+                    [groupName]: [databaseItem].concat(currentPartData.itemsByGroup?.[groupName] || []),
+                  }
+                  : {}
+                )
               },
               // add localized item to its group (if data loaded)
               ...(
-                data.origin && partData?.fullItemsByOrigin?.[data.origin]
+                origin && currentPartData.fullItemsByOrigin?.[origin]
                 ? {
                   fullItemsByOrigin: {
-                    [data.origin]: {
+                    [origin]: {
                       all: [
-                        ...(partData?.fullItemsByOrigin?.[data.origin]?.all || []),
-                        data,
+                        ...(currentPartData.fullItemsByOrigin?.[origin]?.all || []),
+                        databaseItem,
                       ],
                       missingTranslations:
-                        (partData?.fullItemsByOrigin?.[data.origin]?.missingTranslations || [])
-                          .filter(locale => locale !== data.locale),
+                        (currentPartData.fullItemsByOrigin?.[origin]?.missingTranslations || [])
+                          .filter(locale => locale !== locale),
                     }
                   }
                 }
@@ -359,25 +360,37 @@ export class DatabaseState {
   @Action(UpdateItem)
   updateItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateItem) {
     const state = getState();
-    const {part, type, id, data, currentData} = action;
+    const {part, databaseItem, currentDatabaseItem} = action;
+    const { id } = currentDatabaseItem;
+    const status = databaseItem.status;
+    const currentStatus = currentDatabaseItem.status;
     const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
+    const currentPartData = state[partName] || {} as DatabaseStatePartData;
+    // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
-    return part.dataService.update(id, data, currentData)
+    // update data
+    return part.dataService.update(id, databaseItem, currentDatabaseItem)
     .pipe(
       tap(() => 
         patchState(
           this.getPatchingData(
             partName,
-            (currentPartData || {} as DatabaseStatePartData),
-            this.updatePatchingItem(
-              type,
-              id,
-              data,
-              currentPartData as DatabaseStatePartData
-            ),
+            currentPartData,
+            {
+              ...(
+                status === currentStatus
+                  ? {}
+                  : {
+                    statusCounting: {
+                      [currentStatus]: (currentPartData.statusCounting?.[currentStatus] || 0) - 1,
+                      [status]: (currentPartData.statusCounting?.[status] || 0) + 1,
+                    }
+                  }
+              ),
+              ...this.updatePatchingItem(id, databaseItem, currentPartData),
+            },
           )
         )
       )
@@ -388,26 +401,28 @@ export class DatabaseState {
   removeItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: RemoveItem) {
     const state = getState();
     const { part, databaseItem } = action;
-    const partName = part.name;
-    const currentPartData = state[partName] as undefined | DatabaseStatePartData;
     const id = databaseItem.id;
-    const type = databaseItem.type;
+    const partName = part.name;
+    const currentPartData = state[partName] || {} as DatabaseStatePartData;
+    // no data service
     if (!part.dataService) {
       throw new Error('No data service for this part.');
     }
+    // remove item
     return part.dataService.delete(id)
     .pipe(
       tap(() =>
       patchState(
         this.getPatchingData(
           partName,
-          (currentPartData || {} as DatabaseStatePartData),
-          this.updatePatchingItem(
-            type,
-            id,
-            null,
-            currentPartData as DatabaseStatePartData
-          ),
+          currentPartData,
+          {
+            totalCount: (currentPartData.totalCount || 0) - 1,
+            statusCounting: {
+              [status]: (currentPartData.statusCounting?.[status] || 0) - 1,
+            },
+           ...this.updatePatchingItem(id, null, currentPartData),
+          },
         )
       )
       ),
@@ -422,13 +437,27 @@ export class DatabaseState {
     const updateData = {} as Record<string, any>;
     const updateKeys = Object.keys(data);
     // direct data
-    ['remoteLoaded', 'searchQuery', 'searchResult'].forEach(key => {
+    [
+      'totalCount',
+      'remoteLoaded',
+      'searchQuery',
+      'searchResult'
+    ].forEach(key => {
       if (updateKeys.includes(key)) {
         updateData[key] = data[key];
       }
     });
-    // nested data
-    ['itemsByType', 'fullItemsByOrigin'].forEach(key => {
+    // nested
+    ['itemsByGroup', 'statusCounting'].forEach(key => {
+      if (updateKeys.includes(key)) {
+        updateData[key] = {
+          ...(currentPartData?.[key] || {}),
+          ...(data[key] || {}),
+        };
+      }
+    });
+    // nested (2 levels)
+    ['fullItemsByOrigin'].forEach(key => {
       if (updateKeys.includes(key)) {
         const thisUpdateData = {} as Record<string, any>;
         Object.keys(data[key]).forEach(nestedKey => {
@@ -453,27 +482,26 @@ export class DatabaseState {
   }
 
   private updatePatchingItem(
-    type: string,
     id: string,
     data: any,
     partData: DatabaseStatePartData
   ) {
-    // itemsByType
-    const thisItemsByType = (partData?.itemsByType?.[type] || {});
-    Object.keys(thisItemsByType).forEach(page => {
+    // itemsByGroup
+    const itemsByGroup = (partData.itemsByGroup || {});
+    Object.keys(itemsByGroup).forEach(groupName => {
       if (data !== null) {
-        thisItemsByType[page].forEach((item, i) => {
+        itemsByGroup[groupName].forEach((item, i) => {
           if (item.id !== id) {
             return;
           }
-          thisItemsByType[page][i] = {...item, ...data};
+          itemsByGroup[groupName][i] = {...item, ...data};
         });
       } else {
-        thisItemsByType[page] = thisItemsByType[page].filter(item => item.id !== id);
+        itemsByGroup[groupName] = itemsByGroup[groupName].filter(item => item.id !== id);
       }
     });
     // fullItemsByOrigin
-    const fullItemsByOrigin = (partData?.fullItemsByOrigin || {});
+    const fullItemsByOrigin = (partData.fullItemsByOrigin || {});
     Object.keys(fullItemsByOrigin).forEach(origin => {
       if (data !== null) {
         fullItemsByOrigin[origin].all.forEach((item, i) => {
@@ -487,7 +515,7 @@ export class DatabaseState {
       }
     });
     // searchResult
-    let searchResult = partData?.searchResult;
+    let searchResult = partData.searchResult;
     if (searchResult) {
       if (data !== null) {
         searchResult.forEach(item => {
@@ -502,9 +530,7 @@ export class DatabaseState {
     }
     // result
     return {
-      itemsByType: {
-        [type]: thisItemsByType,
-      },
+      itemsByGroup,
       fullItemsByOrigin,
       searchResult,
     };

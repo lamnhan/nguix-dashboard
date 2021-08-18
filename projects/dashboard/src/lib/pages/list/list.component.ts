@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { map, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, tap, filter, switchMap } from 'rxjs/operators';
 import { SettingService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
-import { DatabaseItem, DashboardPart } from '../../services/config/config.service';
+import { DatabaseItem, DashboardPart, ListingGrouping } from '../../services/config/config.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
@@ -16,68 +17,68 @@ import { DatabaseStateModel, GetCounting, GetItems, GetTranslations, SearchItems
   styleUrls: ['./list.component.scss']
 })
 export class ListPage implements OnInit {
-  private part?: DashboardPart;
   private readonly viewPerPage = 2;
 
-  isListingLoading = false;
-  type = 'default';
-  status = 'all';
-  query = '';
-  pageNo = 1;
+  part!: DashboardPart;
+  isListingLoading!: boolean;
+  type!: string;
+  status!: string;
+  pageNo!: number;
+  query!: string;
+  detailId!: string;
   defaultLocale!: string;
   allLocales!: Record<string, BuiltinListingItem>;
 
-  detailId = '';
-
   public readonly page$ = this.route.params.pipe(
-    map(params => {
-      // reset filter
+    switchMap(params => {
+      this.part = this.dashboardService.getPart(params.part) as DashboardPart;
+      this.isListingLoading = false;
       this.type = 'default';
-      this.status = 'all';
-      this.query = '';
+      this.status = 'publish';
       this.pageNo = 1;
+      this.query = '';
+      this.detailId = '';
       this.defaultLocale = this.settingService.defaultLocale;
       this.allLocales = this.settingService.locales.reduce(
         (result, item) => { result[item.value] = item; return result; },
         {} as Record<string, BuiltinListingItem>
       );
-      // set data
-      this.part = this.dashboardService.getPart(params.part);
-      if (this.part && this.part.contentTypes && this.part.contentTypes.length > 1) {
-        this.type = this.part.contentTypes[0].value || '';
+      // not a valid part (stop right here)
+      if (!this.part?.dataService) {
+        return of({ ok: false });
       }
-      // ...
-      return !this.part?.dataService ? {} : {part: this.part};
+      // load couting and continue
+      else {
+        return this.store
+          .dispatch(new GetCounting(this.part, this.type, this.defaultLocale))
+          .pipe(
+            map(() => ({ ok: true }))
+          );
+      }
     }),
-    tap(() => {
-
-      this.loadItems();
-    }),
+    tap(page =>  !page.ok ? false : this.loadItems()),
   );
 
   public readonly data$ = this.store
     .select<DatabaseStateModel>(state => state.database)
     .pipe(
+      filter(databaseState => !!databaseState[this.part.name]?.itemsByGroup),
       map(databaseState => {
+        console.log({ databaseState });
+        const currentPartData = databaseState[this.part.name];
         // reset loading
         this.isListingLoading = false;
-        // get data
-        const part = this.part as DashboardPart;
-        const totalCount = databaseState[part.name].count;
-        const statusCounting = databaseState[part.name].statusCounting;
-        const totalPages = !totalCount ? 1 : Math.ceil(totalCount/this.viewPerPage);
-        const pageItems = databaseState[part.name].itemsByType[this.type][this.pageNo] || [];
-        const fullItemsByOrigin = databaseState[part.name].fullItemsByOrigin || {};
-        const searchQuery = databaseState[part.name].searchQuery;
-        const searchItems = databaseState[part.name].searchResult;
+        // extract data
+        const totalPages = Math.ceil((currentPartData.statusCounting[this.status] || 1)/this.viewPerPage);
+        const listingStatuses = this.getStatuses(currentPartData.statusCounting || {});
+        const groupItems = currentPartData.itemsByGroup?.[`${this.type}:${this.status}:${this.pageNo}`] || [];
+        const fullItemsByOrigin = currentPartData.fullItemsByOrigin || {};
+        const searchQuery = currentPartData.searchQuery;
+        const searchItems = currentPartData.searchResult;
         return {
-          part,
-          defaultLocale: this.defaultLocale,
-          allLocales: this.allLocales,
-          totalCount,
-          statusCounting,
           totalPages,
-          pageItems,
+          listingStatuses,
+          groupItems,
           fullItemsByOrigin,
           searchQuery,
           searchItems,
@@ -90,7 +91,7 @@ export class ListPage implements OnInit {
     private store: Store,
     private settingService: SettingService,
     private dashboardService: DashboardService,
-    public dataService: DataService
+    public dataService: DataService,
   ) {}
 
   ngOnInit(): void {}
@@ -100,6 +101,15 @@ export class ListPage implements OnInit {
       return;
     }
     this.type = value;
+    this.pageNo = 1;
+    this.loadItems();
+  }
+
+  changeStatus(value: string) {
+    if (this.status === value) {
+      return;
+    }
+    this.status = value;
     this.pageNo = 1;
     this.loadItems();
   }
@@ -131,11 +141,37 @@ export class ListPage implements OnInit {
   private loadItems() {
     if (this.part) {
       this.isListingLoading = true;
-      this.store.dispatch([
-        new GetCounting(this.part, this.type, this.defaultLocale),
-        new GetItems(this.part, this.type, this.pageNo, this.viewPerPage, true)
-      ]);
+      this.store.dispatch(new GetItems(this.part, this.type, this.status, this.pageNo, this.viewPerPage, true));
     }
+  }
+
+  private getStatuses(counting: Record<string, number>): ListingGrouping[] {
+    const statuses: ListingGrouping[] = [
+      {
+        title: 'Publish',
+        value: 'publish',
+        count: 0
+      },
+      {
+        title: 'Draft',
+        value: 'draft',
+        count: 0
+      },
+      {
+        title: 'Archive',
+        value: 'archive',
+        count: 0
+      },
+      {
+        title: 'Trash',
+        value: 'trash',
+        count: 0
+      }
+    ];
+    return statuses.map(item => {
+      item.count = counting[item.value] || 0;
+      return item;
+    });
   }
 
 }

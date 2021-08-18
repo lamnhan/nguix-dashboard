@@ -1,9 +1,8 @@
 <div class="host dashboard page" *ngIf="page$ | async as page; else loadingView">
 
-  <div class="main" *ngIf="page.part as part; else notFound">
-  <ng-container *ngIf="data$ | async; let data;">
-  <ng-container *ngIf="!query ? data.pageItems : (data.searchItems || data.pageItems); let listingItems">
-  <ng-container *ngIf="listingItems | statusFilter : status; let activeItems">
+  <div class="main" *ngIf="page.ok; else notFound;">
+  <ng-container *ngIf="data$ | async as data">
+  <ng-container *ngIf="!query ? data.groupItems : (data.searchItems || data.groupItems); let activeItems;">
 
     <div class="head">
 
@@ -15,12 +14,12 @@
         >Add New</a>
       </div>
 
-      <ul class="statuses" *ngIf="listingItems | extractStatuses as listingStatuses">
-        <ng-container *ngFor="let listingStatus of listingStatuses">
-          <li *ngIf="listingStatus.count">
-            <strong *ngIf="listingStatus.value === status; else inactive">{{ listingStatus.title }}</strong>
-            <ng-template #inactive>
-              <a href="#" (click)="status=listingStatus.value; false">{{ listingStatus.title }}</a>
+      <ul class="statuses">
+        <ng-container *ngFor="let listingStatus of data.listingStatuses">
+          <li>
+            <strong *ngIf="listingStatus.value === status; else inactiveStatus;">{{ listingStatus.title }}</strong>
+            <ng-template #inactiveStatus>
+              <a href="#" (click)="changeStatus(listingStatus.value); false;">{{ listingStatus.title }}</a>
             </ng-template>
             <em>({{ listingStatus.count }})</em>
           </li>
@@ -83,14 +82,19 @@
           </tr>
           <tr *ngFor="let listingItem of activeItems">
           <ng-container
-            *ngIf="part.noI18n || !data.fullItemsByOrigin[listingItem.id] ? [listingItem] : data.fullItemsByOrigin[listingItem.id].all; let items;"
+            *ngIf="
+              part.noI18n || !data.fullItemsByOrigin[listingItem.id]
+                ? [listingItem]
+                : data.fullItemsByOrigin[listingItem.id].all;
+              let items;
+            "
           >
   
             <td class="title">
               <ul>
                 <li *ngFor="let item of items">
 
-                  <div class="locale" *ngIf="item.locale">{{ data.allLocales[item.locale].text }}</div>
+                  <div class="locale" *ngIf="item.locale">{{ allLocales[item.locale].text }}</div>
 
                   <div class="major">
                     <span class="label" [class]="item.status" *ngIf="item.status!=='publish'">{{ item.status }}</span>
@@ -174,7 +178,7 @@
                   
                   <ng-template #missingTranslations>
                     <li class="missing-item" *ngFor="let missingTranslation of (data.fullItemsByOrigin[listingItem.origin].missingTranslations || [])">
-                      <div class="locale">{{ data.allLocales[missingTranslation].text }}</div>
+                      <div class="locale">{{ allLocales[missingTranslation].text }}</div>
                       <div class="major">
                         <a
                           [usefulRouterLink]="['app-admin', 'copy', part.name, listingItem.id]"
@@ -250,11 +254,10 @@
 
   </ng-container>
   </ng-container>
-  </ng-container>
   </div>
 
   <ng-template #notFound>
-    <div class="not-found">Not found ...</div>
+    <div class="not-found">Some thing wrong!</div>
   </ng-template>
 
 </div>

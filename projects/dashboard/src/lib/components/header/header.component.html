@@ -81,9 +81,9 @@
             [usefulRouterLink]="[userService.data?.username || 'account']"
           >{{ userService.data?.displayName || 'User' }}</a>
         </li>
-        <li><a [usefulRouterLink]="['account']">Manage Account</a></li>
+        <li><a [usefulRouterLink]="['account']">My Account</a></li>
         <li><a href="#" (click)="exitDashboard(); false">Exit Dashboard</a></li>
-        <li><a href="#" (click)="logOut(); false">Log Out</a></li>
+        <li><a href="#" (click)="logOut(); false">Sign Out</a></li>
       </ul>
     </li>
   </ul>
