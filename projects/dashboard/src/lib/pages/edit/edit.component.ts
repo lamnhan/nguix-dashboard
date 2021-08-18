@@ -292,7 +292,7 @@ export class EditPage implements OnInit, OnDestroy {
         }
         return result;
       },
-      {} as DatabaseItem
+      {} as Record<string, any>
     );
     // default data
     if (this.isNew) {
@@ -378,10 +378,25 @@ export class EditPage implements OnInit, OnDestroy {
     // set id & title
     else {
       const schema = part.formSchema.map(item => this.processSchema(item));
+      // i18n
+      const isTranslation = !part.noI18n && this.isCopy && this.prioritizedData.locale;
+      if (!part.noI18n) {
+        // origin
+        schema.unshift({ ...Schemas.origin, disabled: !this.isNew || isTranslation });
+        // locale
+        schema.unshift({
+          ...Schemas.locale,
+          disabled: !this.isNew || isTranslation,
+          defaultValue: this.settingService.defaultLocale,
+        });
+      }
       // type
       schema.unshift({
         ...Schemas.type,
-        disabled: !this.isNew || (this.part?.contentTypes && this.part?.contentTypes.length <= 1)
+        disabled:
+          !this.isNew ||
+          isTranslation ||
+          (this.part?.contentTypes && this.part?.contentTypes.length <= 1)
       });
       // id (new only)
       schema.unshift({ ...Schemas.id, disabled: !this.isNew });
@@ -390,18 +405,6 @@ export class EditPage implements OnInit, OnDestroy {
       // status
       if (this.isNew || (this.databaseItem?.status === 'draft')) {
         schema.push(Schemas.status);
-      }
-      // i18n
-      if (!part.noI18n) {
-        const isTranslation = this.isCopy && this.prioritizedData.locale;
-        // locale
-        schema.push({
-          ...Schemas.locale,
-          disabled: !this.isNew || isTranslation,
-          defaultValue: this.settingService.defaultLocale,
-        });
-        // origin
-        schema.push({ ...Schemas.origin, disabled: !this.isNew || isTranslation });
       }
       // result
       return schema;
@@ -415,7 +418,7 @@ export class EditPage implements OnInit, OnDestroy {
     const fields = {} as Record<string, any>;
     // build fields
     formSchema.forEach(schema => {
-      const {name, defaultValue, disabled, validators} = schema;
+      const { name, defaultValue, disabled, validators } = schema;
       const value = !databaseItem || !databaseItem[name] ? '' : databaseItem[name];
       let isDirty = false;
       const control = new FormControl(
@@ -427,7 +430,7 @@ export class EditPage implements OnInit, OnDestroy {
         control.setValue(defaultValue);
         isDirty = true;
       }
-      // modify id and origin
+      // modify id and origin (for copy)
       if (value && this.isCopy) {
         // id
         if (name === 'id') {
@@ -467,7 +470,7 @@ export class EditPage implements OnInit, OnDestroy {
         isDirty = true;
       }
       // type
-      if (name === 'type' && this.part?.contentTypes && this.part?.contentTypes?.length > 0) {
+      if (name === 'type' && !value && this.part?.contentTypes && this.part?.contentTypes?.length > 0) {
         control.setValue(this.part?.contentTypes[0].value);
         isDirty = true;
       }
@@ -501,12 +504,12 @@ export class EditPage implements OnInit, OnDestroy {
     // 1. checkbox alike
     if (type === 'checkbox' && value &&  children) {
       children.forEach(child =>
-        (value as string[]).indexOf(child.name) === -1 ? false : child.checked = true);
+        (value as string[]).indexOf(child.name) === -1 ? child.checked = false : child.checked = true);
     }
     // 2. radio alike
     if (type === 'radio' && value &&  selections) {
       selections.forEach(child =>
-        (value as string) !== child.name ? false : child.selected = true);
+        (value as string) !== child.name ? child.selected = false : child.selected = true);
     }
     // 3. content
     if (type === 'content') {

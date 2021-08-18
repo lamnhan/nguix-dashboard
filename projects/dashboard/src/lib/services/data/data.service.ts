@@ -43,13 +43,13 @@ export class DataService {
 
   updateItem(
     part: DashboardPart,
-    currentDatabaseItem: DatabaseItem,
     databaseItem: DatabaseItem,
+    updateData: Record<string, any>,
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
     this.store.dispatch(
-      new UpdateItem(part, databaseItem, currentDatabaseItem)
+      new UpdateItem(part, databaseItem, updateData)
     )
     .subscribe(onSuccess, onError);
   }
@@ -65,7 +65,7 @@ export class DataService {
       return;
     }
     this.store.dispatch(
-      new UpdateItem(part, { status: 'archive' }, databaseItem)
+      new UpdateItem(part, databaseItem, { status: 'archive' })
     )
     .subscribe(onSuccess, onError);
   }
@@ -81,7 +81,7 @@ export class DataService {
       return;
     }
     this.store.dispatch(
-      new UpdateItem(part, { status: 'draft' }, databaseItem)
+      new UpdateItem(part, databaseItem, { status: 'draft' })
     )
     .subscribe(onSuccess, onError);
   }
@@ -97,7 +97,7 @@ export class DataService {
       return;
     }
     this.store.dispatch(
-      new UpdateItem(part, { status: 'trash' }, databaseItem)
+      new UpdateItem(part, databaseItem, { status: 'trash' })
     )
     .subscribe(onSuccess, onError);
   }
@@ -113,7 +113,7 @@ export class DataService {
       return;
     }
     this.store.dispatch(
-      new UpdateItem(part, { status: 'draft' }, databaseItem)
+      new UpdateItem(part, databaseItem, { status: 'draft' })
     )
     .subscribe(onSuccess, onError);
   }

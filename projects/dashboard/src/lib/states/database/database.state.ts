@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { tap, map, switchMap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { Meta } from '@lamnhan/schemata';
 import { DatabaseData, SettingService } from '@lamnhan/ngx-useful';
@@ -11,7 +11,6 @@ export class GetCounting {
   static readonly type = '[Database] Get counting';
   constructor(
     public part: DashboardPart,
-    public type: string,
     public locale: string,
   ) {}
 }
@@ -59,21 +58,22 @@ export class UpdateItem {
   constructor(
     public part: DashboardPart,
     public databaseItem: DatabaseItem,
-    public currentDatabaseItem: DatabaseItem,
+    public updateData: Record<string, any>,
   ) {}
 }
 
 export class RemoveItem {
   static readonly type = '[Database] Remove item';
-  constructor(public part: DashboardPart, public databaseItem: DatabaseItem) {}
+  constructor(
+    public part: DashboardPart,
+    public databaseItem: DatabaseItem,
+  ) {}
 }
 
 export interface DatabaseStatePartData extends Record<string, any> {
-  // counting
-  totalCount: number;
-  statusCounting: Record<string, number>;
   // listing
   remoteLoaded: boolean;
+  counting: Record<string, Record<string, number>>;
   itemsByGroup: Record<string, DatabaseItem[]>;
   fullItemsByOrigin?: Record<string, DatabaseFullItem>;
   // search
@@ -102,7 +102,7 @@ export class DatabaseState {
   @Action(GetCounting)
   getCounting({ getState, patchState }: StateContext<DatabaseStateModel>, action: GetCounting) {
     const state = getState();
-    const { part, type, locale } = action;
+    const { part, locale } = action;
     const partName = part.name;
     const currentPartData = state[partName] || {} as DatabaseStatePartData;
     // no data service
@@ -110,26 +110,26 @@ export class DatabaseState {
       throw new Error('No data service for this part.');
     }
     // already loaded
-    if (currentPartData?.totalCount && currentPartData?.statusCounting) {
+    if (currentPartData?.counting) {
       return of(currentPartData);
     } else {
-      return part.dataService.databaseService
-      .getDoc<Meta>(`metas/$${part.dataService.name}`, undefined, false)
+      return part.dataService.getRemoteMetas(false)
       .pipe(
         tap(metaDoc => {
-          const statusCounting = metaDoc?.value?.documentCounting?.[type]?.[locale] || {
-            draft: 0,
-            publish: 0,
-            trash: 0,
-            archive: 0,
-          };
-          const totalCount = Object.keys(statusCounting)
-            .reduce((result, key) => result + statusCounting[key], 0);
+          const counting: Record<string, Record<string, number>> = {};
+          Object.keys(metaDoc?.value?.documentCounting || {}).forEach(type => {
+            counting[type] = metaDoc?.value?.documentCounting?.[type]?.[locale] || {
+              draft: 0,
+              publish: 0,
+              trash: 0,
+              archive: 0,
+            };
+          });
           return patchState(
             this.getPatchingData(
               partName,
               currentPartData,
-              { totalCount, statusCounting },
+              { counting },
             )
           );
         }),
@@ -274,10 +274,10 @@ export class DatabaseState {
     }
     // load data
     else {
-      return part.dataService.setupSearching().pipe(
+      return part.dataService.setupSearching(false, true).pipe(
         switchMap(() => (part.dataService as DatabaseData<any>)
           .search(searchQuery, limit, type === 'default' ? undefined : type)
-            .list()
+            .list(1, false)
             .pipe(
               tap((searchResult: DatabaseItem[]) =>
                 patchState(
@@ -318,9 +318,10 @@ export class DatabaseState {
             partName,
             currentPartData,
             {
-              totalCount: (currentPartData.totalCount || 0) + 1,
-              statusCounting: {
-                [status]: (currentPartData.statusCounting?.[status] || 0) + 1,
+              counting: {
+                [type]: {
+                  [status]: (currentPartData.counting?.[type]?.[status] || 0) + 1,
+                }
               },
               itemsByGroup: {
                 // add main item to the first page (check for locale first)
@@ -360,10 +361,9 @@ export class DatabaseState {
   @Action(UpdateItem)
   updateItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: UpdateItem) {
     const state = getState();
-    const {part, databaseItem, currentDatabaseItem} = action;
-    const { id } = currentDatabaseItem;
-    const status = databaseItem.status;
-    const currentStatus = currentDatabaseItem.status;
+    const { part, databaseItem, updateData } = action;
+    const { id, type, status: currentStatus } = databaseItem;
+    const { status: newStatus } = updateData;
     const partName = part.name;
     const currentPartData = state[partName] || {} as DatabaseStatePartData;
     // no data service
@@ -371,7 +371,7 @@ export class DatabaseState {
       throw new Error('No data service for this part.');
     }
     // update data
-    return part.dataService.update(id, databaseItem, currentDatabaseItem)
+    return part.dataService.update(id, updateData, databaseItem)
     .pipe(
       tap(() => 
         patchState(
@@ -380,16 +380,18 @@ export class DatabaseState {
             currentPartData,
             {
               ...(
-                status === currentStatus
+                !newStatus || newStatus === currentStatus
                   ? {}
                   : {
-                    statusCounting: {
-                      [currentStatus]: (currentPartData.statusCounting?.[currentStatus] || 0) - 1,
-                      [status]: (currentPartData.statusCounting?.[status] || 0) + 1,
-                    }
+                    counting: {
+                      [type]: {
+                        [currentStatus]: (currentPartData.counting?.[type]?.[currentStatus] || 0) - 1,
+                        [newStatus]: (currentPartData.counting?.[type]?.[newStatus] || 0) + 1,
+                      }
+                    },
                   }
               ),
-              ...this.updatePatchingItem(id, databaseItem, currentPartData),
+              ...this.updatePatchingItem(currentPartData, id, updateData, databaseItem),
             },
           )
         )
@@ -401,7 +403,7 @@ export class DatabaseState {
   removeItem({ getState, patchState }: StateContext<DatabaseStateModel>, action: RemoveItem) {
     const state = getState();
     const { part, databaseItem } = action;
-    const id = databaseItem.id;
+    const { id, type, status } = databaseItem;
     const partName = part.name;
     const currentPartData = state[partName] || {} as DatabaseStatePartData;
     // no data service
@@ -409,7 +411,7 @@ export class DatabaseState {
       throw new Error('No data service for this part.');
     }
     // remove item
-    return part.dataService.delete(id)
+    return part.dataService.delete(id, databaseItem)
     .pipe(
       tap(() =>
       patchState(
@@ -417,11 +419,12 @@ export class DatabaseState {
           partName,
           currentPartData,
           {
-            totalCount: (currentPartData.totalCount || 0) - 1,
-            statusCounting: {
-              [status]: (currentPartData.statusCounting?.[status] || 0) - 1,
+            counting: {
+              [type]: {
+                [status]: (currentPartData.counting?.[type]?.[status] || 0) - 1,
+              }
             },
-           ...this.updatePatchingItem(id, null, currentPartData),
+           ...this.updatePatchingItem(currentPartData, id, null, databaseItem),
           },
         )
       )
@@ -438,7 +441,6 @@ export class DatabaseState {
     const updateKeys = Object.keys(data);
     // direct data
     [
-      'totalCount',
       'remoteLoaded',
       'searchQuery',
       'searchResult'
@@ -448,7 +450,7 @@ export class DatabaseState {
       }
     });
     // nested
-    ['itemsByGroup', 'statusCounting'].forEach(key => {
+    ['itemsByGroup'].forEach(key => {
       if (updateKeys.includes(key)) {
         updateData[key] = {
           ...(currentPartData?.[key] || {}),
@@ -457,7 +459,7 @@ export class DatabaseState {
       }
     });
     // nested (2 levels)
-    ['fullItemsByOrigin'].forEach(key => {
+    ['fullItemsByOrigin', 'counting'].forEach(key => {
       if (updateKeys.includes(key)) {
         const thisUpdateData = {} as Record<string, any>;
         Object.keys(data[key]).forEach(nestedKey => {
@@ -482,47 +484,48 @@ export class DatabaseState {
   }
 
   private updatePatchingItem(
+    currentPartData: DatabaseStatePartData,
     id: string,
-    data: any,
-    partData: DatabaseStatePartData
+    updateData: null | Record<string, any>,
+    databaseItem: DatabaseItem,
   ) {
     // itemsByGroup
-    const itemsByGroup = (partData.itemsByGroup || {});
+    const itemsByGroup = (currentPartData.itemsByGroup || {});
     Object.keys(itemsByGroup).forEach(groupName => {
-      if (data !== null) {
+      if (updateData !== null) {
         itemsByGroup[groupName].forEach((item, i) => {
           if (item.id !== id) {
             return;
           }
-          itemsByGroup[groupName][i] = {...item, ...data};
+          itemsByGroup[groupName][i] = {...item, ...updateData};
         });
       } else {
         itemsByGroup[groupName] = itemsByGroup[groupName].filter(item => item.id !== id);
       }
     });
     // fullItemsByOrigin
-    const fullItemsByOrigin = (partData.fullItemsByOrigin || {});
+    const fullItemsByOrigin = (currentPartData.fullItemsByOrigin || {});
     Object.keys(fullItemsByOrigin).forEach(origin => {
-      if (data !== null) {
+      if (updateData !== null) {
         fullItemsByOrigin[origin].all.forEach((item, i) => {
           if (item.id !== id) {
             return;
           }
-          fullItemsByOrigin[origin].all[i] = {...item, ...data};
+          fullItemsByOrigin[origin].all[i] = {...item, ...updateData};
         })
       } else {
         fullItemsByOrigin[origin].all = fullItemsByOrigin[origin].all.filter(item => item.id !== id);
       }
     });
     // searchResult
-    let searchResult = partData.searchResult;
+    let searchResult = currentPartData.searchResult;
     if (searchResult) {
-      if (data !== null) {
+      if (updateData !== null) {
         searchResult.forEach(item => {
           if (item.id !== id) {
             return;
           }
-          item = {...item, ...data};
+          item = {...item, ...updateData};
         });
       } else {
         searchResult = searchResult.filter(item => item.id !== id);

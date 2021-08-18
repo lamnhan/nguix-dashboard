@@ -56,7 +56,7 @@
                 (change)="toggleItem(item, $event)"
                 [checked]="currentData && currentData[item.id]"
               >
-              <a href="#" (click)="false;">{{ item.title }}</a>
+              <a href="#" (click)="false">{{ item.title }}</a>
             </li>
           </ul>
         </div>
@@ -82,7 +82,7 @@
   
         <ul class="view-list">
           <li *ngFor="let item of currentData | o2a">
-            <a href="#">{{ item.title }}</a>
+            <a href="#" (click)="false">{{ item.title }}</a>
           </li>
         </ul>
   

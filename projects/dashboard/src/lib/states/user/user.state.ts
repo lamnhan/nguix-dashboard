@@ -52,6 +52,7 @@ export class UserState {
         ref => {
           let query = ref
             .where('type', '==', 'default')
+            .where('status', 'in', ['draft', 'publish', 'archive', 'trash']) // for indexing
             .orderBy('createdAt', 'desc');
           if (pageNo > 1) {
             const prevPageNo = pageNo - 1;

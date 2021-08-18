@@ -27,14 +27,6 @@ export class VideoPartService {
         text: 'Add New',
         routerLink: ['app-admin', 'new', this.name],
       },
-      {
-        text: 'Categories',
-        routerLink: ['app-admin', 'list', 'category'],
-      },
-      {
-        text: 'Tags',
-        routerLink: ['app-admin', 'list', 'tag'],
-      }
     ]
   };
 

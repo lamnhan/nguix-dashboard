@@ -11,6 +11,7 @@
         <a
           class="button-outline-primary"
           [usefulRouterLink]="['app-admin', 'new', part.name]"
+          [usefulRouteExtras]="{queryParams: { type: type }}"
         >Add New</a>
       </div>
 
@@ -120,7 +121,10 @@
                       <a [usefulRouterLink]="['app-admin', 'edit', part.name, item.id]">Edit</a>
                     </li>
                     <li class="copy">
-                      <a [usefulRouterLink]="['app-admin', 'copy', part.name, item.id]">Copy</a>
+                      <a
+                        [usefulRouterLink]="['app-admin', 'copy', part.name, item.id]"
+                        [usefulRouteExtras]="{queryParams: { type: type }}"
+                      >Copy</a>
                     </li>
                     <li class="archive">
                       <a href="javascript:void(0)" (click)="dataService.archiveItem(part, item)">Archive</a>
@@ -182,7 +186,7 @@
                       <div class="major">
                         <a
                           [usefulRouterLink]="['app-admin', 'copy', part.name, listingItem.id]"
-                          [usefulRouteExtras]="{queryParams: {locale: missingTranslation}}"
+                          [usefulRouteExtras]="{queryParams: { type: type, locale: missingTranslation }}"
                         >Add the translation</a>
                       </div>
                     </li>

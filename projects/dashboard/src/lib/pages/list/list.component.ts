@@ -50,7 +50,7 @@ export class ListPage implements OnInit {
       // load couting and continue
       else {
         return this.store
-          .dispatch(new GetCounting(this.part, this.type, this.defaultLocale))
+          .dispatch(new GetCounting(this.part, this.defaultLocale))
           .pipe(
             map(() => ({ ok: true }))
           );
@@ -62,15 +62,18 @@ export class ListPage implements OnInit {
   public readonly data$ = this.store
     .select<DatabaseStateModel>(state => state.database)
     .pipe(
-      filter(databaseState => !!databaseState[this.part.name]?.itemsByGroup),
+      filter(databaseState =>
+        !!databaseState[this.part.name]?.counting && !!databaseState[this.part.name]?.itemsByGroup
+      ),
       map(databaseState => {
-        console.log({ databaseState });
         const currentPartData = databaseState[this.part.name];
         // reset loading
         this.isListingLoading = false;
         // extract data
-        const totalPages = Math.ceil((currentPartData.statusCounting[this.status] || 1)/this.viewPerPage);
-        const listingStatuses = this.getStatuses(currentPartData.statusCounting || {});
+        const totalPages = Math.ceil(
+          (currentPartData.counting[this.type]?.[this.status] || 1) / this.viewPerPage
+        );
+        const listingStatuses = this.getStatuses(currentPartData.counting[this.type] || {});
         const groupItems = currentPartData.itemsByGroup?.[`${this.type}:${this.status}:${this.pageNo}`] || [];
         const fullItemsByOrigin = currentPartData.fullItemsByOrigin || {};
         const searchQuery = currentPartData.searchQuery;
