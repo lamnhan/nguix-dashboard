@@ -23,13 +23,8 @@
           <div class="title">Selected</div>
           <ul class="items">
             <li *ngFor="let item of selectedData | o2a">
-              <input
-                type="checkbox"
-                [value]="item.id"
-                (change)="toggleItem(item, $event)"
-                checked="true"
-              >
-              <a href="#" (click)="false;">{{ item.title }}</a>
+              <a href="#" class="button-outline-dark-sm" (click)="removeItem(item);false;">-</a>
+              <a href="#" (click)="false">{{ item.title }}</a>
             </li>
           </ul>
 
@@ -41,21 +36,17 @@
               class="form-control"
               type="search"
               [(ngModel)]="query"
-              placeholder="Search items ..."
-              (keyup.enter)="search()"
+              placeholder="ID, keyword or search query ..."
+              (keyup.enter)="loadItems()"
             >
+            <a href="#" class="button-primary-sm" [class.disabled]="!query" (click)="!query ? false : loadItems(); false;">Load</a>
           </div>
           <ul class="items">
             <li class="loading" *ngIf="isLoading">
               <nguix-dashboard-spinner></nguix-dashboard-spinner>
             </li>
-            <li *ngFor="let item of items">
-              <input
-                type="checkbox"
-                [value]="item.id"
-                (change)="toggleItem(item, $event)"
-                [checked]="currentData && currentData[item.id]"
-              >
+            <li *ngFor="let item of items">              
+              <a href="#" class="button-outline-dark-sm" (click)="addItem(item);false;">+</a>
               <a href="#" (click)="false">{{ item.title }}</a>
             </li>
           </ul>

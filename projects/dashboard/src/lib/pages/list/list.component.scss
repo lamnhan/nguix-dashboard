@@ -185,20 +185,21 @@
                   font-size: 11px;
                   padding: 1px 5px;
                   margin-right: .5rem;
-                  border-radius: 3px;
                   text-transform: uppercase;
+                  border: 1px solid $medium;
+                  border-radius: 3px;
 
                   &.draft {
-                    background: $secondary;
-                    color: $light;
+                    border-color: $secondary;
+                    color: $secondary;
                   }
                   &.archive {
-                    background: $dark;
-                    color: $dark_contrast;
+                    border-color: $dark;
+                    color: $dark;
                   }
                   &.trash {
-                    background: $danger;
-                    color: $light;
+                    border-color: $danger;
+                    color: $danger;
                   }
                 }
 

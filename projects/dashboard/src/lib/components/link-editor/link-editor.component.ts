@@ -1,9 +1,9 @@
 import { Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DatabaseData } from '@lamnhan/ngx-useful';
 
-import { DashboardPart } from '../../services/config/config.service';
+import { DashboardPart, DatabaseItem } from '../../services/config/config.service';
 
 @Component({
   selector: 'nguix-dashboard-link-editor',
@@ -26,7 +26,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   query = '';
   isLoading: boolean = false;
-  items: any[] = [];
+  items: DatabaseItem[] = [];
   preloadSubscription?: Subscription;
   searchingSubscription?: Subscription;
 
@@ -43,14 +43,21 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.preloadSubscription = this.part.dataService
         .getCollection(
           ref => {
-            let query = ref.where('type', '==', this.contentType);
+            let query = ref
+              .where('type', '==', this.contentType)
+              .where('status', '==', 'publish');
             if (!this.part.noI18n) {
               query = query.where('locale', '==', this.contentLocale);
             }
             return query.limit(this.preload as number);
           },
           {
-            name: `Preload linking: part=${this.part.name} type=${this.contentType} locale=${this.contentLocale}`,
+            name:
+              `Preload linking:
+                part=${this.part.name}
+                type=${this.contentType}
+                status=publish
+                locale=${this.contentLocale}`,
           }
         )
         .subscribe(items => {
@@ -80,50 +87,83 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  search() {
+  loadItems() {
     if (this.part?.dataService) {
       this.isLoading = true;
       if (this.searchingSubscription) {
         this.searchingSubscription.unsubscribe();
       }
-      this.searchingSubscription = this.part.dataService.setupSearching().pipe(
-        switchMap(() =>
-          (this.part.dataService as DatabaseData<any>)
-          .search(this.query, 5, this.contentType === 'default' ? undefined : this.contentType)
-            .list()
+      this.searchingSubscription = combineLatest([
+        // match id
+        this.part.dataService.getDoc(this.query),
+        this.part.dataService.lookup(
+          {
+            keyword: this.query,
+            type: this.contentType,
+            status: 'publish',
+            locale: this.part.noI18n ? undefined : this.contentLocale,
+          },
+          3,
         ),
-      )
-      .subscribe(items => {
+        this.part.dataService.setupSearching()
+          .pipe(
+            switchMap(() =>
+              (this.part.dataService as DatabaseData<any>)
+              .search(this.query, 3, this.contentType === 'default' ? undefined : this.contentType)
+                .list()
+            ),
+          )
+      ])
+      .subscribe(([byIdItem, byKeywordItems, bySearchingItems]) => {
         this.isLoading = false;
-        this.items = items;
+        // items
+        const items = [] as DatabaseItem[];
+        if (byIdItem) {
+          items.push(byIdItem);
+        }
+        items.push(...byKeywordItems, ...bySearchingItems);
+        // set items
+        const duplicatedIds: string[] = [];
+        this.items = items.filter(item => {
+          const isDuplicated = duplicatedIds.includes(item.id);
+          duplicatedIds.push(item.id);
+          return !isDuplicated;
+        });
       });
     }
   }
 
-  toggleItem(item: any, e: any) {
-    const id = e.target.value;
-    const checked = e.target.checked;
+  addItem(item: any) {
+    const dataPickers = this.part.dataService?.getDataPickers() || {};
     const selectedData = { ...this.selectedData };
-    if (checked) {
-      selectedData[id] = (this.fields || [])
-        .map(key => ({key, value: item[key]}))
-        .reduce(
-          (result, item) => {
-            result[item.key] = item.value;
-            return result;
-          },
-          {} as any,
-        );
-    } else {
-      delete selectedData[id];
-    }
+    selectedData[item.id] = (this.fields || [])
+      .map(prop => ({
+        prop,
+        value:
+          !dataPickers[prop]
+            ? item[prop]
+            : dataPickers[prop](item[prop], item)
+      }))
+      .reduce(
+        (result, item) => {
+          result[item.prop] = item.value;
+          return result;
+        },
+        {} as any,
+      );
+    // re-assign
+    this.selectedData = selectedData;
+  }
+
+  removeItem(item: any) {
+    const selectedData = { ...this.selectedData };
+    delete selectedData[item.id];
+    // re-assign
     this.selectedData = selectedData;
   }
 
   submit() {
-    // event
-    this.save.emit(this.selectedData);
-    // exit
     this.isEdit = false;
+    this.save.emit(this.selectedData);
   }
 }
