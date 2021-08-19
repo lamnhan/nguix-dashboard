@@ -169,7 +169,8 @@ export class DatabaseState {
           if (pageNo > 1) {
             const prevPageNo = pageNo - 1;
             const prevGroupName = `${type}:${status}:${prevPageNo}`;
-            const lastItem = (currentPartData as DatabaseStatePartData).itemsByGroup[prevGroupName].pop();
+            const lastItems = (currentPartData as DatabaseStatePartData).itemsByGroup[prevGroupName];
+            const lastItem = lastItems[lastItems.length - 1];
             if (lastItem) {
               query = query.startAfter(lastItem.createdAt as string);
             }

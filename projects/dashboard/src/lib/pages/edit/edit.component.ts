@@ -301,7 +301,8 @@ export class EditPage implements OnInit, OnDestroy {
       (result, name) => {
         const item = formGroup.controls[name];
         if (item.dirty) {
-          result[name] = item.value;
+          const value = item.value;
+          result[name] = !isNaN(value) ? +value : value;
         }
         return result;
       },

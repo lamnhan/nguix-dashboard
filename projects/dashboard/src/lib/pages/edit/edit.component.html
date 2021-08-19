@@ -15,7 +15,8 @@
         <a
           *ngIf="!isNew"
           class="button-outline-primary"
-          [usefulRouterLink]="['app-admin', 'new', part.name]"
+          [usefulRouterLink]="['app-admin', 'new', part.name]"          
+          [usefulRouteExtras]="{queryParams: { type: !databaseItem ? 'default' : databaseItem.type }}"
         >Add another</a>
         <a
           *ngIf="!isNew && databaseItem"
