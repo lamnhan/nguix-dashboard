@@ -2,7 +2,7 @@
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
   <ng-container *ngIf="!query ? data.folderItems : (data.searchItems || data.folderItems); let listingItems;">
-  <ng-container *ngIf="listingItems | mediaTypeFilter : type | paginate : {itemsPerPage: 30, currentPage: pageNo}; let activeItems;">
+  <ng-container *ngIf="listingItems | mediaTypeFilter : type | paginate : { itemsPerPage: 30, currentPage: pageNo }; let activeItems;">
 
     <div class="head">
   

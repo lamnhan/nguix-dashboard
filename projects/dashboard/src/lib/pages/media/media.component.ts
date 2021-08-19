@@ -40,7 +40,6 @@ export class MediaPage implements OnInit {
   type = 'all';
   query = '';
   pageNo = 1;
-
   showUploader = false;
   activeFolder?: string;
   detailItem?: StorageItem;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { of, combineLatest } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
 import { Profile } from '@lamnhan/schemata';
@@ -12,7 +12,7 @@ export class GetProfiles {
 
 export class SearchProfiles {
   static readonly type = '[User] Search profiles';
-  constructor(public query: string, public limit: number) {}
+  constructor(public searchQuery: string, public limit: number) {}
 }
 
 export interface UserStateModel {
@@ -80,25 +80,53 @@ export class UserState {
       searchQuery: currentSearchQuery,
       searchResult: currentSearchResult
     } = getState();
-    const { limit, query } = action;
-    if (currentSearchQuery === query && currentSearchResult?.length) {
+    const { searchQuery, limit } = action;
+    if (currentSearchQuery === searchQuery && currentSearchResult?.length) {
       return of(currentSearchResult).pipe(
         tap(() => patchState({ searchResult: currentSearchResult })),
       );
     } else {
-      return this.profileDataService.setupSearching().pipe(
-        switchMap(() =>
-          this.profileDataService.search(query, limit)
-            .list()
-            .pipe(
-              tap(searchResult =>
-                patchState({
-                  searchQuery: query,
-                  searchResult: searchResult as Profile[],
-                })
-              ),
-            )
+      return combineLatest([
+        // match id
+        this.profileDataService.getDoc(searchQuery, false),
+        // match keyword
+        this.profileDataService.lookup(
+          {
+            keyword: searchQuery,
+            type: 'default',
+            status: 'publish',
+          },
+          3,
         ),
+        // match searching
+        this.profileDataService.setupSearching().pipe(
+          switchMap(() =>
+            this.profileDataService.search(searchQuery, limit).list()
+          ),
+        ),
+      ])
+      .pipe(
+        tap(([byIdItem, byKeywordItems, bySearchingItems]) => {
+          // items
+          const items = [] as Profile[];
+          if (byIdItem) {
+            items.push(byIdItem);
+          }
+          items.push(...byKeywordItems, ...bySearchingItems);
+          const duplicatedIds: string[] = [];
+          const searchResult = items
+            .filter(item => {
+              const isDuplicated = duplicatedIds.includes(item.id);
+              duplicatedIds.push(item.id);
+              return !isDuplicated;
+            })
+            .slice(0, limit);
+          // patch
+          return patchState({
+            searchQuery,
+            searchResult,
+          });
+        })
       );
     }
   }

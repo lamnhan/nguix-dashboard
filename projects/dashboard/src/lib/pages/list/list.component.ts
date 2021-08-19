@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { map, tap, filter, switchMap } from 'rxjs/operators';
 import { SettingService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
-import { DatabaseItem, DashboardPart, ListingGrouping } from '../../services/config/config.service';
+import { ConfigService, DatabaseItem, DashboardPart, ListingGrouping } from '../../services/config/config.service';
 import { DataService } from '../../services/data/data.service';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 
@@ -17,17 +17,6 @@ import { DatabaseStateModel, GetCounting, GetItems, GetTranslations, SearchItems
   styleUrls: ['./list.component.scss']
 })
 export class ListPage implements OnInit {
-  private readonly viewPerPage = 2;
-
-  part!: DashboardPart;
-  isListingLoading!: boolean;
-  type!: string;
-  status!: string;
-  pageNo!: number;
-  query!: string;
-  detailId!: string;
-  defaultLocale!: string;
-  allLocales!: Record<string, BuiltinListingItem>;
 
   public readonly page$ = this.route.params.pipe(
     switchMap(params => {
@@ -71,7 +60,7 @@ export class ListPage implements OnInit {
         this.isListingLoading = false;
         // extract data
         const totalPages = Math.ceil(
-          (currentPartData.counting[this.type]?.[this.status] || 1) / this.viewPerPage
+          (currentPartData.counting[this.type]?.[this.status] || 1) / this.getViewPerPage()
         );
         const listingStatuses = this.getStatuses(currentPartData.counting[this.type] || {});
         const groupItems = currentPartData.itemsByGroup?.[`${this.type}:${this.status}:${this.pageNo}`] || [];
@@ -88,11 +77,22 @@ export class ListPage implements OnInit {
         };
       }),
     );
+  
+  part!: DashboardPart;
+  isListingLoading!: boolean;
+  type!: string;
+  status!: string;
+  pageNo!: number;
+  query!: string;
+  detailId!: string;
+  defaultLocale!: string;
+  allLocales!: Record<string, BuiltinListingItem>;
 
   constructor(
     private route: ActivatedRoute,
     private store: Store,
     private settingService: SettingService,
+    private configService: ConfigService,
     private dashboardService: DashboardService,
     public dataService: DataService,
   ) {}
@@ -121,7 +121,7 @@ export class ListPage implements OnInit {
     if (this.part && this.query && this.query !== currentQuery) {
       this.isListingLoading = true;
       // dispatch action
-      this.store.dispatch(new SearchItems(this.part, this.type, this.query, this.viewPerPage));
+      this.store.dispatch(new SearchItems(this.part, this.type, this.query, this.getViewPerPage()));
     }
   }
   
@@ -144,7 +144,7 @@ export class ListPage implements OnInit {
   private loadItems() {
     if (this.part) {
       this.isListingLoading = true;
-      this.store.dispatch(new GetItems(this.part, this.type, this.status, this.pageNo, this.viewPerPage, true));
+      this.store.dispatch(new GetItems(this.part, this.type, this.status, this.pageNo, this.getViewPerPage(), true));
     }
   }
 
@@ -177,4 +177,7 @@ export class ListPage implements OnInit {
     });
   }
 
+  private getViewPerPage() {
+    return this.configService.getConfig().viewPerPage || 15;
+  }
 }

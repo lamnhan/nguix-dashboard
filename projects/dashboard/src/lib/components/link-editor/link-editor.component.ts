@@ -96,6 +96,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.searchingSubscription = combineLatest([
         // match id
         this.part.dataService.getDoc(this.query),
+        // match keyword
         this.part.dataService.lookup(
           {
             keyword: this.query,
@@ -105,14 +106,14 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
           },
           3,
         ),
-        this.part.dataService.setupSearching()
-          .pipe(
-            switchMap(() =>
-              (this.part.dataService as DatabaseData<any>)
-              .search(this.query, 3, this.contentType === 'default' ? undefined : this.contentType)
-                .list()
-            ),
-          )
+        // match searching
+        this.part.dataService.setupSearching().pipe(
+          switchMap(() =>
+            (this.part.dataService as DatabaseData<any>)
+            .search(this.query, 3, this.contentType === 'default' ? undefined : this.contentType)
+              .list()
+          ),
+        )
       ])
       .subscribe(([byIdItem, byKeywordItems, bySearchingItems]) => {
         this.isLoading = false;

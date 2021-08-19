@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ConfigService, DashboardPart, DatabaseItem } from '../config/config.service';
+import { ConfigService, DashboardPart } from '../config/config.service';
 
 import { FrontPartService } from '../../parts/front/front.service';
 import { MediaPartService } from '../../parts/media/media.service';

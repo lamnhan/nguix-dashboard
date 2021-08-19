@@ -17,7 +17,7 @@
             <ng-template #inactive>
               <a href="#" (click)="role=listingRole.value; false">{{ listingRole.title }}</a>
             </ng-template>
-            <em>({{ listingRole.count }})</em>
+            <em *ngIf="listingRole.value === 'all'">({{ data.totalCount }})</em>
           </li>
         </ng-container>
       </ul>

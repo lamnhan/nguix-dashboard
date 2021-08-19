@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { of, combineLatest } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 import { State, Action, StateContext } from '@ngxs/store';
-import { Meta } from '@lamnhan/schemata';
 import { DatabaseData, SettingService } from '@lamnhan/ngx-useful';
 
 import { DashboardPart, DatabaseItem } from '../../services/config/config.service';
@@ -275,25 +274,55 @@ export class DatabaseState {
     }
     // load data
     else {
-      return part.dataService.setupSearching(false, true).pipe(
-        switchMap(() => (part.dataService as DatabaseData<any>)
-          .search(searchQuery, limit, type === 'default' ? undefined : type)
-            .list(1, false)
-            .pipe(
-              tap((searchResult: DatabaseItem[]) =>
-                patchState(
-                  this.getPatchingData(
-                    partName,
-                    currentPartData,
-                    {
-                      searchQuery,
-                      searchResult,
-                    }
-                  )
-                )
-              ),
-            )
+      return combineLatest([
+        // match id
+        part.dataService.getDoc(searchQuery, false),
+        // match keyword
+        part.dataService.lookup(
+          {
+            keyword: searchQuery,
+            type,
+            status: 'publish',
+            locale: part.noI18n ? undefined : this.settingService.defaultLocale,
+          },
+          3,
         ),
+        // match searching
+        part.dataService.setupSearching(false, true).pipe(
+          switchMap(() => (part.dataService as DatabaseData<any>)
+            .search(searchQuery, limit, type === 'default' ? undefined : type)
+              .list(1, false)
+          ),
+        ),
+      ])
+      .pipe(
+        tap(([byIdItem, byKeywordItems, bySearchingItems]) => {
+          // items
+          const items = [] as DatabaseItem[];
+          if (byIdItem) {
+            items.push(byIdItem);
+          }
+          items.push(...byKeywordItems, ...bySearchingItems);
+          const duplicatedIds: string[] = [];
+          const searchResult = items
+            .filter(item => {
+              const isDuplicated = duplicatedIds.includes(item.id);
+              duplicatedIds.push(item.id);
+              return !isDuplicated;
+            })
+            .slice(0, limit);
+          // patch
+          return patchState(
+            this.getPatchingData(
+              partName,
+              currentPartData,
+              {
+                searchQuery,
+                searchResult,
+              }
+            )
+          );
+        })
       );
     }
   }
