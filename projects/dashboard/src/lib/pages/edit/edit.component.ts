@@ -281,6 +281,19 @@ export class EditPage implements OnInit, OnDestroy {
     }
   }
 
+  listChanges(
+    schema: FormSchemaItem,
+    formGroup: FormGroup,
+    value: any
+  ) {
+    (schema.meta as any).currentData = value;
+    const control = formGroup.get(schema.name);
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
+  }
+
   submit(part: DashboardPart, formGroup: FormGroup) {
     this.lockdown = true;    
     // changed data
@@ -540,6 +553,10 @@ export class EditPage implements OnInit, OnDestroy {
         schema.meta.fields = part.dataService.getLinkingFields();
         schema.meta.currentData = value;
       }
+    }
+    // 7. list
+    if (type === 'list') {
+      schema.meta = { currentData: value };
     }
   }
 

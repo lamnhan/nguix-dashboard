@@ -226,6 +226,17 @@
               )"
             ></nguix-dashboard-link-editor>
           </ng-container>
+
+          <ng-container *ngIf="schema.type==='list' && schema.meta">
+            <nguix-dashboard-list-editor
+              [currentData]="schema.meta.currentData"
+              (save)="listChanges(
+                schema,
+                data.formGroup,
+                $event
+              )"
+            ></nguix-dashboard-list-editor>
+          </ng-container>
   
         </div>
         </ng-container>

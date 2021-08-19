@@ -101,7 +101,7 @@ export const Schemas = {
   content: { label: 'Content', name: 'content', type: 'content' },
   value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 }, // TODO: add "count" type
-  keyword: { label: 'Keyword', name: 'keyword', type: 'text' },
+  keyword: { label: 'Keywords', name: 'keywords', type: 'list' },
   toc: {
     label: 'TOC',
     name: 'toc',

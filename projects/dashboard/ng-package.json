@@ -12,7 +12,8 @@
       "ngx-toastr": "toastr",
       "ngx-tinymce": "tinymce",
       "ngx-filesize": "ng.filesize",
-      "croppie": "croppie"
+      "croppie": "croppie",
+      "@yaireo/tagify": "tagify"
     }
   },
   "allowedNonPeerDependencies": [
@@ -20,6 +21,7 @@
     "ngx-toastr",
     "ngx-tinymce",
     "ngx-filesize",
-    "croppie"
+    "croppie",
+    "@yaireo/tagify"
   ]
 }

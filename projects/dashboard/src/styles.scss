@@ -1,6 +1,9 @@
 // toastr
 @import '~ngx-toastr/toastr';
 
+// tagify
+@import '@yaireo/tagify/dist/tagify.css';
+
 // register skin
 @import './scss/skin';
 
@@ -61,5 +64,10 @@
       border: 1px solid $primary;
       color: $primary;
     }
+  }
+
+  .tagify {
+    border-color: $medium;
+    background: $light;
   }
 }
