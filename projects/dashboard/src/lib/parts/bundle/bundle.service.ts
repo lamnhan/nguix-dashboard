@@ -30,6 +30,8 @@ export class BundlePartService {
     ]
   };
 
+  public readonly hasOnly = true;
+
   public readonly formSchema: FormSchemaItem[] = [
     {
       label: 'Only',

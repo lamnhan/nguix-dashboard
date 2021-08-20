@@ -34,6 +34,9 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
               text: 'Test menu',
               routerLink: []
             });
+            dashboardService.postPart.contentTypes.push(
+              { text: 'Foo', value: 'foo', icon: `icon-dashboard-part-post` },
+            );
           },
         ],
         allowDirectContent: true,

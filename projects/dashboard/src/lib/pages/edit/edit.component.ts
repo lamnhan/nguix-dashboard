@@ -15,6 +15,7 @@ import {
   RadioAlikeChild,
   ConfigService,
   ContentSchemaMeta,
+  LinkingSchemaMeta,
   ImageCropping,
 } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
@@ -32,6 +33,8 @@ export class EditPage implements OnInit, OnDestroy {
   
   lockdown = false;
   submitText = 'Submit';
+
+  activeType = 'default';
   activeLocale = 'en-US';
 
   isNew = false;
@@ -136,6 +139,12 @@ export class EditPage implements OnInit, OnDestroy {
           this.localeChangesSubscription = localeControl.valueChanges
             .subscribe(locale => this.activeLocale = locale);
         }
+        // active type
+        const typeControl = data.formGroup?.get('type');
+        if (typeControl) {
+          this.typeChangesSubscription = typeControl.valueChanges
+            .subscribe(type => this.activeType = type);
+        }
       }),
     );
 
@@ -143,6 +152,7 @@ export class EditPage implements OnInit, OnDestroy {
   private titleChangesSubscription?: Subscription;
   private statusChangesSubscription?: Subscription;
   private localeChangesSubscription?: Subscription;
+  private typeChangesSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -170,6 +180,9 @@ export class EditPage implements OnInit, OnDestroy {
     }
     if (this.localeChangesSubscription) {
       this.localeChangesSubscription.unsubscribe();
+    }
+    if (this.typeChangesSubscription) {
+      this.typeChangesSubscription.unsubscribe();
     }
   }
 
@@ -391,7 +404,7 @@ export class EditPage implements OnInit, OnDestroy {
     }
     // set id & title
     else {
-      const schema = part.formSchema.map(item => this.processSchema(item));
+      const schema = part.formSchema.map(item => ({ ...item }));
       // i18n
       const isTranslation = !part.noI18n && this.isCopy && this.prioritizedData.locale;
       if (!part.noI18n) {
@@ -503,14 +516,6 @@ export class EditPage implements OnInit, OnDestroy {
     });
     // result
     return this.formBuilder.group(fields);
-  }
-
-  private processSchema(schema: FormSchemaItem) {
-    const item = {...schema};
-    const { type } = schema;
-    // 1. ...
-    // result
-    return item;
   }
 
   private processSchemaData(schema: FormSchemaItem, value: any) {

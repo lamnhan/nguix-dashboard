@@ -217,8 +217,9 @@
               [part]="schema.meta.part"
               [fields]="schema.meta.fields"
               [currentData]="schema.meta.currentData"
-              [contentLocale]="activeLocale"
               [contentType]="schema.meta.contentType"
+              [contentLocale]="activeLocale"
+              [contentOnly]="!part?.dataService ? undefined : (part?.dataService?.name + ':' + activeType)"
               [preload]="schema.meta.preload"
               (save)="linkChanges(
                 schema,

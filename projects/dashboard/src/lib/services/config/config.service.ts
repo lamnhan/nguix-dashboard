@@ -25,6 +25,7 @@ export interface DashboardPart {
   name: string;
   menuItem: MenuItem;
   noI18n?: boolean;
+  hasOnly?: boolean;
   contentTypes?: ContentType[];
   dataService?: DatabaseData<any>;
   formSchema?: FormSchemaItem[];

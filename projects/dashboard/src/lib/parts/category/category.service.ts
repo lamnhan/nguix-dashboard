@@ -30,6 +30,8 @@ export class CategoryPartService {
     ]
   };
 
+  public readonly hasOnly = true;
+
   public readonly formSchema: FormSchemaItem[] = [
     {
       label: 'Only',
