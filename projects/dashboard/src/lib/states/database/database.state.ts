@@ -277,16 +277,6 @@ export class DatabaseState {
       return combineLatest([
         // match id
         part.dataService.getDoc(searchQuery, false),
-        // match keyword
-        part.dataService.lookup(
-          {
-            keyword: searchQuery,
-            type,
-            status: 'publish',
-            locale: part.noI18n ? undefined : this.settingService.defaultLocale,
-          },
-          3,
-        ),
         // match searching
         part.dataService.setupSearching(false, true).pipe(
           switchMap(() => (part.dataService as DatabaseData<any>)
@@ -296,13 +286,13 @@ export class DatabaseState {
         ),
       ])
       .pipe(
-        tap(([byIdItem, byKeywordItems, bySearchingItems]) => {
+        tap(([byIdItem, bySearchingItems]) => {
           // items
           const items = [] as DatabaseItem[];
           if (byIdItem) {
             items.push(byIdItem);
           }
-          items.push(...byKeywordItems, ...bySearchingItems);
+          items.push(...bySearchingItems);
           const duplicatedIds: string[] = [];
           const searchResult = items
             .filter(item => {

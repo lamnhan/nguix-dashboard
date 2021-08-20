@@ -36,7 +36,7 @@
               class="form-control"
               type="search"
               [(ngModel)]="query"
-              placeholder="ID, keyword or search query ..."
+              placeholder="ID or search query ..."
               (keyup.enter)="loadItems()"
             >
             <a href="#" class="button-primary-sm" [class.disabled]="!query" (click)="!query ? false : loadItems(); false;">Load</a>

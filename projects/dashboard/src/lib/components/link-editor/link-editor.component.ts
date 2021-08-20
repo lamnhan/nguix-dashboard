@@ -96,33 +96,23 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.searchingSubscription = combineLatest([
         // match id
         this.part.dataService.getDoc(this.query),
-        // match keyword
-        this.part.dataService.lookup(
-          {
-            keyword: this.query,
-            type: this.contentType,
-            status: 'publish',
-            locale: this.part.noI18n ? undefined : this.contentLocale,
-          },
-          3,
-        ),
         // match searching
         this.part.dataService.setupSearching().pipe(
           switchMap(() =>
             (this.part.dataService as DatabaseData<any>)
-            .search(this.query, 3, this.contentType === 'default' ? undefined : this.contentType)
+            .search(this.query, 5, this.contentType === 'default' ? undefined : this.contentType)
               .list()
           ),
         )
       ])
-      .subscribe(([byIdItem, byKeywordItems, bySearchingItems]) => {
+      .subscribe(([byIdItem, bySearchingItems]) => {
         this.isLoading = false;
         // items
         const items = [] as DatabaseItem[];
         if (byIdItem) {
           items.push(byIdItem);
         }
-        items.push(...byKeywordItems, ...bySearchingItems);
+        items.push(...bySearchingItems);
         // set items
         const duplicatedIds: string[] = [];
         this.items = items.filter(item => {

@@ -89,15 +89,6 @@ export class UserState {
       return combineLatest([
         // match id
         this.profileDataService.getDoc(searchQuery, false),
-        // match keyword
-        this.profileDataService.lookup(
-          {
-            keyword: searchQuery,
-            type: 'default',
-            status: 'publish',
-          },
-          3,
-        ),
         // match searching
         this.profileDataService.setupSearching().pipe(
           switchMap(() =>
@@ -106,13 +97,13 @@ export class UserState {
         ),
       ])
       .pipe(
-        tap(([byIdItem, byKeywordItems, bySearchingItems]) => {
+        tap(([byIdItem, bySearchingItems]) => {
           // items
           const items = [] as Profile[];
           if (byIdItem) {
             items.push(byIdItem);
           }
-          items.push(...byKeywordItems, ...bySearchingItems);
+          items.push(...bySearchingItems);
           const duplicatedIds: string[] = [];
           const searchResult = items
             .filter(item => {
