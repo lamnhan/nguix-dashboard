@@ -43,16 +43,12 @@
             <td><a href="javascript:void(0)" (click)="remove(i)">[-]</a></td>
             <td *ngFor="let schemaItem of matrixItem">
 
-              <ng-container *ngIf="schemaItem.type === 'string'">
+              <ng-container *ngIf="schemaItem.type === 'text'">
                 <input class="form-control" type="text" [(ngModel)]="schemaItem.value">
               </ng-container>
 
               <ng-container *ngIf="schemaItem.type === 'number'">
-                <input class="form-control" [type]="schemaItem.type" [(ngModel)]="schemaItem.value">
-              </ng-container>
-
-              <ng-container *ngIf="schemaItem.type === 'boolean'">
-                <input class="form-checkbox" type="checkbox" [(ngModel)]="schemaItem.value">
+                <input class="form-control" type="number" [(ngModel)]="schemaItem.value">
               </ng-container>
 
               <ng-container *ngIf="schemaItem.type === 'upload'">

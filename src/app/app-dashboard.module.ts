@@ -10,16 +10,16 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
       useValue: dashboardConfig({
         parts: [
           'front',
-          'post',
           'page',
+          'post',
+          'audio',
+          'video',
+          'bundle',
           'category',
           'tag',
           'media',
           'user',
           'option',
-          'audio',
-          'video',
-          'bundle',
         ],
         plugins: [
           // register genre type of category part

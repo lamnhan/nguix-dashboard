@@ -55,7 +55,7 @@ export const Schemas = {
     meta: {
       type: 'record',
       schema: [
-        {name: 'name', type: 'string', required: true, width: 50},
+        {name: 'name', type: 'text', required: true, width: 50},
         {
           name: 'src',
           type: 'upload',
@@ -80,9 +80,22 @@ export const Schemas = {
     meta: {
       type: 'record',
       schema: [
-        {name: 'name', type: 'string', required: true, width: 50},
-        {name: 'src', type: 'upload', required: true, width: 250},
+        {name: 'name', type: 'text', required: true, width: 50},
+        {
+          name: 'src',
+          type: 'upload',
+          required: true,
+          width: 250,
+          itemMetas: {
+            default: {
+              imageCropping: { width: 1920, height: 1080 } as ImageCropping,
+            },
+          },
+        },
       ],
+      defaultData: {
+        default: { name: 'default', src: '' },
+      },
     } as JsonSchemaMeta,
   },
   srcs: {
@@ -92,7 +105,7 @@ export const Schemas = {
     meta: {
       type: 'record',
       schema: [
-        {name: 'name', type: 'string', required: true, width: 50},
+        {name: 'name', type: 'text', required: true, width: 50},
         {name: 'src', type: 'upload', required: true, width: 250},
       ],
     } as JsonSchemaMeta,    
@@ -101,7 +114,7 @@ export const Schemas = {
   content: { label: 'Content', name: 'content', type: 'content' },
   value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 }, // TODO: add "count" type
-  keyword: { label: 'Keywords', name: 'keywords', type: 'list' },
+  keywords: { label: 'Keywords', name: 'keywords', type: 'list' },
   toc: {
     label: 'TOC',
     name: 'toc',
@@ -109,11 +122,11 @@ export const Schemas = {
     meta: {
       type: 'array',
       schema: [
-        {name: 'text', type: 'string', required: true, width: 150},
+        {name: 'text', type: 'text', required: true, width: 150},
         {name: 'level', type: 'number', required: true, defaultValue: 1},
-        {name: 'id', type: 'string', width: 100},
-        {name: 'href', type: 'string', width: 150},
-        {name: 'routerLink', type: 'string', width: 150},
+        {name: 'id', type: 'text', width: 100},
+        {name: 'href', type: 'text', width: 150},
+        {name: 'routerLink', type: 'text', width: 150},
       ],
     } as JsonSchemaMeta,
   },
@@ -124,10 +137,10 @@ export const Schemas = {
     meta: {
       type: 'array',
       schema: [
-        {name: 'id', type: 'string', required: true, width: 100},
-        {name: 'title', type: 'string', width: 150},
-        {name: 'image', type: 'string', required: true, width: 150},
-        {name: 'description', type: 'string', width: 150},
+        {name: 'id', type: 'text', required: true, width: 100},
+        {name: 'title', type: 'text', width: 150},
+        {name: 'image', type: 'text', required: true, width: 150},
+        {name: 'description', type: 'text', width: 150},
       ],
     } as JsonSchemaMeta,
   },
@@ -138,8 +151,8 @@ export const Schemas = {
     meta: {
       type: 'record',
       schema: [
-        {name: 'name', type: 'string', required: true, width: 100},
-        {name: 'value', type: 'string', required: true, width: 150},
+        {name: 'name', type: 'text', required: true, width: 100},
+        {name: 'value', type: 'text', required: true, width: 150},
       ],
     } as JsonSchemaMeta,
   },

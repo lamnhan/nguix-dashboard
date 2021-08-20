@@ -46,13 +46,13 @@ export class BundlePartService {
     Schemas.description,
     Schemas.thumbnails,
     Schemas.images,
-    Schemas.authors,
     Schemas.content,
     Schemas.count,
+    Schemas.authors,
     Schemas.categories,
     Schemas.tags,
-    Schemas.keyword,
     Schemas.relatedBundles,
+    Schemas.keywords,
   ];
 
   public readonly contentTypes: ContentType[]  = [

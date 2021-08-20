@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { of } from 'rxjs';
+import { of, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
 
 import { DashboardPart, DatabaseItem } from '../config/config.service';
 import { DashboardService } from '../dashboard/dashboard.service';
@@ -48,9 +48,14 @@ export class DataService {
     onSuccess?: (data: any) => void,
     onError?: (error: any) => void,
   ) {
-    this.store.dispatch(
-      new UpdateItem(part, databaseItem, updateData)
-    )
+    combineLatest([
+      this.store.dispatch(
+        new UpdateItem(part, databaseItem, updateData)
+      ),
+      !part.dataService
+        ? of(null)
+        : part.dataService.updateEffects(databaseItem.id, updateData),
+    ])
     .subscribe(onSuccess, onError);
   }
 
@@ -64,10 +69,13 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(
-      new UpdateItem(part, databaseItem, { status: 'archive' })
-    )
-    .subscribe(onSuccess, onError);
+    this.updateItem(
+      part,
+      databaseItem,
+      { status: 'archive' },
+      onSuccess,
+      onError,
+    );
   }
 
   unarchiveItem(
@@ -80,10 +88,13 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(
-      new UpdateItem(part, databaseItem, { status: 'draft' })
-    )
-    .subscribe(onSuccess, onError);
+    this.updateItem(
+      part,
+      databaseItem,
+      { status: 'draft' },
+      onSuccess,
+      onError,
+    );
   }
 
   trashItem(
@@ -96,10 +107,13 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(
-      new UpdateItem(part, databaseItem, { status: 'trash' })
-    )
-    .subscribe(onSuccess, onError);
+    this.updateItem(
+      part,
+      databaseItem,
+      { status: 'trash' },
+      onSuccess,
+      onError,
+    );
   }
 
   restoreItem(
@@ -112,10 +126,13 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(
-      new UpdateItem(part, databaseItem, { status: 'draft' })
-    )
-    .subscribe(onSuccess, onError);
+    this.updateItem(
+      part,
+      databaseItem,
+      { status: 'draft' },
+      onSuccess,
+      onError,
+    );
   }
 
   removePermanently(
@@ -128,8 +145,13 @@ export class DataService {
     if (!yes) {
       return;
     }
-    this.store.dispatch(new RemoveItem(part, databaseItem))
-      .subscribe(onSuccess, onError);
+    combineLatest([
+      this.store.dispatch(new RemoveItem(part, databaseItem)),
+      !part.dataService
+        ? of(null)
+        : part.dataService.deleteEffects(databaseItem.id),
+    ])
+    .subscribe(onSuccess, onError);
   }
 
 }

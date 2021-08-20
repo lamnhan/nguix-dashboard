@@ -31,28 +31,28 @@ export class VideoPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    {
-      ...Schemas.srcs,
-      required: true,
-      validators: [Validators.required],
-    },
+    Schemas.description,
     {
       ...Schemas.duration,
       required: true,
       validators: [Validators.required],
     },
-    Schemas.description,
+    {
+      ...Schemas.srcs,
+      required: true,
+      validators: [Validators.required],
+    },
     Schemas.thumbnails,
     Schemas.images,
-    Schemas.authors,
     Schemas.content,
     { label: 'Birthday', name: 'birthday', type: 'text' },
     Schemas.props,
+    Schemas.authors,
     Schemas.parents,
     Schemas.categories,
     Schemas.tags,
-    Schemas.keyword,
     Schemas.relatedVideos,
+    Schemas.keywords,
   ];
 
   public readonly contentTypes: ContentType[]  = [

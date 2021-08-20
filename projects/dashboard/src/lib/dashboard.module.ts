@@ -51,11 +51,12 @@ import { UserState } from './states/user/user.state';
       useValue: dashboardConfig({
         parts: [
           'front',
-          'post',
           'page',
+          'post',
           'category',
           'tag',
           'media',
+          'user',
         ]
       }),
     },

@@ -31,20 +31,19 @@ export class AudioPartService {
   };
 
   public readonly formSchema: FormSchemaItem[] = [
-    {
-      ...Schemas.srcs,
-      required: true,
-      validators: [Validators.required],
-    },
+    Schemas.description,
     {
       ...Schemas.duration,
       required: true,
       validators: [Validators.required],
     },
-    Schemas.description,
+    {
+      ...Schemas.srcs,
+      required: true,
+      validators: [Validators.required],
+    },
     Schemas.thumbnails,
     Schemas.images,
-    Schemas.authors,
     Schemas.content,
     { label: 'Birthday', name: 'birthday', type: 'text' },
     {
@@ -54,12 +53,13 @@ export class AudioPartService {
       meta: {
         type: 'array',
         schema: [
-          {name: 'name', type: 'string', required: true, width: 50},
+          {name: 'name', type: 'text', required: true, width: 50},
           {name: 'src', type: 'upload', required: true, width: 250},
         ],
       },
     },
     Schemas.props,
+    Schemas.authors,
     Schemas.parents,
     Schemas.categories,
     {
@@ -73,8 +73,8 @@ export class AudioPartService {
       } as LinkingSchemaMeta,
     },
     Schemas.tags,
-    Schemas.keyword,
     Schemas.relatedAudios,
+    Schemas.keywords,
   ];
 
   public readonly contentTypes: ContentType[]  = [

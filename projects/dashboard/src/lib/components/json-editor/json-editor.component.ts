@@ -34,7 +34,19 @@ export class JsonEditorComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
   
   ngOnChanges(): void {
-    this.buildData();
+    // raw
+    this.dataRaw = !this.currentData ? '' : JSON.stringify(this.currentData, undefined, 2);
+    // matrix
+    const currentData = this.currentData || (this.type === 'array' ? [] : {});
+    this.dataMatrix = (
+      currentData instanceof Array
+      ? currentData
+      : Object.keys(currentData)
+          .map(key => (currentData as Record<string, any>)[key])
+    )
+    .map(data =>
+      (this.schema || []).map(schema => this.getMatrixItem(schema, data))
+    );
   }
 
   openUploader(schemaItem: SchemaItem, matrixItem: MatrixItem) {
@@ -85,7 +97,8 @@ export class JsonEditorComponent implements OnInit, OnChanges {
       items.reduce(
         (result, item) => {
           if (item.value !== undefined && item.value !== null) {
-            result[item.name] = item.value;
+            const value = item.value;
+            result[item.name] = !isNaN(value) ? +value : value;
           }
           return result;
         },
@@ -115,22 +128,6 @@ export class JsonEditorComponent implements OnInit, OnChanges {
     );
     // exit
     this.mode = 'table';
-  }
-
-  private buildData() {
-    // raw
-    this.dataRaw = !this.currentData ? '' : JSON.stringify(this.currentData, undefined, 2);
-    // matrix
-    const currentData = this.currentData || (this.type === 'array' ? [] : {});
-    this.dataMatrix = (
-      currentData instanceof Array
-      ? currentData
-      : Object.keys(currentData)
-          .map(key => (currentData as Record<string, any>)[key])
-    )
-    .map(data =>
-      (this.schema || []).map(schema => this.getMatrixItem(schema, data))
-    );
   }
 
   private getMatrixItem(schema: JsonSchemaMetaSchemaItem, data: any = {}): SchemaItem {

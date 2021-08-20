@@ -31,21 +31,21 @@ export class PostPartService {
 
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.description,
-    Schemas.toc,
-    { label: 'TLDR', name: 'tldr', type: 'textarea' },
     Schemas.thumbnails,
     Schemas.images,
-    Schemas.authors,
+    Schemas.toc,
+    { label: 'TLDR', name: 'tldr', type: 'textarea' },
     Schemas.duration,
     Schemas.content,
     Schemas.slides,
     { label: 'Audio', name: 'audio', type: 'upload' },
     { label: 'Video', name: 'video', type: 'upload' },    
+    Schemas.authors,
     Schemas.parents,
     Schemas.categories,
     Schemas.tags,
-    Schemas.keyword,
     Schemas.relatedPosts,
+    Schemas.keywords,
   ];
 
   public readonly contentTypes: ContentType[]  = [

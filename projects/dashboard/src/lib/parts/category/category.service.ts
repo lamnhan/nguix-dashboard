@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { CategoryDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, ContentType } from '../../services/config/config.service';
+import { FormSchemaItem, ContentType, ImageCropping } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -45,7 +45,7 @@ export class CategoryPartService {
       ],
     },
     Schemas.description,
-    Schemas.thumbnails,
+    this.thumbnails,
     Schemas.images,
     Schemas.count,
   ];
@@ -55,5 +55,26 @@ export class CategoryPartService {
   ];
 
   constructor(public readonly dataService: CategoryDataService) {}
+
+  private get thumbnails() {
+    const sharedThumbnails = Schemas.thumbnails;
+    return {
+      ...sharedThumbnails,
+      meta: {
+        ...sharedThumbnails.meta,
+        schema: [
+          { ...sharedThumbnails.meta.schema[0] },
+          {
+            ...sharedThumbnails.meta.schema[1],
+            itemMetas: {
+              default: {
+                imageCropping: { width: 256, height: 256 } as ImageCropping,
+              },
+            },
+          },
+        ],
+      }
+    };
+  }
 
 }
