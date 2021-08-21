@@ -121,13 +121,21 @@
               <span>Name</span>
               <strong>{{ detailItem.title }}</strong>
             </div>
+            <div class="status">
+              <span>Status</span>
+              <strong>{{ detailItem.status === 'publish' ? 'Public' : 'Private' }}</strong>
+            </div>
             <div class="role">
               <span>Role</span>
               <strong>{{ detailItem.role }}</strong>
             </div>
-            <div class="status">
-              <span>Status</span>
-              <strong>{{ detailItem.status === 'publish' ? 'Public' : 'Private' }}</strong>
+            <div class="rank" *ngIf="detailItem.rank">
+              <span>Rank</span>
+              <strong>{{ detailItem.rank }}</strong>
+            </div>
+            <div class="legit" *ngIf="detailItem.legit">
+              <span>Legit</span>
+              <strong>{{ detailItem.legit }}</strong>
             </div>
             <div class="created">
               <span>Created</span>
@@ -136,6 +144,12 @@
             <div class="updated">
               <span>Updated</span>
               <strong>{{ detailItem.updatedAt | date }}</strong>
+            </div>
+            <div class="actions">
+              <a
+                class="button-primary-sm"
+                [usefulRouterLink]="['app-admin', 'edit', 'profile', detailItem.id]"
+              >Edit</a>
             </div>
           </div>
         </div>

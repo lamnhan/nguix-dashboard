@@ -526,7 +526,7 @@ export class EditPage implements OnInit, OnDestroy {
         (value as string[]).indexOf(child.name) === -1 ? child.checked = false : child.checked = true);
     }
     // 2. radio alike
-    if (type === 'radio' && value &&  selections) {
+    if ((type === 'radio' || type === 'select') && value && selections) {
       selections.forEach(child =>
         (value as string) !== child.name ? child.selected = false : child.selected = true);
     }

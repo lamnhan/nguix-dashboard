@@ -7,22 +7,24 @@
   
       <div class="title">
         <h1>{{ isNew ? 'Add New ' : 'Update' }} {{ part.name }}</h1>
-        <a
-          style="margin-right: .5rem;"
-          class="button-outline-primary"
-          [usefulRouterLink]="['app-admin', 'list', part.name]"
-        >All {{ part.menuItem.text || 'Items' }}</a>
-        <a
-          *ngIf="!isNew"
-          class="button-outline-primary"
-          [usefulRouterLink]="['app-admin', 'new', part.name]"          
-          [usefulRouteExtras]="{queryParams: { type: !databaseItem ? 'default' : databaseItem.type }}"
-        >Add another</a>
-        <a
-          *ngIf="!isNew && databaseItem"
-          class="button-outline-primary"
-          [usefulRouterLink]="['app-admin', 'copy', part.name, databaseItem.id]"
-        >Add similar</a>
+        <ng-container *ngIf="part.name !== 'profile'">
+          <a
+            style="margin-right: .5rem;"
+            class="button-outline-primary"
+            [usefulRouterLink]="['app-admin', 'list', part.name]"
+          >All {{ part.menuItem.text || 'Items' }}</a>
+          <a
+            *ngIf="!isNew"
+            class="button-outline-primary"
+            [usefulRouterLink]="['app-admin', 'new', part.name]"          
+            [usefulRouteExtras]="{queryParams: { type: !databaseItem ? 'default' : databaseItem.type }}"
+          >Add another</a>
+          <a
+            *ngIf="!isNew && databaseItem"
+            class="button-outline-primary"
+            [usefulRouterLink]="['app-admin', 'copy', part.name, databaseItem.id]"
+          >Add similar</a>
+        </ng-container>
       </div>
   
     </div>
@@ -98,14 +100,15 @@
               <span>{{ radioItem.text }}</span>
             </label>
           </div>
-          </ng-container>
+          </ng-container>          
   
-          <ng-container *ngIf="schema.type==='locale'">
+          <ng-container *ngIf="schema.type==='select'">
             <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
               <option
-                *ngFor="let localeItem of settingService.locales"
-                [value]="localeItem.value"
-              >{{ localeItem.text }}</option>
+                *ngFor="let radioItem of schema.selections || []"
+                [value]="radioItem.name"
+                [selected]="radioItem.selected"
+              >{{ radioItem.text }}</option>
             </select>
           </ng-container>
   
@@ -119,6 +122,15 @@
             <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
               <option value="publish">Publish</option>
               <option value="draft">Draft</option>
+            </select>
+          </ng-container>
+  
+          <ng-container *ngIf="schema.type==='locale'">
+            <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
+              <option
+                *ngFor="let localeItem of settingService.locales"
+                [value]="localeItem.value"
+              >{{ localeItem.text }}</option>
             </select>
           </ng-container>
 
@@ -269,7 +281,7 @@
             </div>
           </div>
 
-          <div class="secondary" *ngIf="databaseItem && !isCopy">
+          <div class="secondary" *ngIf="part.name !== 'profile' && databaseItem && !isCopy">
 
             <ng-container
               *ngIf="databaseItem.status==='draft' || databaseItem.status==='publish'"

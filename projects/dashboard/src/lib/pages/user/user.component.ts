@@ -25,7 +25,6 @@ export class UserPage implements OnInit {
 
   public readonly data$ = this.store.select<UserStateModel>(state => state.user).pipe(
     map(userState => {
-      console.log({ userState });
       this.isListingLoading = false;
       // set data
       const totalCount = this.profileDataService.count('default');

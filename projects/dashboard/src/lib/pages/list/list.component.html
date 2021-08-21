@@ -8,11 +8,13 @@
 
       <div class="title">
         <h1>All {{ part.menuItem.text || 'Items' }}</h1>
-        <a
-          class="button-outline-primary"
-          [usefulRouterLink]="['app-admin', 'new', part.name]"
-          [usefulRouteExtras]="{queryParams: { type: type }}"
-        >Add New</a>
+        <ng-container *ngIf="part.name !== 'profile'">
+          <a
+            class="button-outline-primary"
+            [usefulRouterLink]="['app-admin', 'new', part.name]"
+            [usefulRouteExtras]="{queryParams: { type: type }}"
+          >Add New</a>
+        </ng-container>
       </div>
 
       <ul class="statuses">

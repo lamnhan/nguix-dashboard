@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { ProfileDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, ContentType } from '../../services/config/config.service';
+import { FormSchemaItem, ContentType, RadioAlikeChild } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -22,16 +22,13 @@ export class ProfilePartService {
         text: 'All Profiles',
         routerLink: ['app-admin', 'list', this.name],
       },
-      {
-        text: 'Add New',
-        routerLink: ['app-admin', 'new', this.name],
-      },
     ]
   };
 
   public readonly noI18n = true;
 
   public readonly formSchema: FormSchemaItem[] = [
+    { label: 'Badges', name: 'badges', type: 'list' },
     Schemas.categories,
     Schemas.tags,
     Schemas.relatedProfiles,

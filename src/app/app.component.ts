@@ -173,7 +173,7 @@ export class AppComponent {
     this.categoryDataService
       .setOptions({
         advancedMode: true,
-        predefinedContextuals: [
+        predefinedSearchingContextuals: [
           { name: 'genre', picker: item => item?.status === 'publish' && item?.type === 'genre' },
         ],
       })

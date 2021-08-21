@@ -67,11 +67,11 @@ export type SchemaType = string;
 export interface CheckboxAlikeChild {
   text: string;
   name: string;
-  checked: boolean;
+  checked?: boolean;
 }
 
 export interface RadioAlikeChild extends Omit<CheckboxAlikeChild, 'checked'> {
-  selected: boolean;
+  selected?: boolean;
 }
 
 export interface ContentType {
