@@ -73,7 +73,7 @@
                   <strong>{{ listingItem.id }}</strong>
                 </a>
               </td>
-              <td class="role">{{ listingItem | userGetRole }}</td>
+              <td class="role">{{ listingItem.role }}</td>
               <td class="date">{{ listingItem.createdAt | date }}</td>
             </tr>
           </tbody>
@@ -123,7 +123,7 @@
             </div>
             <div class="role">
               <span>Role</span>
-              <strong>{{ detailItem | userGetRole }}</strong>
+              <strong>{{ detailItem.role }}</strong>
             </div>
             <div class="status">
               <span>Status</span>

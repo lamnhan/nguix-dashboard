@@ -34,8 +34,8 @@ export class ProfilePartService {
   public readonly formSchema: FormSchemaItem[] = [
     Schemas.categories,
     Schemas.tags,
-    Schemas.keywords,
     Schemas.relatedProfiles,
+    Schemas.keywords,
   ];
 
   public readonly contentTypes: ContentType[]  = [

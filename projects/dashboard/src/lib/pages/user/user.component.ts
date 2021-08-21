@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { Profile } from '@lamnhan/schemata';
 import { ProfileDataService } from '@lamnhan/ngx-schemata';
 
-import { ConfigService } from '../../services/config/config.service';
+import { ConfigService, ListingGrouping } from '../../services/config/config.service';
 
 import { UserStateModel, GetProfiles, SearchProfiles } from '../../states/user/user.state';
 
@@ -25,6 +25,7 @@ export class UserPage implements OnInit {
 
   public readonly data$ = this.store.select<UserStateModel>(state => state.user).pipe(
     map(userState => {
+      console.log({ userState });
       this.isListingLoading = false;
       // set data
       const totalCount = this.profileDataService.count('default');
@@ -78,6 +79,47 @@ export class UserPage implements OnInit {
   private loadProfiles() {
     this.isListingLoading = true;
     this.store.dispatch(new GetProfiles(this.pageNo, this.getViewPerPage(), true));
+  }
+
+  private getRoles(totalCount: number): ListingGrouping[] {
+    const roles: ListingGrouping[] = [
+      {
+        title: 'All',
+        value: 'all',
+        count: totalCount,
+      },
+      {
+        title: 'Super Admin',
+        value: 'sadmin',
+        count: 0
+      },
+      {
+        title: 'Admin',
+        value: 'admin',
+        count: 0
+      },
+      {
+        title: 'Editor',
+        value: 'editor',
+        count: 0
+      },
+      {
+        title: 'Author',
+        value: 'author',
+        count: 0
+      },
+      {
+        title: 'Contributor',
+        value: 'contributor',
+        count: 0
+      },
+      {
+        title: 'Subscriber',
+        value: 'subscriber',
+        count: 0
+      }
+    ];
+    return roles;
   }
 
   private getViewPerPage() {

@@ -45,16 +45,15 @@ export class UserExtractRolesPipe implements PipeTransform {
     };
     // counting
     items.forEach(item => {
-      const badges = item.badges || [];
-      if (badges.indexOf('sadmin') !== -1) {
+      if (item.role === 'sadmin') {
         sadmin.count++;
-      } else if (badges.indexOf('admin') !== -1) {
+      } else if (item.role === 'admin') {
         admin.count++;
-      } else if (badges.indexOf('editor') !== -1) {
+      } else if (item.role === 'editor') {
         editor.count++;
-      } else if (badges.indexOf('author') !== -1) {
+      } else if (item.role === 'author') {
         author.count++;
-      } else if (badges.indexOf('contributor') !== -1) {
+      } else if (item.role === 'contributor') {
         contributor.count++;
       } else {
         subscriber.count++;

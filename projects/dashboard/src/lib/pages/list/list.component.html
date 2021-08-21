@@ -16,15 +16,13 @@
       </div>
 
       <ul class="statuses">
-        <ng-container *ngFor="let listingStatus of data.listingStatuses">
-          <li>
-            <strong *ngIf="listingStatus.value === status; else inactiveStatus;">{{ listingStatus.title }}</strong>
-            <ng-template #inactiveStatus>
-              <a href="#" (click)="changeStatus(listingStatus.value); false;">{{ listingStatus.title }}</a>
-            </ng-template>
-            <em>({{ listingStatus.count }})</em>
-          </li>
-        </ng-container>
+        <li *ngFor="let listingStatus of data.listingStatuses">
+          <strong *ngIf="listingStatus.value === status; else inactiveStatus;">{{ listingStatus.title }}</strong>
+          <ng-template #inactiveStatus>
+            <a href="#" (click)="changeStatus(listingStatus.value); false;">{{ listingStatus.title }}</a>
+          </ng-template>
+          <em>({{ listingStatus.count }})</em>
+        </li>
       </ul>
 
     </div>
