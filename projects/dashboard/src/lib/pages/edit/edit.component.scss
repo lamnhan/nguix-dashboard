@@ -24,12 +24,26 @@
         .item {
           margin-top: 1rem;
 
-          .form-label {
-            min-width: 7rem;
-          }
-
           &.required .form-label {
             font-weight: 700;
+          }
+
+          .schema-label {
+
+            a.desc-toggler {
+              margin-left: .5rem;
+              font-size: .75rem;
+            }
+          }
+
+          .schema-description {
+            margin-bottom: 1rem;
+            display: none;
+            color: $medium;
+
+            &.active {
+              display: block;
+            }
           }
 
           textarea {
@@ -37,12 +51,7 @@
           }
 
           .form-select {
-            min-width: 7rem;
-          }
-
-          .checkboxes, .radios {
-            padding-left: 7rem;
-            margin-top: -2rem;
+            min-width: 10rem;
           }
 
           .uploadable {
@@ -74,6 +83,13 @@
                 margin-right: .5rem;
               }
             }
+          }
+
+          .schema-note {
+            margin-top: .25rem;
+            font-weight: 700;
+            font-size: .75rem;
+            color: $medium;
           }
         }
 

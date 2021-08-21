@@ -49,6 +49,8 @@ export class EditPage implements OnInit, OnDestroy {
     imageCropping?: ImageCropping;
   };
 
+  activeDescriptions: Record<string, boolean> = {};
+
   public readonly page$ = combineLatest([
       this.route.params,
       this.route.data,
@@ -321,7 +323,7 @@ export class EditPage implements OnInit, OnDestroy {
       },
       {} as Record<string, any>
     );
-    // default data
+    // default data for new item
     if (this.isNew) {
       data.uid = this.userService.uid as string;
       data.createdAt = new Date().toISOString();
@@ -348,11 +350,16 @@ export class EditPage implements OnInit, OnDestroy {
           }
         );
       } else if(mode === 'update' && this.databaseItem) {
+        // clean up unchangable fields
+        ['uid', 'id', 'type', 'status', 'createdAt', 'locale', 'ogirin'].forEach(removeField => {
+          delete data[removeField];
+        });
+        // update item
         return this.dataService.updateItem(
           part,
           this.databaseItem,
           data,
-          result => {
+          () => {
             this.lockdown = false;
           },
           error => {
@@ -555,8 +562,6 @@ export class EditPage implements OnInit, OnDestroy {
       const part = this.dashboardService.getPart(schema.meta.source as string);
       if (part?.dataService) {
         schema.meta.part = part;
-        schema.meta.contentType = schema.meta.contentType || 'default';
-        schema.meta.fields = part.dataService.getLinkingFields();
         schema.meta.currentData = value;
       }
     }

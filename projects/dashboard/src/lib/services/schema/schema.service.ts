@@ -10,6 +10,7 @@ export const Schemas = {
     type: 'text',
     required: true,
     validators: [Validators.required],
+    note: 'This can NOT be changed later.'
   },
   title: {
     label: 'Title',
@@ -24,6 +25,7 @@ export const Schemas = {
     type: 'type',
     required: true,
     validators: [Validators.required],
+    note: 'This can NOT be changed later.'
   },  
   status: {
     label: 'Status',
@@ -39,6 +41,7 @@ export const Schemas = {
     type: 'locale',
     required: true,
     validators: [Validators.required],
+    note: 'This can NOT be changed later.'
   },
   origin: {
     label: 'Origin',
@@ -46,6 +49,7 @@ export const Schemas = {
     type: 'text',
     required: true,
     validators: [Validators.required],
+    note: 'This can NOT be changed later.'
   },
   description: { label: 'Description', name: 'description', type: 'textarea' },
   thumbnails: {
@@ -108,13 +112,25 @@ export const Schemas = {
         {name: 'name', type: 'text', required: true, width: 50},
         {name: 'src', type: 'upload', required: true, width: 250},
       ],
-    } as JsonSchemaMeta,    
+    } as JsonSchemaMeta,
+    description: 'Provide a default one or multiple fallback sources.',
   },
   duration: { label: 'Duration', name: 'duration', type: 'number', defaultValue: 0 },
-  content: { label: 'Content', name: 'content', type: 'content' },
+  content: {
+    label: 'Content',
+    name: 'content',
+    type: 'content',
+    description: 'It is recommended to provide an external content instead of a direct.'
+  },
   value: { label: 'Value', name: 'value', type: 'text' }, // TODO: add "dynamic" (for any/unknown) type
   count: { label: 'Count', name: 'count', type: 'number', defaultValue: 0 }, // TODO: add "count" type
-  keywords: { label: 'Keywords', name: 'keywords', type: 'list' },
+  keywords: {
+    label: 'Keywords',
+    name: 'keywords',
+    type: 'list',
+    description: 'For searching and lookup, provide 1-2 keywords for every paragraph.',
+    note: 'Must be below 500 characters.'
+  },
   toc: {
     label: 'TOC',
     name: 'toc',

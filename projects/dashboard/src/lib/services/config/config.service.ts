@@ -56,6 +56,7 @@ export interface FormSchemaItem {
   defaultValue?: any;
   placeholder?: string;
   description?: string;
+  note?: string;
   validators?: any[];
   children?: CheckboxAlikeChild[];
   selections?: RadioAlikeChild[];
@@ -120,7 +121,6 @@ export interface LinkingSchemaMeta {
   preload?: number;
   // auto-generated from source
   part?: DashboardPart;
-  fields?: string[];
   currentData?: Record<string, any>;
 }
 

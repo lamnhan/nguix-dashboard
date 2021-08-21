@@ -35,7 +35,7 @@ export class PostPartService {
     Schemas.images,
     Schemas.toc,
     { label: 'TLDR', name: 'tldr', type: 'textarea' },
-    Schemas.duration,
+    { ...Schemas.duration, note: 'In minutes' },
     Schemas.content,
     Schemas.slides,
     { label: 'Audio', name: 'audio', type: 'upload' },

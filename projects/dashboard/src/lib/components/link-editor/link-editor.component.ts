@@ -12,7 +12,6 @@ import { DashboardPart, DatabaseItem } from '../../services/config/config.servic
 })
 export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() part!: DashboardPart;
-  @Input() fields!: string[];
   @Input() contentType!: string;
   @Input() contentLocale?: string;
   @Input() currentData?: Record<string, any>;
@@ -129,21 +128,18 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   addItem(item: any) {
     const dataPickers = this.part.dataService?.getDataPickers() || {};
     const selectedData = { ...this.selectedData };
-    selectedData[item.id] = (this.fields || [])
-      .map(prop => ({
-        prop,
-        value:
-          !dataPickers[prop]
-            ? item[prop]
-            : dataPickers[prop](item[prop], item)
-      }))
-      .reduce(
-        (result, item) => {
-          result[item.prop] = item.value;
-          return result;
-        },
-        {} as any,
-      );
+    selectedData[item.id] = (this.part.dataService?.getLinkingFields() || []).reduce(
+      (result, prop) => {
+        const value = !dataPickers[prop]
+          ? item[prop]
+          : dataPickers[prop](item[prop], item);
+        if (value) {
+          result[prop] = value;
+        }
+        return result;
+      },
+      {} as any,
+    );
     // re-assign
     this.selectedData = selectedData;
   }

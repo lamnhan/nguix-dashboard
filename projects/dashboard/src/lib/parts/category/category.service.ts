@@ -34,7 +34,10 @@ export class CategoryPartService {
     Schemas.description,
     this.thumbnails,
     Schemas.images,
-    Schemas.count,
+    {
+      ...Schemas.count,
+      description: 'Number of all content belongs to this category.',
+    },
   ];
 
   public readonly contentTypes: ContentType[]  = [

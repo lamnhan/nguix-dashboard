@@ -36,6 +36,7 @@ export class AudioPartService {
       ...Schemas.duration,
       required: true,
       validators: [Validators.required],
+      note: 'In seconds',
     },
     {
       ...Schemas.srcs,
@@ -44,8 +45,16 @@ export class AudioPartService {
     },
     Schemas.thumbnails,
     Schemas.images,
-    Schemas.content,
-    { label: 'Birthday', name: 'birthday', type: 'text' },
+    {
+      ...Schemas.content,
+      description: 'This could be song lyric or any content.',
+    },
+    {
+      label: 'Birthday',
+      name: 'birthday',
+      type: 'text',
+      description: 'Published or recorded day or year.',
+    },
     {
       label: 'Sheets',
       name: 'sheets',
@@ -57,8 +66,12 @@ export class AudioPartService {
           {name: 'src', type: 'upload', required: true, width: 250},
         ],
       },
+      description: 'Sheets in different format: jpg, pdf, ...'
     },
-    Schemas.props,
+    {
+      ...Schemas.props,
+      description: 'Any audio properties: bitrate, filesize, ...',
+    },
     Schemas.authors,
     Schemas.parents,
     Schemas.categories,

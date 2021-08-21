@@ -39,7 +39,21 @@
         <ng-container *ngFor="let schema of data.formSchema">
         <div class="item" [class.required]="!!schema.required" *ngIf="!schema.hidden">
   
-          <label class="form-label" [for]="schema.name">{{ schema.label }}</label>
+          <div class="schema-label">
+            <label class="form-label" [for]="schema.name">{{ schema.label }}</label>
+            <a
+              href="#"
+              class="desc-toggler"
+              *ngIf="schema.description"
+              (click)="activeDescriptions[schema.name]=!activeDescriptions[schema.name];false;"
+            >Description {{ !activeDescriptions[schema.name] ? '▼' : '▲' }}</a>
+          </div>
+          <div
+            class="schema-description"
+            [class.active]="activeDescriptions[schema.name]"
+            *ngIf="schema.description"
+            [innerHtml]="schema.description"
+          ></div>
   
           <ng-container
             *ngIf="
@@ -100,10 +114,11 @@
               <span>{{ radioItem.text }}</span>
             </label>
           </div>
-          </ng-container>          
+          </ng-container>
   
           <ng-container *ngIf="schema.type==='select'">
             <select class="form-select" [id]="schema.name" [formControlName]="schema.name">
+              <option *ngIf="schema.placeholder" value="0" disabled="true">{{ schema.placeholder }}</option>
               <option
                 *ngFor="let radioItem of schema.selections || []"
                 [value]="radioItem.name"
@@ -227,9 +242,8 @@
           <ng-container *ngIf="schema.type==='link' && schema.meta">
             <nguix-dashboard-link-editor
               [part]="schema.meta.part"
-              [fields]="schema.meta.fields"
               [currentData]="schema.meta.currentData"
-              [contentType]="schema.meta.contentType"
+              [contentType]="schema.meta.contentType || 'default'"
               [contentLocale]="activeLocale"
               [preload]="schema.meta.preload"
               (save)="linkChanges(
@@ -250,6 +264,8 @@
               )"
             ></nguix-dashboard-list-editor>
           </ng-container>
+
+          <div class="schema-note" *ngIf="schema.note" [innerHtml]="schema.note"></div>
   
         </div>
         </ng-container>

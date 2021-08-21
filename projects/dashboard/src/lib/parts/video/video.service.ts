@@ -36,6 +36,7 @@ export class VideoPartService {
       ...Schemas.duration,
       required: true,
       validators: [Validators.required],
+      note: 'In seconds',
     },
     {
       ...Schemas.srcs,
@@ -44,9 +45,20 @@ export class VideoPartService {
     },
     Schemas.thumbnails,
     Schemas.images,
-    Schemas.content,
-    { label: 'Birthday', name: 'birthday', type: 'text' },
-    Schemas.props,
+    {
+      ...Schemas.content,
+      description: 'Transcript, subtitle or any content.',
+    },
+    {
+      label: 'Birthday',
+      name: 'birthday',
+      type: 'text',
+      description: 'Published or recorded day or year.',
+    },
+    {
+      ...Schemas.props,
+      description: 'Any video properties: resolution, filesize, ...',
+    },
     Schemas.authors,
     Schemas.parents,
     Schemas.categories,

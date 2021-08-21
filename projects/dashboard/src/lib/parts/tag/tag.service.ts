@@ -32,7 +32,10 @@ export class TagPartService {
   public readonly noI18n = true;
 
   public readonly formSchema: FormSchemaItem[] = [
-    Schemas.count,
+    {
+      ...Schemas.count,      
+      description: 'Number of all content belongs to this tag.',
+    },
   ];
 
   public readonly contentTypes: ContentType[]  = [

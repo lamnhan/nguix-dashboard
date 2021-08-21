@@ -35,7 +35,10 @@ export class BundlePartService {
     Schemas.thumbnails,
     Schemas.images,
     Schemas.content,
-    Schemas.count,
+    {
+      ...Schemas.count,
+      description: 'Number of children in this bundle.',
+    },
     Schemas.authors,
     Schemas.categories,
     Schemas.tags,
