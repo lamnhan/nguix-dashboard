@@ -219,7 +219,6 @@
               [currentData]="schema.meta.currentData"
               [contentType]="schema.meta.contentType"
               [contentLocale]="activeLocale"
-              [contentOnly]="!part?.dataService ? undefined : (part?.dataService?.name + ':' + activeType)"
               [preload]="schema.meta.preload"
               (save)="linkChanges(
                 schema,

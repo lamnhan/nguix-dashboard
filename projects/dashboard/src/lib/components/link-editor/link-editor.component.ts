@@ -15,7 +15,6 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() fields!: string[];
   @Input() contentType!: string;
   @Input() contentLocale?: string;
-  @Input() contentOnly?: string;
   @Input() currentData?: Record<string, any>;
   @Input() preload?: number;
 
@@ -51,10 +50,6 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
             if (!this.part.noI18n && this.contentLocale) {
               query = query.where('locale', '==', this.contentLocale);
             }
-            // content only
-            if (this.part.hasOnly && this.contentOnly) {
-              query = query.where('only', '==', this.contentOnly);
-            }
             // result
             return query.limit(this.preload as number);
           },
@@ -64,8 +59,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
                 part=${this.part.name}
                 type=${this.contentType}
                 status=publish
-                locale=${this.contentLocale}
-                only=${this.contentOnly}`,
+                locale=${this.contentLocale}`,
           }
         )
         .subscribe(items => {
@@ -124,13 +118,9 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
         // set items
         const duplicatedIds: string[] = [];
         this.items = items.filter(item => {
-          // check duplicated
           const isDuplicated = duplicatedIds.includes(item.id);
           duplicatedIds.push(item.id);
-          // check only
-          const isOnlyMatched = !this.part.hasOnly || (this.contentOnly && item.only === this.contentOnly);
-          // result
-          return !isDuplicated && isOnlyMatched;
+          return !isDuplicated;
         });
       });
     }

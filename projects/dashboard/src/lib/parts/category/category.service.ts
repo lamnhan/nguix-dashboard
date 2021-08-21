@@ -30,22 +30,7 @@ export class CategoryPartService {
     ]
   };
 
-  public readonly hasOnly = true;
-
   public readonly formSchema: FormSchemaItem[] = [
-    {
-      label: 'Only',
-      name: 'only',
-      type: 'radio',
-      required: true,
-      validators: [Validators.required],
-      selections: [
-        { text: 'posts:default', name: 'posts:default', selected: false },
-        { text: 'audios:default', name: 'audios:default', selected: false },
-        { text: 'videos:default', name: 'videos:default', selected: false },
-        { text: 'profiles:default', name: 'profiles:default', selected: false }
-      ],
-    },
     Schemas.description,
     this.thumbnails,
     Schemas.images,
