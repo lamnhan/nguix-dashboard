@@ -1,4 +1,5 @@
 import { Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Subscription, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DatabaseData } from '@lamnhan/ngx-useful';
@@ -11,6 +12,7 @@ import { DashboardPart, DatabaseItem } from '../../services/config/config.servic
   styleUrls: ['./link-editor.component.scss'],
 })
 export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() formGroup!: FormGroup;
   @Input() part!: DashboardPart;
   @Input() contentType!: string;
   @Input() contentLocale?: string;
@@ -144,7 +146,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
       {} as any,
     );
     // notify linking
-    this.part.dataService.onLinking('create', item);
+    this.part.dataService.onLinking('create', item, this.getLinkingContext());
     // re-assign
     this.selectedData = selectedData;
   }
@@ -156,7 +158,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
     const selectedData = { ...this.selectedData };
     delete selectedData[item.id];
     // notify linking
-    this.part.dataService.onLinking('delete', item);
+    this.part.dataService.onLinking('delete', item, this.getLinkingContext());
     // re-assign
     this.selectedData = selectedData;
   }
@@ -165,5 +167,24 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
     this.isEdit = false;
     this.save.emit(this.selectedData);
     return false;
+  }
+
+  private getLinkingContext() {
+    return {
+      collection: (this.part.dataService as DatabaseData<any>).name,
+      data: this.getDataSnapshot(),
+    };
+  }
+
+  private getDataSnapshot() {
+    return Object.keys(this.formGroup.controls).reduce(
+      (result, name) => {
+        const control = this.formGroup.controls[name];
+        const value = control.value;
+        result[name] = !isNaN(value) ? +value : value;
+        return result;
+      },
+      {} as Record<string, any>
+    );
   }
 }

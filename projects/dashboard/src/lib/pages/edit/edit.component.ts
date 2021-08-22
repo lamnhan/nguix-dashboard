@@ -316,9 +316,9 @@ export class EditPage implements OnInit, OnDestroy {
     // changed data
     const data = Object.keys(formGroup.controls).reduce(
       (result, name) => {
-        const item = formGroup.controls[name];
-        if (item.dirty) {
-          const value = item.value;
+        const control = formGroup.controls[name];
+        if (control.dirty) {
+          const value = control.value;
           result[name] = !isNaN(value) ? +value : value;
         }
         return result;
