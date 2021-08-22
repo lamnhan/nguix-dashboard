@@ -31,6 +31,7 @@ import {
   UserDataService,
   ProfileDataService,
 } from '@lamnhan/ngx-schemata';
+import { DashboardService } from '@lamnhan/nguix-dashboard';
 
 @Component({
   selector: 'app-root',
@@ -69,6 +70,8 @@ export class AppComponent {
     private bundleDataService: BundleDataService,
     private userDataService: UserDataService,
     private profileDataService: ProfileDataService,
+    // dashboard
+    private dashboardService: DashboardService,
   ) {
     this.initialize();
   }
@@ -199,5 +202,8 @@ export class AppComponent {
     this.profileDataService
       .setOptions({ advancedMode: true })
       .init();
+    // dashboard
+    // this.dashboardService
+    //   .registerAvailableParts({ ... });
   }
 }

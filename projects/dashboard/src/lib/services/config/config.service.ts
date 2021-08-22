@@ -17,6 +17,7 @@ export interface DashboardConfig {
   allowDirectContent?: boolean;
   uploadRetrieval?: 'path' | 'url';
   viewPerPage?: number;
+  serverUrl?: string; // TODO: ...
 }
 
 export type DashboardPlugin = (dashboardService: DashboardService) => any;

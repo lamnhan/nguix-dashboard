@@ -10,6 +10,7 @@ import { ConfigService, DASHBOARD_CONFIG, dashboardConfig } from './services/con
 import { SchemaService } from './services/schema/schema.service';
 import { DataService } from './services/data/data.service';
 import { DashboardService } from './services/dashboard/dashboard.service';
+import { ServerService } from './services/server/server.service';
 
 import { FrontPartService } from './parts/front/front.service';
 import { MediaPartService } from './parts/media/media.service';
@@ -64,6 +65,7 @@ import { UserState } from './states/user/user.state';
     SchemaService,
     DataService,
     DashboardService,
+    ServerService,
     // parts
     FrontPartService,
     MediaPartService,
