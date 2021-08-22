@@ -156,7 +156,7 @@ export class DatabaseState {
     }
     // load data
     else {
-      return part.dataService.getCollection(
+      return part.dataService.list(
         ref => {
           let query = ref
             .where('type', '==', type)
@@ -215,7 +215,7 @@ export class DatabaseState {
     }
     // load data
     else {
-      return part.dataService.getCollection(
+      return part.dataService.list(
         ref => ref.where('origin', '==', origin),
         false,
       )
@@ -276,7 +276,7 @@ export class DatabaseState {
     else {
       return combineLatest([
         // match id
-        part.dataService.getDoc(searchQuery, false),
+        part.dataService.get(searchQuery, false),
         // match searching
         part.dataService.setupSearching(false, true).pipe(
           switchMap(() => (part.dataService as DatabaseData<any>)
@@ -330,7 +330,7 @@ export class DatabaseState {
       throw new Error('No data service for this part.');
     }
     // add item
-    return part.dataService.add(id, databaseItem)
+    return part.dataService.create(id, databaseItem)
     .pipe(
       tap(() => {
         patchState(

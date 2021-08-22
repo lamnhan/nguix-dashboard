@@ -37,8 +37,9 @@
           }
 
           .schema-description {
-            margin-bottom: 1rem;
             display: none;
+            margin-bottom: 1rem;
+            margin-right: 5rem;
             color: $medium;
 
             &.active {

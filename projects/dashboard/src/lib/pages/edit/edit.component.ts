@@ -39,6 +39,7 @@ export class EditPage implements OnInit, OnDestroy {
 
   isNew = false;
   isCopy = false;
+  isTranslate = false;
   databaseItem?: DatabaseItem;
   prioritizedData: Record<string, any> = {};
 
@@ -62,10 +63,11 @@ export class EditPage implements OnInit, OnDestroy {
         this.lockdown = false;      
         // set data
         this.itemId = params.id;
-        this.isCopy = data.copy;
         this.prioritizedData = queryParams;
-        this.isNew = !this.itemId || this.isCopy;
         this.part = this.dashboardService.getPart(params.part);
+        this.isCopy = data.copy;
+        this.isNew = !this.itemId || this.isCopy;
+        this.isTranslate = !this.part?.noI18n && this.isCopy && this.prioritizedData.locale;
         // not a proper data part
         if (!this.part?.dataService) {
           return of({ data: undefined });
@@ -75,7 +77,7 @@ export class EditPage implements OnInit, OnDestroy {
           return (
             !this.itemId
               ? of(undefined) // new item
-              : this.part.dataService.getDoc(this.itemId, false) // get current data
+              : this.part.dataService.get(this.itemId, false) // get current data
           )
           .pipe(
             map((databaseItem: undefined | DatabaseItem) => {
@@ -330,14 +332,14 @@ export class EditPage implements OnInit, OnDestroy {
       data.updatedAt = data.createdAt;
     }
     // has form handler
-    const mode = this.isNew ? 'new' : 'update';
+    const mode = this.isNew ? 'create' : 'update';
     if (part.formHandler) {
       return part.formHandler({mode, data}, formGroup);
     }
     // default handler
     else if (part.dataService) {
-      if (mode === 'new') {
-        return this.dataService.addItem(
+      if (mode === 'create') {
+        return this.dataService.createItem(
           part,
           data,
           () => {
@@ -349,7 +351,7 @@ export class EditPage implements OnInit, OnDestroy {
             alert(error.message);
           }
         );
-      } else if(mode === 'update' && this.databaseItem) {
+      } else if (mode === 'update' && this.databaseItem) {
         // clean up unchangable fields
         ['uid', 'id', 'type', 'status', 'createdAt', 'locale', 'ogirin'].forEach(removeField => {
           delete data[removeField];
@@ -413,27 +415,30 @@ export class EditPage implements OnInit, OnDestroy {
     else {
       const schema = part.formSchema.map(item => ({ ...item }));
       // i18n
-      const isTranslation = !part.noI18n && this.isCopy && this.prioritizedData.locale;
-      if (!part.noI18n) {
+      if (this.isNew && !part.noI18n) {
         // origin
-        schema.unshift({ ...Schemas.origin, disabled: !this.isNew || isTranslation });
+        schema.unshift({ ...Schemas.origin, disabled: !this.isNew || this.isTranslate });
         // locale
         schema.unshift({
           ...Schemas.locale,
-          disabled: !this.isNew || isTranslation,
+          disabled: !this.isNew || this.isTranslate,
           defaultValue: this.settingService.defaultLocale,
         });
       }
       // type
-      schema.unshift({
-        ...Schemas.type,
-        disabled:
-          !this.isNew ||
-          isTranslation ||
-          (this.part?.contentTypes && this.part?.contentTypes.length <= 1)
-      });
+      if (this.isNew) {
+        schema.unshift({
+          ...Schemas.type,
+          disabled:
+            !this.isNew ||
+            this.isTranslate ||
+            (this.part?.contentTypes && this.part?.contentTypes.length <= 1)
+        });
+      }
       // id (new only)
-      schema.unshift({ ...Schemas.id, disabled: !this.isNew });
+      if (this.isNew) {
+        schema.unshift({ ...Schemas.id, disabled: !this.isNew });
+      }
       // title
       schema.unshift(Schemas.title);      
       // status

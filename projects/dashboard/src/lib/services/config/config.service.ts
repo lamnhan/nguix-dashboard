@@ -32,7 +32,7 @@ export interface DashboardPart {
 }
 
 export interface FormResult {
-  mode: 'new' | 'update';
+  mode: 'create' | 'update';
   data: Record<string, any>;
 }
 

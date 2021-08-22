@@ -48,7 +48,7 @@ export class UserState {
       }
       return of(currentProfilesByPage[pageNo]);
     } else {
-      return this.profileDataService.getCollection(
+      return this.profileDataService.list(
         ref => {
           let query = ref
             .where('type', '==', 'default')
@@ -88,7 +88,7 @@ export class UserState {
     } else {
       return combineLatest([
         // match id
-        this.profileDataService.getDoc(searchQuery, false),
+        this.profileDataService.get(searchQuery, false),
         // match searching
         this.profileDataService.setupSearching().pipe(
           switchMap(() =>

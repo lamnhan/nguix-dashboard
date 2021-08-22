@@ -40,7 +40,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
         this.preloadSubscription.unsubscribe();
       }
       this.preloadSubscription = this.part.dataService
-        .getCollection(
+        .list(
           ref => {
             let query = ref
               .where('type', '==', this.contentType)
@@ -96,7 +96,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
       }
       this.searchingSubscription = combineLatest([
         // match id
-        this.part.dataService.getDoc(this.query),
+        this.part.dataService.get(this.query),
         // match searching
         this.part.dataService.setupSearching().pipe(
           switchMap(() =>
@@ -154,5 +154,6 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   submit() {
     this.isEdit = false;
     this.save.emit(this.selectedData);
+    return false;
   }
 }

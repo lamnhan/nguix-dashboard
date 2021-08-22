@@ -22,7 +22,7 @@ export class DataService {
     alert('// TODO: Preview ...');
   }
 
-  addItem(
+  createItem(
     part: DashboardPart,
     databaseItem: DatabaseItem,
     onSuccess?: (data: any) => void,

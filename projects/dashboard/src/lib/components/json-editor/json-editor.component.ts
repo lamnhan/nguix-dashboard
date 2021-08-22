@@ -128,6 +128,8 @@ export class JsonEditorComponent implements OnInit, OnChanges {
     );
     // exit
     this.mode = 'table';
+    // done
+    return false;
   }
 
   private getMatrixItem(schema: JsonSchemaMetaSchemaItem, data: any = {}): SchemaItem {

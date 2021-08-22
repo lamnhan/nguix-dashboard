@@ -34,6 +34,7 @@
       <form
         [formGroup]="data.formGroup"
         (ngSubmit)="submit(part, data.formGroup)"
+        (keydown.enter)="false"
         #theForm="ngForm"
       >
         <ng-container *ngFor="let schema of data.formSchema">
