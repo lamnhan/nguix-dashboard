@@ -126,9 +126,12 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   addItem(item: any) {
-    const dataPickers = this.part.dataService?.getDataPickers() || {};
+    if (!this.part.dataService) {
+      return;
+    }
+    const dataPickers = this.part.dataService.getDataPickers();
     const selectedData = { ...this.selectedData };
-    selectedData[item.id] = (this.part.dataService?.getLinkingFields() || []).reduce(
+    selectedData[item.id] = this.part.dataService.getLinkingFields().reduce(
       (result, prop) => {
         const value = !dataPickers[prop]
           ? item[prop]
@@ -140,13 +143,20 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
       },
       {} as any,
     );
+    // notify linking
+    this.part.dataService.onLinking('create', item);
     // re-assign
     this.selectedData = selectedData;
   }
 
   removeItem(item: any) {
+    if (!this.part.dataService) {
+      return;
+    }
     const selectedData = { ...this.selectedData };
     delete selectedData[item.id];
+    // notify linking
+    this.part.dataService.onLinking('delete', item);
     // re-assign
     this.selectedData = selectedData;
   }
