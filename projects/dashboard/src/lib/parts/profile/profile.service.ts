@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '@lamnhan/ngx-useful';
 import { ProfileDataService } from '@lamnhan/ngx-schemata';
 
-import { FormSchemaItem, ContentType, RadioAlikeChild } from '../../services/config/config.service';
+import { FormSchemaItem, ContentType, JsonSchemaMeta, RadioAlikeChild } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
 
 @Injectable({
@@ -28,7 +28,30 @@ export class ProfilePartService {
   public readonly noI18n = true;
 
   public readonly formSchema: FormSchemaItem[] = [
-    { label: 'Badges', name: 'badges', type: 'list' },
+    {
+      label: 'Legit',
+      name: 'legit',
+      type: 'select',
+      placeholder: 'Select legit',
+      selections: [
+        { text: 'Average', value: 'average' },
+        { text: 'Official', value: 'official' },
+        { text: 'Suspicious', value: 'suspicious' },
+      ] as RadioAlikeChild[],
+      description: 'It is "average" if not specified.',
+    },
+    {
+      label: 'Rank',
+      name: 'rank',
+      type: 'text',
+      description: 'Ranking structure of your organization, examples: 100CEO, 101CTO, 200HRHEAD, 300ITHEAD, ...',
+    },
+    {
+      label: 'Badges',
+      name: 'badges',
+      type: 'list',
+      note: 'Use <kbd>Tab</kbd> or <kbd>,</kbd> to separate.',
+    },
     Schemas.categories,
     Schemas.tags,
     Schemas.relatedProfiles,

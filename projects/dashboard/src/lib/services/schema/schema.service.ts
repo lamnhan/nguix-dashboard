@@ -129,7 +129,7 @@ export const Schemas = {
     name: 'keywords',
     type: 'list',
     description: 'For searching and lookup, provide 1-2 keywords for every paragraph.',
-    note: 'Must be below 500 characters.'
+    note: 'Use <kbd>Tab</kbd> or <kbd>,</kbd> to separate. Must be below 500 characters.'
   },
   toc: {
     label: 'TOC',

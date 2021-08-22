@@ -214,9 +214,9 @@ export class EditPage implements OnInit, OnDestroy {
     selections: RadioAlikeChild[],
     radioItem: RadioAlikeChild,
   ) {
-    const value = radioItem.name;
+    const value = radioItem.value;
     selections.forEach(selection => {
-      if (selection.name === value) {
+      if (selection.value === value) {
         selection.selected = true;
       } else {
         selection.selected = false;
@@ -535,12 +535,12 @@ export class EditPage implements OnInit, OnDestroy {
     // 1. checkbox alike
     if (type === 'checkbox' && value &&  children) {
       children.forEach(child =>
-        (value as string[]).indexOf(child.name) === -1 ? child.checked = false : child.checked = true);
+        (value as string[]).indexOf(child.value) === -1 ? child.checked = false : child.checked = true);
     }
     // 2. radio alike
     if ((type === 'radio' || type === 'select') && value && selections) {
       selections.forEach(child =>
-        (value as string) !== child.name ? child.selected = false : child.selected = true);
+        (value as string) !== child.value ? child.selected = false : child.selected = true);
     }
     // 3. content
     if (type === 'content') {

@@ -33,6 +33,14 @@
 
 .dashboard {
 
+  kbd {
+    padding: 0.1rem 0.25rem;
+    font-size: 0.875em;
+    color: $medium;
+    border: 1px solid $medium;
+    border-radius: 0.2rem;
+  }
+
   &.page {
     background: $light-shade;
     padding: 1rem;

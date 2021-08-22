@@ -1,11 +1,11 @@
 <div class="host dashboard">
 
-  <ng-container *ngIf="part?.dataService; else noItems">
+  <ng-container *ngIf="destinationPart?.dataService; else noItems">
 
-    <div class="header" *ngIf="part">
+    <div class="header" *ngIf="destinationPart">
       <div class="left">
         <strong>
-          <i class="icon-medium-tint" [class]="part.menuItem.icon"></i>
+          <i class="icon-medium-tint" [class]="destinationPart.menuItem.icon"></i>
           <span>Linking</span>
         </strong>
       </div>

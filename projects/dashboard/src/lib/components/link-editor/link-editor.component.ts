@@ -13,7 +13,8 @@ import { DashboardPart, DatabaseItem } from '../../services/config/config.servic
 })
 export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() formGroup!: FormGroup;
-  @Input() part!: DashboardPart;
+  @Input() sourcePart!: DashboardPart;
+  @Input() destinationPart!: DashboardPart;
   @Input() contentType!: string;
   @Input() contentLocale?: string;
   @Input() currentData?: Record<string, any>;
@@ -37,18 +38,18 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   
   ngOnChanges(): void {
     // preload items
-    if (this.preload && this.part?.dataService) {
+    if (this.preload && this.destinationPart?.dataService) {
       if (this.preloadSubscription) {
         this.preloadSubscription.unsubscribe();
       }
-      this.preloadSubscription = this.part.dataService
+      this.preloadSubscription = this.destinationPart.dataService
         .list(
           ref => {
             let query = ref
               .where('type', '==', this.contentType)
               .where('status', '==', 'publish');
             // i18n
-            if (!this.part.noI18n && this.contentLocale) {
+            if (!this.destinationPart.noI18n && this.contentLocale) {
               query = query.where('locale', '==', this.contentLocale);
             }
             // result
@@ -57,7 +58,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
           {
             name:
               `Preload linking:
-                part=${this.part.name}
+                part=${this.destinationPart.name}
                 type=${this.contentType}
                 status=publish
                 locale=${this.contentLocale}`,
@@ -91,18 +92,18 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   loadItems() {
-    if (this.part?.dataService) {
+    if (this.destinationPart?.dataService) {
       this.isLoading = true;
       if (this.searchingSubscription) {
         this.searchingSubscription.unsubscribe();
       }
       this.searchingSubscription = combineLatest([
         // match id
-        this.part.dataService.get(this.query),
+        this.destinationPart.dataService.get(this.query),
         // match searching
-        this.part.dataService.setupSearching().pipe(
+        this.destinationPart.dataService.setupSearching().pipe(
           switchMap(() =>
-            (this.part.dataService as DatabaseData<any>)
+            (this.destinationPart.dataService as DatabaseData<any>)
             .search(this.query, 5, this.contentType === 'default' ? undefined : this.contentType)
               .list()
           ),
@@ -128,12 +129,12 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   addItem(item: any) {
-    if (!this.part.dataService) {
+    if (!this.destinationPart.dataService) {
       return;
     }
-    const dataPickers = this.part.dataService.getDataPickers();
+    const dataPickers = this.destinationPart.dataService.getDataPickers();
     const selectedData = { ...this.selectedData };
-    selectedData[item.id] = this.part.dataService.getLinkingFields().reduce(
+    selectedData[item.id] = this.destinationPart.dataService.getLinkingFields().reduce(
       (result, prop) => {
         const value = !dataPickers[prop]
           ? item[prop]
@@ -146,19 +147,19 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
       {} as any,
     );
     // notify linking
-    this.part.dataService.onLinking('create', item, this.getLinkingContext());
+    this.destinationPart.dataService.onLinking('create', item, this.getLinkingContext());
     // re-assign
     this.selectedData = selectedData;
   }
 
   removeItem(item: any) {
-    if (!this.part.dataService) {
+    if (!this.destinationPart.dataService) {
       return;
     }
     const selectedData = { ...this.selectedData };
     delete selectedData[item.id];
     // notify linking
-    this.part.dataService.onLinking('delete', item, this.getLinkingContext());
+    this.destinationPart.dataService.onLinking('delete', item, this.getLinkingContext());
     // re-assign
     this.selectedData = selectedData;
   }
@@ -171,7 +172,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   private getLinkingContext() {
     return {
-      collection: (this.part.dataService as DatabaseData<any>).name,
+      collection: (this.sourcePart.dataService as DatabaseData<any>).name,
       data: this.getDataSnapshot(),
     };
   }

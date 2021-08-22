@@ -122,7 +122,7 @@
               <option *ngIf="schema.placeholder" value="0" disabled="true">{{ schema.placeholder }}</option>
               <option
                 *ngFor="let radioItem of schema.selections || []"
-                [value]="radioItem.name"
+                [value]="radioItem.value"
                 [selected]="radioItem.selected"
               >{{ radioItem.text }}</option>
             </select>
@@ -243,7 +243,8 @@
           <ng-container *ngIf="schema.type==='link' && schema.meta">
             <nguix-dashboard-link-editor
               [formGroup]="data.formGroup"
-              [part]="schema.meta.part"
+              [sourcePart]="part"
+              [destinationPart]="schema.meta.part"
               [currentData]="schema.meta.currentData"
               [contentType]="schema.meta.contentType || 'default'"
               [contentLocale]="activeLocale"
