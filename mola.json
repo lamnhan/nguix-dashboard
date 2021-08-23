@@ -1,0 +1,19 @@
+{
+  "projectName": "nguix-dashboard",
+  "domain": "nguix-dashboard.lamnhan.com",
+  "name": "NGUIX Dashboard",
+  "description": "The Angular UI/UX Dashboard Kit",
+  "deployTarget": "github",
+  "locales": [
+    "en-US",
+    "vi-VN"
+  ],
+  "skins": [
+    "light",
+    "dark"
+  ],
+  "soul": "bootstrap",
+  "backend": {
+    "sadmin": "sadmin@lamnhan.com"
+  }
+}
