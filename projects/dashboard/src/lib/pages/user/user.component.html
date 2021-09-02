@@ -1,4 +1,4 @@
-<div class="host dashboard page" *ngIf="page$ | async as page; else loadingView">
+<div class="host ___dashboard page" *ngIf="page$ | async as page; else loadingView">
   <div class="main" *ngIf="page.ok; else notFound">
   <ng-container *ngIf="data$ | async; let data">
   <ng-container *ngIf="!query ? data.pageItems : (data.searchItems || data.pageItems); let listingItems">
@@ -148,7 +148,7 @@
             <div class="actions">
               <a
                 class="button-primary-sm"
-                [usefulRouterLink]="['app-admin', 'edit', 'profile', detailItem.id]"
+                [usefulRouterLink]="['app-dashboard', 'edit', 'profile', detailItem.id]"
               >Edit</a>
             </div>
           </div>

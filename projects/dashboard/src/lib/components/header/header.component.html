@@ -1,5 +1,5 @@
 <ng-container *transloco="let t">
-<header class="host dashboard">
+<header class="host ___dashboard">
 
   <div class="toggler">
     <button class="icon-medium-tint icon-dashboard-menu" (click)="navService.toggleMenu()"></button>
@@ -9,7 +9,7 @@
     <li>
       <a href="#" (click)="false"><i class="icon-medium-tint icon-dashboard-mola"></i></a>
       <ul class="submenu" aria-label="submenu">
-        <li><a [usefulRouterLink]="['app-admin', 'about']">About Dashboard</a></li>
+        <li><a [usefulRouterLink]="['app-dashboard', 'about']">About Dashboard</a></li>
         <li><a href="https://mola.lamnhan.com" target="_blank">Mola Home</a></li>
         <li><a href="https://mola.lamnhan.com/docs" target="_blank">Documentation</a></li>
         <li><a href="mailto:mola@lamnhan.com">Support</a></li>

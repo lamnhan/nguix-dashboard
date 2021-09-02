@@ -15,17 +15,17 @@ export class BundlePartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Bundles',
-    routerLink: ['app-admin', 'list', this.name],
+    routerLink: ['app-dashboard', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`app-admin/new/${this.name}`],
+    activeAlso: [`app-dashboard/new/${this.name}`],
     subItems: [
       {
         text: 'All Bundles',
-        routerLink: ['app-admin', 'list', this.name],
+        routerLink: ['app-dashboard', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['app-admin', 'new', this.name],
+        routerLink: ['app-dashboard', 'new', this.name],
       },
     ]
   };

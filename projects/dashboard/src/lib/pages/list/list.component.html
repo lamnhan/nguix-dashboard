@@ -1,4 +1,4 @@
-<div class="host dashboard page" *ngIf="page$ | async as page; else loadingView">
+<div class="host ___dashboard page" *ngIf="page$ | async as page; else loadingView">
 
   <div class="main" *ngIf="page.ok; else notFound;">
   <ng-container *ngIf="data$ | async as data">
@@ -11,7 +11,7 @@
         <ng-container *ngIf="part.name !== 'profile'">
           <a
             class="button-outline-primary"
-            [usefulRouterLink]="['app-admin', 'new', part.name]"
+            [usefulRouterLink]="['app-dashboard', 'new', part.name]"
             [usefulRouteExtras]="{queryParams: { type: type }}"
           >Add New</a>
         </ng-container>
@@ -101,7 +101,7 @@
                     <span class="label" [class]="item.status" *ngIf="item.status!=='publish'">{{ item.status }}</span>
                     <!-- draft / publish -->
                     <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
-                      <a [usefulRouterLink]="['app-admin', 'edit', part.name, item.id]">{{ item.title }}</a>
+                      <a [usefulRouterLink]="['app-dashboard', 'edit', part.name, item.id]">{{ item.title }}</a>
                     </ng-container>
                     <!-- archive -->
                     <ng-container *ngIf="item.status==='archive'">
@@ -118,11 +118,11 @@
                     <!-- draft / publish -->
                     <ng-container *ngIf="item.status==='draft' || item.status==='publish'">
                     <li class="edit">
-                      <a [usefulRouterLink]="['app-admin', 'edit', part.name, item.id]">Edit</a>
+                      <a [usefulRouterLink]="['app-dashboard', 'edit', part.name, item.id]">Edit</a>
                     </li>
                     <li class="copy">
                       <a
-                        [usefulRouterLink]="['app-admin', 'copy', part.name, item.id]"
+                        [usefulRouterLink]="['app-dashboard', 'copy', part.name, item.id]"
                         [usefulRouteExtras]="{queryParams: { type: type }}"
                       >Copy</a>
                     </li>
@@ -185,7 +185,7 @@
                       <div class="locale">{{ allLocales[missingTranslation].text }}</div>
                       <div class="major">
                         <a
-                          [usefulRouterLink]="['app-admin', 'copy', part.name, listingItem.id]"
+                          [usefulRouterLink]="['app-dashboard', 'copy', part.name, listingItem.id]"
                           [usefulRouteExtras]="{queryParams: { type: type, locale: missingTranslation }}"
                         >Add the translation</a>
                       </div>

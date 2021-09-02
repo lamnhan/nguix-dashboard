@@ -15,17 +15,17 @@ export class VideoPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Videos',
-    routerLink: ['app-admin', 'list', this.name],
+    routerLink: ['app-dashboard', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`app-admin/new/${this.name}`],
+    activeAlso: [`app-dashboard/new/${this.name}`],
     subItems: [
       {
         text: 'All Videos',
-        routerLink: ['app-admin', 'list', this.name],
+        routerLink: ['app-dashboard', 'list', this.name],
       },
       {
         text: 'Add New',
-        routerLink: ['app-admin', 'new', this.name],
+        routerLink: ['app-dashboard', 'new', this.name],
       },
     ]
   };

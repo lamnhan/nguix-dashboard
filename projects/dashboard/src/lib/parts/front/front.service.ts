@@ -10,17 +10,17 @@ export class FrontPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Dashboard',
-    routerLink: ['app-admin'],
+    routerLink: ['app-dashboard'],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: ['app-admin/about'],
+    activeAlso: ['app-dashboard/about'],
     subItems: [
       {
         text: 'Home',
-        routerLink: ['app-admin']
+        routerLink: ['app-dashboard']
       },
       {
         text: 'About',
-        routerLink: ['app-admin', 'about']
+        routerLink: ['app-dashboard', 'about']
       }
     ],
   };

@@ -3,13 +3,14 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
 
 @NgModule({
   exports: [NguixDashboardModule],
-  imports: [],
+  imports: [NguixDashboardModule],
   providers: [
     {
       provide: DASHBOARD_CONFIG,
       useValue: dashboardConfig({
         parts: [
           'front',
+          'option',
           'page',
           'post',
           'audio',
@@ -19,7 +20,6 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
           'tag',
           'media',
           'user',
-          'option',
         ],
         plugins: [
           // register genre type of category part

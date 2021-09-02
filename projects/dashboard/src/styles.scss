@@ -8,7 +8,7 @@
 @import './scss/skin';
 
 // register soul
-.dashboard {
+.___dashboard {
   @import './scss/soul/core';
   @import './scss/soul/content/typography';
   @import './scss/soul/forms/label';
@@ -24,14 +24,57 @@
   @import './scss/soul/components/table';
 }
 
-// register lib
-@import './theming/dashboard.module';
+/*
+ * icons
+ */
+
+$icons: (
+  // misc
+  dashboard-left: ('material', 'chevron-left'),
+  dashboard-right: ('material', 'chevron-right'),
+  dashboard-mola: ('direct', 'https://nguix-dashboard.lamnhan.com/assets/icons/mola.svg'),
+  dashboard-menu: ('bootstrap', 'list'),
+  dashboard-home: ('bootstrap', 'house-fill'),
+  dashboard-comment: ('material', 'comment'),
+  dashboard-record: ('material', 'code-braces'),
+  dashboard-array: ('material', 'code-brackets'),
+  // media
+  dashboard-media-image: ('material', 'file-image'),
+  dashboard-media-audio: ('material', 'file-music'),
+  dashboard-media-video: ('material', 'file-video'),
+  dashboard-media-document: ('material', 'file-document'),
+  dashboard-media-archive: ('material', 'zip-box'),
+  dashboard-media-unknown: ('material', 'file-question'),
+  // media
+  dashboard-media-library: ('material', 'folder'),
+  dashboard-media-upload: ('material', 'upload'),
+  dashboard-media-editor: ('material', 'image-edit'),
+  // layout
+  dashboard-layout-list: ('material', 'format-list-bulleted-square'),
+  dashboard-layout-thumbnail: ('material', 'image-area'),
+  // parts
+  dashboard-part-front: ('material', 'gauge'),
+  dashboard-part-media: ('material', 'image'),
+  dashboard-part-user: ('material', 'account'),
+  dashboard-part-category: ('material', 'shape'),
+  dashboard-part-tag: ('material', 'tag-multiple'),
+  dashboard-part-page: ('material', 'view-carousel'),
+  dashboard-part-post: ('material', 'text-box'),
+  dashboard-part-option: ('material', 'cog'),
+  dashboard-part-profile: ('material', 'account-edit'),
+  dashboard-part-audio: ('material', 'music'),
+  dashboard-part-video: ('material', 'video'),
+  dashboard-part-bundle: ('material', 'animation'),
+);
+
+@include register_icons($icons);
+
 
 /*
  * styles
  */
 
-.dashboard {
+.___dashboard {
 
   kbd {
     padding: 0.1rem 0.25rem;

@@ -10,17 +10,17 @@ export class MediaPartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Media',
-    routerLink: ['app-admin', this.name],
+    routerLink: ['app-dashboard', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`app-admin/${this.name}/new`],
+    activeAlso: [`app-dashboard/${this.name}/new`],
     subItems: [
       {
         text: 'Library',
-        routerLink: ['app-admin', this.name]
+        routerLink: ['app-dashboard', this.name]
       },
       {
         text: 'Add New',
-        routerLink: ['app-admin', this.name, 'new']
+        routerLink: ['app-dashboard', this.name, 'new']
       }
     ],
   };

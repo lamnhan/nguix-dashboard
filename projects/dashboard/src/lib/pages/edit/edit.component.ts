@@ -344,7 +344,7 @@ export class EditPage implements OnInit, OnDestroy {
           data,
           () => {
             this.lockdown = false;
-            this.navService.navigate(['app-admin', 'edit', part.name, data.id as string]);
+            this.navService.navigate(['app-dashboard', 'edit', part.name, data.id as string]);
           },
           error => {
             this.lockdown = false;
@@ -385,7 +385,7 @@ export class EditPage implements OnInit, OnDestroy {
       databaseItem,
       result => {
         if (result !== null) {
-          this.navService.navigate(['app-admin', 'new', part.name]);
+          this.navService.navigate(['app-dashboard', 'new', part.name]);
         }
       }
     );

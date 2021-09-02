@@ -14,13 +14,13 @@ export class ProfilePartService {
   public readonly menuItem: MenuItem = {
     name: this.name,
     text: 'Profiles',
-    routerLink: ['app-admin', 'list', this.name],
+    routerLink: ['app-dashboard', 'list', this.name],
     icon: `icon-dashboard-part-${this.name}`,
-    activeAlso: [`app-admin/new/${this.name}`],
+    activeAlso: [`app-dashboard/new/${this.name}`],
     subItems: [
       {
         text: 'All Profiles',
-        routerLink: ['app-admin', 'list', this.name],
+        routerLink: ['app-dashboard', 'list', this.name],
       },
     ]
   };

@@ -36,7 +36,7 @@ import { AppDashboardModule } from './app-dashboard.module';
 
   gotoDashboard() {
     this.settingService.changePersona('dashboard');
-    this.navService.navigate(['app-admin']);
+    this.navService.navigate(['app-dashboard']);
   }
 
   signOut() {
