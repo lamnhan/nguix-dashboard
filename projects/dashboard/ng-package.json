@@ -7,8 +7,8 @@
       "@lamnhan/ngx-useful": "ng.lamnhan.useful",
       "@lamnhan/ngx-schemata": "ng.lamnhan.schemata",
       "@ngneat/transloco": "transloco",
-      "ngx-pagination": "pagination",
       "@ngxs/store" : "ngxsStore",
+      "ngx-pagination": "pagination",
       "ngx-toastr": "toastr",
       "ngx-tinymce": "tinymce",
       "ngx-filesize": "ng.filesize",
@@ -17,6 +17,7 @@
     }
   },
   "allowedNonPeerDependencies": [
+    "@ngxs/store",
     "ngx-pagination",
     "ngx-toastr",
     "ngx-tinymce",

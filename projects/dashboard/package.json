@@ -19,12 +19,12 @@
     "url": "https://github.com/lamnhan/nguix-dashboard/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^12.0.3",
-    "@angular/core": "^12.0.3",
-    "@angular/platform-browser": "~12.0.3",
-    "@lamnhan/ngx-useful": "0.0.28",
-    "@lamnhan/schemata": "0.0.22",
-    "@lamnhan/ngx-schemata": "0.0.11",
+    "@angular/common": "^12.2.5",
+    "@angular/core": "^12.2.5",
+    "@angular/platform-browser": "~12.2.5",
+    "@lamnhan/ngx-useful": "0.0.31",
+    "@lamnhan/schemata": "0.0.24",
+    "@lamnhan/ngx-schemata": "0.0.13",
     "@ngxs/store": "^3.7.2"
   },
   "dependencies": {
