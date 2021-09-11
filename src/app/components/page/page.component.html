@@ -21,8 +21,7 @@
 
     <nguix-content
       *ngIf="contentSrc || content; else listingElse"
-      [content]="content"
-      [contentSrc]="contentSrc"
+      [input]="contentSrc || content"
       (error)="onError($event)"
     ></nguix-content>
   
