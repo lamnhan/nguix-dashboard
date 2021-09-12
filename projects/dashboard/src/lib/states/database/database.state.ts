@@ -90,7 +90,7 @@ export interface DatabaseFullItem {
 }
 
 @State<DatabaseStateModel>({
-  name: 'database',
+  name: 'dashboard_database',
   defaults: {},
 })
 @Injectable()

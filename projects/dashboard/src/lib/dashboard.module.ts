@@ -35,14 +35,11 @@ import { UserState } from './states/user/user.state';
     BrowserAnimationsModule,
     DashboardRoutingModule,
     NguixDashboardHeaderComponentModule,
-    NgxsModule.forRoot(
-      [
-        DatabaseState,
-        MediaState,
-        UserState,
-      ],
-      { developmentMode: false }
-    ),
+    NgxsModule.forFeature([
+      DatabaseState,
+      MediaState,
+      UserState,
+    ]),
     ToastrModule.forRoot(),
   ],
   providers: [

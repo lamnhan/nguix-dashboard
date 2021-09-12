@@ -23,7 +23,7 @@ export class UserPage implements OnInit {
     }),
   );
 
-  public readonly data$ = this.store.select<UserStateModel>(state => state.user).pipe(
+  public readonly data$ = this.store.select<UserStateModel>(state => state.dashboard_user).pipe(
     map(userState => {
       this.isListingLoading = false;
       // set data

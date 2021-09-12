@@ -41,7 +41,7 @@ export interface MediaStateModel {
 }
 
 @State<MediaStateModel>({
-  name: 'media',
+  name: 'dashboard_media',
   defaults: {
     remoteLoaded: false,
     folders: [],

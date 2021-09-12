@@ -49,7 +49,7 @@ export class ListPage implements OnInit {
   );
 
   public readonly data$ = this.store
-    .select<DatabaseStateModel>(state => state.database)
+    .select<DatabaseStateModel>(state => state.dashboard_database)
     .pipe(
       filter(databaseState =>
         !!databaseState[this.part.name]?.counting && !!databaseState[this.part.name]?.itemsByGroup

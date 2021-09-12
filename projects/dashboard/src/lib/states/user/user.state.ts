@@ -23,7 +23,7 @@ export interface UserStateModel {
 }
 
 @State<UserStateModel>({
-  name: 'user',
+  name: 'dashboard_user',
   defaults: {
     profilesByPage: {},
   },

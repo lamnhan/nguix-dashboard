@@ -18,7 +18,7 @@ export class MediaPage implements OnInit {
     tap(() => this.store.dispatch(new GetFolders())),
   );
 
-  public readonly data$ = this.store.select<MediaStateModel>(state => state.media).pipe(
+  public readonly data$ = this.store.select<MediaStateModel>(state => state.dashboard_media).pipe(
     map(mediaState => {
       this.isListingLoading = false;
       // set data
