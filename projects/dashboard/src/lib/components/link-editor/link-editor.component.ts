@@ -13,12 +13,13 @@ import { DashboardPart, DatabaseItem } from '../../services/config/config.servic
 })
 export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() formGroup!: FormGroup;
+  @Input() currentData?: Record<string, any>;
   @Input() sourcePart!: DashboardPart;
   @Input() destinationPart!: DashboardPart;
-  @Input() contentType!: string;
-  @Input() contentLocale?: string;
-  @Input() currentData?: Record<string, any>;
   @Input() preload?: number;
+  @Input() activeLocale!: string;
+  @Input() activeType!: string;
+  @Input() typeFilter?: Record<string, string>;
 
   @Output() save = new EventEmitter<any>();
 
@@ -32,11 +33,14 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
   preloadSubscription?: Subscription;
   searchingSubscription?: Subscription;
 
+  private contentType = 'default';
+
   constructor() {}
 
   ngOnInit(): void {}
   
   ngOnChanges(): void {
+    this.contentType = (this.typeFilter || {})[this.activeType] || 'default';
     // preload items
     if (this.preload && this.destinationPart?.dataService) {
       if (this.preloadSubscription) {
@@ -49,8 +53,8 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
               .where('type', '==', this.contentType)
               .where('status', '==', 'publish');
             // i18n
-            if (!this.destinationPart.noI18n && this.contentLocale) {
-              query = query.where('locale', '==', this.contentLocale);
+            if (!this.destinationPart.noI18n && this.activeLocale) {
+              query = query.where('locale', '==', this.activeLocale);
             }
             // result
             return query.limit(this.preload as number);
@@ -61,7 +65,7 @@ export class LinkEditorComponent implements OnInit, OnChanges, OnDestroy {
                 part=${this.destinationPart.name}
                 type=${this.contentType}
                 status=publish
-                locale=${this.contentLocale}`,
+                locale=${this.activeLocale}`,
           }
         )
         .subscribe(items => {

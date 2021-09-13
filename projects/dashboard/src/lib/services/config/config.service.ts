@@ -120,8 +120,8 @@ export interface JsonSchemaMetaSchemaItem {
 
 export interface LinkingSchemaMeta {
   source: string;
-  contentType?: string;
   preload?: number;
+  typeFilter?: Record<string, string>;
   // auto-generated from source
   part?: DashboardPart;
   currentData?: Record<string, any>;

@@ -176,7 +176,7 @@
   
           <ng-container *ngIf="schema.type==='content'">
           <ng-container *ngIf="schema.meta as ceData">
-            <div class="content-editor">
+            <div class="content-editor" [class.allow-direct]="ceData.allowDirect">
               <label class="toggler" *ngIf="ceData.allowDirect">
                 <input
                   type="checkbox"
@@ -243,12 +243,13 @@
           <ng-container *ngIf="schema.type==='link' && schema.meta">
             <nguix-dashboard-link-editor
               [formGroup]="data.formGroup"
+              [currentData]="schema.meta.currentData"
               [sourcePart]="part"
               [destinationPart]="schema.meta.part"
-              [currentData]="schema.meta.currentData"
-              [contentType]="schema.meta.contentType || 'default'"
-              [contentLocale]="activeLocale"
               [preload]="schema.meta.preload"
+              [activeLocale]="activeLocale"
+              [activeType]="activeType"
+              [typeFilter]="schema.meta.typeFilter"
               (save)="linkChanges(
                 schema,
                 data.formGroup,

@@ -39,7 +39,7 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
             );
           },
         ],
-        allowDirectContent: true,
+        // allowDirectContent: true,
       }),
     }
   ]

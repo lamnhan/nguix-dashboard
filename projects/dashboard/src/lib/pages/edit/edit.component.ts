@@ -60,7 +60,7 @@ export class EditPage implements OnInit, OnDestroy {
     .pipe(
       switchMap(([params, data, queryParams]) => {
         // reset
-        this.lockdown = false;      
+        this.lockdown = false;
         // set data
         this.itemId = params.id;
         this.prioritizedData = queryParams;
@@ -81,11 +81,11 @@ export class EditPage implements OnInit, OnDestroy {
           )
           .pipe(
             map((databaseItem: undefined | DatabaseItem) => {
-              this.databaseItem = databaseItem;
               const part = this.part as DashboardPart;
               const formSchema = this.getFormSchema(part);
               const formGroup = this.getFormGroup(formSchema, this.databaseItem);
               return {
+                databaseItem,
                 data: {
                   part,
                   formSchema,
@@ -93,13 +93,23 @@ export class EditPage implements OnInit, OnDestroy {
                 },
               };
             }),
+            tap(({databaseItem}) => this.databaseItem = databaseItem),
           );
         }
       }),
       tap(({ data }) => {
-        if (!data) {
-          return;
-        }
+        if (!data) return;
+        // active type
+        this.activeType =
+          this.databaseItem?.type ||
+          this.prioritizedData.type ||
+          this.activeType;
+        // active locale
+        this.activeLocale =
+          this.databaseItem?.locale ||
+          this.prioritizedData.locale ||
+          this.settingService.defaultLocale ||
+          this.activeLocale;
         // submit text
         this.submitText = this.getSubmitText(
           this.isCopy || !this.databaseItem?.status
@@ -137,7 +147,6 @@ export class EditPage implements OnInit, OnDestroy {
           });
         }
         // active locale
-        this.activeLocale = this.databaseItem?.locale || this.settingService.defaultLocale;
         const localeControl = data.formGroup?.get('locale');
         if (localeControl) {
           this.localeChangesSubscription = localeControl.valueChanges

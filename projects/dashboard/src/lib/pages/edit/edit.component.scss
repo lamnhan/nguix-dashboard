@@ -70,7 +70,10 @@
           }
 
           .content-editor {
-            margin-top: -2rem;
+
+            &.allow-direct {
+              margin-top: -2rem;
+            }
 
             .toggler {
               display: flex;
