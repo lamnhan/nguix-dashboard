@@ -73,29 +73,29 @@ export class EditPage implements OnInit, OnDestroy {
           return of({ data: undefined });
         }
         // continue processing
-        else {
-          return (
-            !this.itemId
-              ? of(undefined) // new item
-              : this.part.dataService.get(this.itemId, false) // get current data
-          )
-          .pipe(
-            map((databaseItem: undefined | DatabaseItem) => {
-              const part = this.part as DashboardPart;
-              const formSchema = this.getFormSchema(part);
-              const formGroup = this.getFormGroup(formSchema, this.databaseItem);
-              return {
-                databaseItem,
-                data: {
-                  part,
-                  formSchema,
-                  formGroup,
-                },
-              };
-            }),
-            tap(({databaseItem}) => this.databaseItem = databaseItem),
-          );
-        }
+        return (
+          !this.itemId
+            ? of(undefined) // new item
+            : this.part.dataService.get(this.itemId, false) // get current data
+        )
+        .pipe(
+          map((databaseItem: undefined | DatabaseItem) => {
+            // save database item
+            this.databaseItem = databaseItem;
+            // build data
+            const part = this.part as DashboardPart;
+            const formSchema = this.getFormSchema(part);
+            const formGroup = this.getFormGroup(formSchema, this.databaseItem);
+            // result
+            return {
+              data: {
+                part,
+                formSchema,
+                formGroup,
+              },
+            };
+          }),
+        );
       }),
       tap(({ data }) => {
         if (!data) return;
