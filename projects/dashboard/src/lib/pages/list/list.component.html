@@ -174,7 +174,7 @@
 
                 </li>
 
-                <ng-container *ngIf="!part.noI18n">
+                <ng-container *ngIf="!part.noI18n && localeCount > 1">
 
                   <ng-container *ngIf="!data.fullItemsByOrigin[listingItem.origin]; else missingTranslations;">
                     <li><a href="#" (click)="loadItemTranslations(listingItem);false;">View translations</a></li>

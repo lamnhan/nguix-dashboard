@@ -82,6 +82,23 @@ export class EditPage implements OnInit, OnDestroy {
           map((databaseItem: undefined | DatabaseItem) => {
             // save database item
             this.databaseItem = databaseItem;
+            // active type
+            this.activeType =
+              this.databaseItem?.type ||
+              this.prioritizedData.type ||
+              this.activeType;
+            // active locale
+            this.activeLocale =
+              this.databaseItem?.locale ||
+              this.prioritizedData.locale ||
+              this.settingService.defaultLocale ||
+              this.activeLocale;
+            // submit text
+            this.submitText = this.getSubmitText(
+              this.isCopy || !this.databaseItem?.status
+                ? 'draft'
+                : this.databaseItem?.status
+            );
             // build data
             const part = this.part as DashboardPart;
             const formSchema = this.getFormSchema(part);
@@ -99,23 +116,7 @@ export class EditPage implements OnInit, OnDestroy {
       }),
       tap(({ data }) => {
         if (!data) return;
-        // active type
-        this.activeType =
-          this.databaseItem?.type ||
-          this.prioritizedData.type ||
-          this.activeType;
-        // active locale
-        this.activeLocale =
-          this.databaseItem?.locale ||
-          this.prioritizedData.locale ||
-          this.settingService.defaultLocale ||
-          this.activeLocale;
         // submit text
-        this.submitText = this.getSubmitText(
-          this.isCopy || !this.databaseItem?.status
-            ? 'draft'
-            : this.databaseItem?.status
-        );
         const statusControl = data.formGroup?.get('status');
         if (statusControl) {
           this.statusChangesSubscription = statusControl.valueChanges.subscribe(status => {

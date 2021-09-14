@@ -32,6 +32,7 @@ export class ListPage implements OnInit {
         (result, item) => { result[item.value] = item; return result; },
         {} as Record<string, BuiltinListingItem>
       );
+      this.localeCount = this.settingService.locales.length;
       // not a valid part (stop right here)
       if (!this.part?.dataService) {
         return of({ ok: false });
@@ -87,6 +88,7 @@ export class ListPage implements OnInit {
   detailId!: string;
   defaultLocale!: string;
   allLocales!: Record<string, BuiltinListingItem>;
+  localeCount = 0;
 
   constructor(
     private route: ActivatedRoute,
