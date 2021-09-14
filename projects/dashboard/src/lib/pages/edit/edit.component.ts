@@ -363,7 +363,7 @@ export class EditPage implements OnInit, OnDestroy {
         );
       } else if (mode === 'update' && this.databaseItem) {
         // clean up unchangable fields
-        ['uid', 'id', 'type', 'status', 'createdAt', 'locale', 'ogirin'].forEach(removeField => {
+        ['uid', 'id', 'type', 'createdAt', 'locale', 'ogirin'].forEach(removeField => {
           delete data[removeField];
         });
         // update item

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import * as Tagify from '@yaireo/tagify';
 
 @Component({
@@ -6,11 +6,16 @@ import * as Tagify from '@yaireo/tagify';
   templateUrl: './list-editor.component.html',
   styleUrls: ['./list-editor.component.scss']
 })
-export class ListEditorComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('tagify') private tagifyEl!: ElementRef;
-
+export class ListEditorComponent implements OnInit, OnDestroy {  
   @Input() currentData: string[] = [];
   @Output() save = new EventEmitter<string[]>();
+
+  @ViewChild('tagify') private set tagifyEl(ref: ElementRef) {
+    setTimeout(() => {
+      this.tagifyInstance = new Tagify(ref.nativeElement);
+      this.tagifyInstance.addTags(this.currentData);
+    }, 0);
+  };
 
   private tagifyInstance!: Tagify;
 
@@ -18,16 +23,11 @@ export class ListEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {}
 
-  ngAfterViewInit() {
-    this.tagifyInstance = new Tagify(this.tagifyEl.nativeElement);
-    this.tagifyInstance.addTags(this.currentData);
-  }
-
   ngOnDestroy() {
     this.tagifyInstance.destroy();
   }
 
-  change() {
+  onChanges() {
     this.save.emit(
       this.tagifyInstance
         .getCleanValue()
