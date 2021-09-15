@@ -60,9 +60,8 @@ export class ListPage implements OnInit {
         // reset loading
         this.isListingLoading = false;
         // extract data
-        const totalPages = Math.ceil(
-          (currentPartData.counting[this.type]?.[this.status] || 1) / this.getViewPerPage()
-        );
+        const totalCount = (currentPartData.counting[this.type]?.[this.status] || 1);
+        const totalPages = (!totalCount || totalCount < 1) ? 1 : Math.ceil(totalCount / this.getViewPerPage());
         const listingStatuses = this.getStatuses(currentPartData.counting[this.type] || {});
         const groupItems = currentPartData.itemsByGroup?.[`${this.type}:${this.status}:${this.pageNo}`] || [];
         const fullItemsByOrigin = currentPartData.fullItemsByOrigin || {};

@@ -393,7 +393,7 @@ export class DatabaseState {
     // update data
     return part.dataService.update(id, updateData, databaseItem)
     .pipe(
-      tap(() => 
+      tap(() => {
         patchState(
           this.getPatchingData(
             partName,
@@ -411,11 +411,11 @@ export class DatabaseState {
                     },
                   }
               ),
-              ...this.updatePatchingItem(currentPartData, id, updateData, databaseItem),
+              ...this.getUpdatedPatchingItem(currentPartData, id, updateData, databaseItem),
             },
           )
-        )
-      )
+        );
+      })
     );
   }
 
@@ -444,7 +444,7 @@ export class DatabaseState {
                 [status]: (currentPartData.counting?.[type]?.[status] || 0) - 1,
               }
             },
-           ...this.updatePatchingItem(currentPartData, id, null, databaseItem),
+           ...this.getUpdatedPatchingItem(currentPartData, id, null, databaseItem),
           },
         )
       )
@@ -503,42 +503,97 @@ export class DatabaseState {
     };
   }
 
-  private updatePatchingItem(
+  private getUpdatedPatchingItem(
     currentPartData: DatabaseStatePartData,
     id: string,
     updateData: null | Record<string, any>,
     databaseItem: DatabaseItem,
   ) {
+    const { type, origin, status: currentStatus } = databaseItem;
+    const { status: newStatus } = updateData || {};
     // itemsByGroup
-    const itemsByGroup = (currentPartData.itemsByGroup || {});
-    Object.keys(itemsByGroup).forEach(groupName => {
-      if (updateData !== null) {
-        itemsByGroup[groupName].forEach((item, i) => {
-          if (item.id !== id) {
-            return;
-          }
-          itemsByGroup[groupName][i] = {...item, ...updateData};
-        });
-      } else {
-        itemsByGroup[groupName] = itemsByGroup[groupName].filter(item => item.id !== id);
+    const currentItemsByGroup = (currentPartData.itemsByGroup || {});
+    const itemsByGroup = Object.keys(currentItemsByGroup).reduce(
+      (result, groupName) => {
+        result[groupName] = [...currentItemsByGroup[groupName]];
+        return result;
+      },
+      {} as Record<string, DatabaseItem[]>,
+    );
+    let activeGroupName = '';
+    let activeItem: undefined |  DatabaseItem;
+    let activeItemIdex = -1;
+    const allGroupNames = Object.keys(itemsByGroup);
+    infoExtracter: for (let i = 0; i < allGroupNames.length; i++) {
+      const groupName = allGroupNames[i];
+      const groupItems = itemsByGroup[groupName];
+      for (let j = 0; j < groupItems.length; j++) {
+        const item = groupItems[j];
+        if (item.id === id) {
+          activeGroupName = groupName;
+          activeItem = item;
+          activeItemIdex = j;
+          break infoExtracter;
+        }
       }
-    });
-    // fullItemsByOrigin
-    const fullItemsByOrigin = (currentPartData.fullItemsByOrigin || {});
-    Object.keys(fullItemsByOrigin).forEach(origin => {
+    }
+    if (activeGroupName && activeItem && activeItemIdex > -1) {
+      // update
       if (updateData !== null) {
-        fullItemsByOrigin[origin].all.forEach((item, i) => {
-          if (item.id !== id) {
-            return;
+        const newItem = {...activeItem, ...updateData};
+        const isChangingStatus = newStatus && newStatus !== currentStatus;
+        // non-status update
+        if (!isChangingStatus) {
+          itemsByGroup[activeGroupName][activeItemIdex] = newItem;;
+        }
+        // status update
+        else {
+          const newGroupName = `${type}:${newStatus}:1`;
+          // add to new group
+          if (itemsByGroup[newGroupName]) {
+            itemsByGroup[newGroupName].unshift({...newItem});
           }
-          fullItemsByOrigin[origin].all[i] = {...item, ...updateData};
-        })
-      } else {
+          // remove from old group
+          itemsByGroup[activeGroupName].splice(activeItemIdex, 1);
+        }
+      }
+      // delete
+      else {
+        itemsByGroup[activeGroupName] = itemsByGroup[activeGroupName].filter(item => item.id !== id);
+      }
+    }
+    // fullItemsByOrigin
+    const currentFullItemsByOrigin = (currentPartData.fullItemsByOrigin || {});
+    const fullItemsByOrigin = Object.keys(currentFullItemsByOrigin).reduce(
+      (result, origin) => {
+        const currentAll = currentFullItemsByOrigin[origin].all;
+        const currentMissingTranslations = currentFullItemsByOrigin[origin].missingTranslations;
+        result[origin] = {
+          all: [...currentAll],
+          missingTranslations: !currentMissingTranslations ? undefined : [...currentMissingTranslations],
+        };
+        return result;
+      },
+      {} as Record<string, DatabaseFullItem>,
+    );
+    if (fullItemsByOrigin[origin]) {
+      // update
+      if (updateData !== null) {
+        for (let i = 0; i < fullItemsByOrigin[origin].all.length; i++) {
+          const item = fullItemsByOrigin[origin].all[i];
+          if (item.id === id) {
+            fullItemsByOrigin[origin].all[i] = {...item, ...updateData};
+            break;
+          }
+        }
+      }
+      // delete
+      else {
         fullItemsByOrigin[origin].all = fullItemsByOrigin[origin].all.filter(item => item.id !== id);
       }
-    });
+    }
     // searchResult
-    let searchResult = currentPartData.searchResult;
+    let searchResult = !currentPartData.searchResult ? undefined : [...currentPartData.searchResult];
     if (searchResult) {
       if (updateData !== null) {
         searchResult.forEach(item => {

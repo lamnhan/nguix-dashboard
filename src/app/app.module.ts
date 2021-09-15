@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '../environments/environment';
+import { NgxsModule } from '@ngxs/store';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
@@ -50,6 +51,7 @@ import { FooterComponentModule } from './components/footer/footer.module';
     BrowserModule,
     AppDashboardModule,
     AppRoutingModule,
+    NgxsModule.forRoot([], { developmentMode: !environment.production }),
     AppTranslationModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

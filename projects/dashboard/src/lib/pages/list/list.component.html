@@ -81,6 +81,9 @@
           <tr *ngIf="query && data.searchItems">
             <td colspan="42">Currently view top search result for query "<strong>{{ data.searchQuery }}</strong>", <a href="#" (click)="query=''; false;">clear search</a>.</td>
           </tr>
+          <tr *ngIf="!activeItems.length">
+            <td colspan="42">No items found!</td>
+          </tr>
           <tr *ngFor="let listingItem of activeItems">
           <ng-container
             *ngIf="

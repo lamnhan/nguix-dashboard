@@ -28,7 +28,7 @@ export class UserPage implements OnInit {
       this.isListingLoading = false;
       // set data
       const totalCount = this.profileDataService.count('default');
-      const totalPages = !totalCount ? 1 : Math.ceil(totalCount / this.getViewPerPage());
+      const totalPages = (!totalCount || totalCount < 1) ? 1 : Math.ceil(totalCount / this.getViewPerPage());
       const pageItems = userState.profilesByPage[this.pageNo] || [];
       const searchQuery = userState.searchQuery;
       const searchItems = userState.searchResult;
