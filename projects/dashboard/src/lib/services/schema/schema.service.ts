@@ -198,6 +198,8 @@ export const Schemas = {
     name: 'tags',
     type: 'tag',
     meta: { source: 'tag' } as LinkingSchemaMeta,
+    description: 'A special linking field, tags will be created if not exists.',
+    note: 'Use <kbd>Tab</kbd> or <kbd>,</kbd> to separate. Must be below 500 characters.'
   },
   relatedPosts: {
     label: 'Related posts',
