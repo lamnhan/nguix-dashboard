@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Subscription, combineLatest, of } from 'rxjs';
 import { tap, map, switchMap, take } from 'rxjs/operators';
-import { NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
+import { HelperService, NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
 import {
@@ -129,7 +129,7 @@ export class EditPage implements OnInit, OnDestroy {
           this.titleChangesSubscription = titleControl.valueChanges.subscribe(title => {
             const idControl = data.formGroup?.get('id');
             if (idControl && this.isNew) {
-              idControl.setValue(this.slugify(title));
+              idControl.setValue(this.helperService.slugify(title));
               idControl.markAsDirty();
             }
           });
@@ -172,6 +172,7 @@ export class EditPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private store: Store,
     private formBuilder: FormBuilder,
+    private helperService: HelperService,
     private navService: NavService,
     public settingService: SettingService,
     private userService: UserService,
@@ -309,6 +310,19 @@ export class EditPage implements OnInit, OnDestroy {
   }
 
   listChanges(
+    schema: FormSchemaItem,
+    formGroup: FormGroup,
+    value: any
+  ) {
+    (schema.meta as any).currentData = value;
+    const control = formGroup.get(schema.name);
+    if (control) {
+      control.setValue(value);
+      control.markAsDirty();
+    }
+  }
+
+  tagChanges(
     schema: FormSchemaItem,
     formGroup: FormGroup,
     value: any
@@ -584,17 +598,14 @@ export class EditPage implements OnInit, OnDestroy {
     if (type === 'list') {
       schema.meta = { currentData: value };
     }
+    // 8. tag
+    if (type === 'tag' && schema.meta && schema.meta.source) {
+      const part = this.dashboardService.getPart(schema.meta.source as string);
+      if (part?.dataService) {
+        schema.meta.part = part;
+        schema.meta.currentData = value;
+      }
+    }
   }
 
-  private slugify(text: string) {
-    return text
-      .toString()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/[^\w-]+/g, '')
-      .replace(/--+/g, '-')
-  }
 }

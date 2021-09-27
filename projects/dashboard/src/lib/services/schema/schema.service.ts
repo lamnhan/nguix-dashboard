@@ -196,7 +196,7 @@ export const Schemas = {
   tags: {
     label: 'Tags',
     name: 'tags',
-    type: 'link',
+    type: 'tag',
     meta: { source: 'tag' } as LinkingSchemaMeta,
   },
   relatedPosts: {

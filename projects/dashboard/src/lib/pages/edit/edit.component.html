@@ -269,6 +269,24 @@
             ></nguix-dashboard-list-editor>
           </ng-container>
 
+          <ng-container *ngIf="schema.type==='tag' && schema.meta">
+            <nguix-dashboard-tag-editor
+              [formGroup]="data.formGroup"
+              [currentData]="schema.meta.currentData"
+              [sourcePart]="part"
+              [destinationPart]="schema.meta.part"
+              [preload]="schema.meta.preload"
+              [activeLocale]="activeLocale"
+              [activeType]="activeType"
+              [typeFilter]="schema.meta.typeFilter"
+              (save)="tagChanges(
+                schema,
+                data.formGroup,
+                $event
+              )"
+            ></nguix-dashboard-tag-editor>
+          </ng-container>
+
           <div class="schema-note" *ngIf="schema.note" [innerHtml]="schema.note"></div>
   
         </div>
