@@ -56,6 +56,10 @@
 
     .right {
 
+      .view-mode {
+        color: $dark;
+      }
+
       a:last-child {
         margin-left: 1.5rem;
       }

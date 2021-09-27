@@ -87,6 +87,11 @@
       overflow-y: scroll;
       padding: .5rem;
 
+      li.note {
+        font-size: .75rem;
+        color: $medium;
+      }
+
       li.loading {
         padding: 1rem;
         display: flex;

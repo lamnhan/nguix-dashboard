@@ -64,7 +64,7 @@
     .secondary {
       display: flex;
       width: 100vw;
-      height: var(--app-view-height, 100vh);
+      height: calc(var(--app-view-height, 100vh) - 46px);
       position: fixed;
       top: 46px;
       transition: all .3s ease;

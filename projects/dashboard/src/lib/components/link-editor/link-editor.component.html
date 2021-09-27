@@ -37,11 +37,12 @@
               type="search"
               [(ngModel)]="query"
               placeholder="ID or search query ..."
-              (keyup.enter)="loadItems()"
+              (keyup.enter)="loadItems(); false;"
             >
             <a href="#" class="button-primary-sm" [class.disabled]="!query" (click)="!query ? false : loadItems(); false;">Load</a>
           </div>
           <ul class="items">
+            <li class="note" *ngIf="!query && !items.length">Load items by ID or search query, then hit [+] to select.</li>
             <li class="loading" *ngIf="isLoading">
               <nguix-dashboard-spinner></nguix-dashboard-spinner>
             </li>
