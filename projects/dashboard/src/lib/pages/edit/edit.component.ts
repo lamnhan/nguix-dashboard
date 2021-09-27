@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Subscription, combineLatest, of } from 'rxjs';
-import { tap, map, switchMap, take } from 'rxjs/operators';
+import { tap, map, switchMap } from 'rxjs/operators';
 import { HelperService, NavService, SettingService, UserService } from '@lamnhan/ngx-useful';
 import { StorageItem } from '@lamnhan/ngx-useful';
 
@@ -15,7 +15,6 @@ import {
   RadioAlikeChild,
   ConfigService,
   ContentSchemaMeta,
-  LinkingSchemaMeta,
   ImageCropping,
 } from '../../services/config/config.service';
 import { Schemas } from '../../services/schema/schema.service';
@@ -54,11 +53,11 @@ export class EditPage implements OnInit, OnDestroy {
 
   public readonly page$ = combineLatest([
       this.route.params,
-      this.route.data,
       this.route.queryParams,
+      this.route.data,
     ])
     .pipe(
-      switchMap(([params, data, queryParams]) => {
+      switchMap(([params, queryParams, data]) => {
         // reset
         this.lockdown = false;
         // set data

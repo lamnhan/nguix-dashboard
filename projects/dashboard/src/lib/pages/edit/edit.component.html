@@ -12,12 +12,13 @@
             style="margin-right: .5rem;"
             class="button-outline-primary"
             [usefulRouterLink]="['app-dashboard', 'list', part.name]"
+            [usefulRouteQueryParams]="{type: !activeType ? 'default' : activeType}"
           >All {{ part.menuItem.text || 'Items' }}</a>
           <a
             *ngIf="!isNew"
             class="button-outline-primary"
-            [usefulRouterLink]="['app-dashboard', 'new', part.name]"          
-            [usefulRouteExtras]="{queryParams: { type: !databaseItem ? 'default' : databaseItem.type }}"
+            [usefulRouterLink]="['app-dashboard', 'new', part.name]"
+            [usefulRouteExtras]="{queryParams: {type: !databaseItem ? 'default' : databaseItem.type}}"
           >Add another</a>
           <a
             *ngIf="!isNew && databaseItem"

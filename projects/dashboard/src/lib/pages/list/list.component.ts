@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { of } from 'rxjs';
+import { of, combineLatest } from 'rxjs';
 import { map, tap, filter, switchMap } from 'rxjs/operators';
 import { SettingService, BuiltinListingItem } from '@lamnhan/ngx-useful';
 
@@ -18,12 +18,16 @@ import { DatabaseStateModel, GetCounting, GetItems, GetTranslations, SearchItems
 })
 export class ListPage implements OnInit {
 
-  public readonly page$ = this.route.params.pipe(
-    switchMap(params => {
+  public readonly page$ = combineLatest([
+    this.route.params,
+    this.route.queryParams,
+  ])
+  .pipe(
+    switchMap(([params, queryParams]) => {
       this.part = this.dashboardService.getPart(params.part) as DashboardPart;
       this.isListingLoading = false;
-      this.type = 'default';
-      this.status = 'publish';
+      this.type = queryParams.type || 'default';
+      this.status = queryParams.status || 'publish';
       this.pageNo = 1;
       this.query = '';
       this.detailId = '';
