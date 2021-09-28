@@ -22,7 +22,7 @@
     "@angular/common": "^12.2.5",
     "@angular/core": "^12.2.5",
     "@angular/platform-browser": "~12.2.5",
-    "@lamnhan/ngx-useful": "0.0.34",
+    "@lamnhan/ngx-useful": "0.0.35",
     "@lamnhan/schemata": "0.0.24",
     "@lamnhan/ngx-schemata": "0.0.16",
     "@ngxs/store": "^3.7.2"

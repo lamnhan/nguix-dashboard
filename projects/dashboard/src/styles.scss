@@ -122,4 +122,12 @@ $icons: (
     border-color: $medium;
     background: $light;
   }
+
+  @media screen and (min-width: 992px) {
+
+    &.page {
+      padding-left: 216px;
+    }
+  }
+
 }
