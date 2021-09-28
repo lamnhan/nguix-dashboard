@@ -35,6 +35,7 @@ export interface DashboardPart {
 export interface FormResult {
   mode: 'create' | 'update';
   data: Record<string, any>;
+  context: any;
 }
 
 export type DatabaseItem = Record<string, any>;

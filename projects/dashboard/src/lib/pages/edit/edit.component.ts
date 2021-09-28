@@ -51,6 +51,8 @@ export class EditPage implements OnInit, OnDestroy {
 
   activeDescriptions: Record<string, boolean> = {};
 
+  updateWithAdvancedCreation = false;
+
   public readonly page$ = combineLatest([
       this.route.params,
       this.route.queryParams,
@@ -198,6 +200,10 @@ export class EditPage implements OnInit, OnDestroy {
     if (this.typeChangesSubscription) {
       this.typeChangesSubscription.unsubscribe();
     }
+  }
+
+  updateWithAdvancedCreationChanges(e: any) {
+    this.updateWithAdvancedCreation = e.target.checked;
   }
 
   checkboxChanges(
@@ -357,7 +363,10 @@ export class EditPage implements OnInit, OnDestroy {
     // has form handler
     const mode = this.isNew ? 'create' : 'update';
     if (part.formHandler) {
-      return part.formHandler({mode, data}, formGroup);
+      return part.formHandler(
+        { mode, data, context: this },
+        formGroup,
+      );
     }
     // default handler
     else if (part.dataService) {
@@ -380,18 +389,28 @@ export class EditPage implements OnInit, OnDestroy {
           delete data[removeField];
         });
         // update item
-        return this.dataService.updateItem(
-          part,
-          this.databaseItem,
-          data,
-          () => {
-            this.lockdown = false;
-          },
-          error => {
-            this.lockdown = false;
-            alert(error.message);
-          }
-        );
+        return (
+          !this.updateWithAdvancedCreation
+            ? of(true)
+            : part.dataService.createAdvancedOnly(this.databaseItem)
+        )
+        .pipe(
+          tap(() =>
+            this.dataService.updateItem(
+              part,
+              this.databaseItem as DatabaseItem,
+              data,
+              () => {
+                this.lockdown = false;
+              },
+              error => {
+                this.lockdown = false;
+                alert(error.message);
+              }
+            )
+          ),
+        )
+        .subscribe();
       } else {
         return alert('No default action for mode: ' + mode);
       }

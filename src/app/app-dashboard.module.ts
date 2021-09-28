@@ -28,6 +28,12 @@ import { NguixDashboardModule, DASHBOARD_CONFIG, dashboardConfig } from '@lamnha
               { text: 'Genre', value: 'genre', icon: `icon-dashboard-part-category` },
             );
           },
+          // register search type for tag part
+          dashboardService => {
+            dashboardService.tagPart.contentTypes.push(
+              { text: 'Search', value: 'search', icon: `icon-dashboard-part-tag` },
+            );
+          },
           // test
           dashboardService => {
             dashboardService.frontPart.menuItem.subItems?.push({
