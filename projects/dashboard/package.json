@@ -1,6 +1,6 @@
 {
   "name": "@lamnhan/nguix-dashboard",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "An Angular UI kit for content management.",
   "author": "Lam Nhan",
   "homepage": "https://lamnhan.com",
@@ -24,7 +24,7 @@
     "@angular/platform-browser": "~12.2.5",
     "@lamnhan/ngx-useful": "0.0.35",
     "@lamnhan/schemata": "0.0.24",
-    "@lamnhan/ngx-schemata": "0.0.16",
+    "@lamnhan/ngx-schemata": "0.0.17",
     "@ngxs/store": "^3.7.2"
   },
   "dependencies": {
